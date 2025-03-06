@@ -17,14 +17,25 @@ class PageNavigatorView extends StatelessWidget {
         shadowColor: colorScheme.shadow,
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        leading:
+        leading: (
           (navigatorViewModel.pageStack.length > 1) ?
           IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () { navigatorViewModel.goBack(); },
-          ) : null,
+          ) :
+          null // Show noting
+        ),
       ),
-      body: navigatorViewModel.currentPage.body
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 150),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        child: KeyedSubtree(
+          key: ValueKey(navigatorViewModel.currentPage),
+          child: navigatorViewModel.currentPage.body,
+        ),
+      ),
     );
   }
 }

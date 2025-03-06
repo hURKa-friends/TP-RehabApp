@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:rehab_app/internal/models/page_model.dart';
 import 'package:rehab_app/internal/view_models/page_navigator_view_model.dart';
 import 'package:rehab_app/internal/views/page_navigator_view.dart';
+import 'package:rehab_app/view_models/menu_view_model.dart';
+import 'package:rehab_app/views/menu_view.dart';
 
 void main() {
   runApp(const ChangeNotifierInjector());
@@ -17,9 +19,10 @@ class ChangeNotifierInjector extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) =>
             PageNavigatorViewModel(
-                PageModel(title: "App menu", icon:Icons.home, body: Placeholder())
+                PageModel(title: "App menu", icon:Icons.home, body: MenuView())
             ),
         ),
+        ChangeNotifierProvider(create: (context) => MenuViewModel()),
       ],
       child: MyMaterialApp(),
     );
