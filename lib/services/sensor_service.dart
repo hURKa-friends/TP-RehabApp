@@ -31,6 +31,9 @@ class SensorService {
   }
 
   bool startAcclDataStream({required Duration samplingPeriod}) {
+    ///
+    /// start data aquisition and return if it was succesful
+    ///
     throw UnimplementedError();
   }
   bool startGyroDataStream({required Duration samplingPeriod}) {
@@ -43,7 +46,26 @@ class SensorService {
     throw UnimplementedError();
   }
 
+  bool registerAcclDataStream({required Duration samplingPeriod, required Function() callback}) {
+    ///
+    /// register callback as acclStream.listen() and return if it was succesful or not
+    ///
+    throw UnimplementedError();
+  }
+  bool registerGyroDataStream({required Duration samplingPeriod, required Function() callback}) {
+    throw UnimplementedError();
+  }
+  bool registerMagDataStream({required Duration samplingPeriod, required Function() callback}) {
+    throw UnimplementedError();
+  }
+  bool registerLuxDataStream({required Function() callback}) {
+    throw UnimplementedError();
+  }
+
   ImuSensorData getAcclData() {
+    ///
+    /// return last datapoint from acclData
+    ///
     throw UnimplementedError();
   }
   ImuSensorData getGyroData() {
@@ -57,6 +79,9 @@ class SensorService {
   }
 
   bool stopAcclDataStream() {
+    ///
+    /// start data aquisition and unregister callback stop internal datastreams
+    ///
     throw UnimplementedError();
   }
   bool stopGyroDataStream() {
