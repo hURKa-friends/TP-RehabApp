@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// Internals
 import 'package:rehab_app/internal/models/page_model.dart';
 import 'package:rehab_app/internal/view_models/page_navigator_view_model.dart';
 import 'package:rehab_app/internal/views/page_navigator_view.dart';
+// Services
+import 'package:rehab_app/services/logger_service.dart';
+// MVVM application dependencies
 import 'package:rehab_app/view_models/menu_view_model.dart';
+///
+/// import your MVVM ViewModels here
+///
+import 'package:rehab_app/view_models/settings_view_model.dart';
 import 'package:rehab_app/views/menu_view.dart';
+
+final String baseAppDirectoryPath = '/storage/emulated/0/RehabApp';
 
 void main() {
   runApp(const ChangeNotifierInjector());
@@ -15,6 +25,7 @@ class ChangeNotifierInjector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LoggerService();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) =>
@@ -23,6 +34,10 @@ class ChangeNotifierInjector extends StatelessWidget {
             ),
         ),
         ChangeNotifierProvider(create: (context) => MenuViewModel()),
+        ///
+        /// You can add your ViewModels here
+        ///
+        ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],
       child: MyMaterialApp(),
     );
