@@ -37,13 +37,13 @@ class SensorService {
     return _internalService.initializeAcclStream(samplingPeriod);
   }
   bool startGyroDataStream({required Duration samplingPeriod}) {
-    throw UnimplementedError();
+    return _internalService.initializeGyroStream(samplingPeriod);
   }
   bool startMagDataStream({required Duration samplingPeriod}) {
-    throw UnimplementedError();
+    return _internalService.initializeMagStream(samplingPeriod);
   }
   bool startLuxDataStream() {
-    throw UnimplementedError();
+    return _internalService.initializeLuxStream();
   }
 
   bool registerAcclDataStream({required Duration samplingPeriod, required Function() callback}) {
@@ -53,13 +53,13 @@ class SensorService {
     return _internalService.registerAcclStream(samplingPeriod, callback);
   }
   bool registerGyroDataStream({required Duration samplingPeriod, required Function() callback}) {
-    throw UnimplementedError();
+    return _internalService.registerGyroStream(samplingPeriod, callback);
   }
   bool registerMagDataStream({required Duration samplingPeriod, required Function() callback}) {
-    throw UnimplementedError();
+    return _internalService.registerMagStream(samplingPeriod, callback);
   }
   bool registerLuxDataStream({required Function() callback}) {
-    throw UnimplementedError();
+    return _internalService.registerLuxStream(callback);
   }
 
   ImuSensorData getAcclData() {
@@ -85,12 +85,12 @@ class SensorService {
     return _internalService.cancelAcclStream();
   }
   bool stopGyroDataStream() {
-    throw UnimplementedError();
+    return _internalService.cancelGyroStream();
   }
   bool stopMagDataStream() {
-    throw UnimplementedError();
+    return _internalService.cancelMagStream();
   }
   bool stopLuxDataStream() {
-    throw UnimplementedError();
+    return _internalService.cancelLuxStream();
   }
 }
