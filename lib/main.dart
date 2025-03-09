@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // Internals
-import 'package:rehab_app/internal/models/page_model.dart';
-import 'package:rehab_app/internal/view_models/page_navigator_view_model.dart';
-import 'package:rehab_app/internal/views/page_navigator_view.dart';
+import 'package:rehab_app/models/page_model.dart';
+import 'package:rehab_app/view_models/page_navigator_view_model.dart';
+import 'package:rehab_app/views/page_navigator_view.dart';
 // Services
 import 'package:rehab_app/services/logger_service.dart';
 // MVVM application dependencies

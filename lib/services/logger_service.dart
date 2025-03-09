@@ -1,4 +1,4 @@
-import 'logger_service_internal.dart';
+import 'internal/logger_service_internal.dart';
 
 /// Public API for LoggerService
 class LoggerService {
