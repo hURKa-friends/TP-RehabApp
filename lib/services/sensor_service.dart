@@ -18,23 +18,23 @@ class SensorService {
 
   // Public Methods
   bool isAcclOn() {
-    throw UnimplementedError();
+    return _internalService.isOnAccl();
   }
   bool isGyroOn() {
-    throw UnimplementedError();
+    return _internalService.isOnGyro();
   }
   bool isMagOn() {
-    throw UnimplementedError();
+    return _internalService.isOnMag();
   }
   bool isLuxOn() {
-    throw UnimplementedError();
+    return _internalService.isOnLux();
   }
 
   bool startAcclDataStream({required Duration samplingPeriod}) {
     ///
     /// start data aquisition and return if it was succesful
     ///
-    throw UnimplementedError();
+    return _internalService.initializeAcclStream(samplingPeriod);
   }
   bool startGyroDataStream({required Duration samplingPeriod}) {
     throw UnimplementedError();
@@ -50,7 +50,7 @@ class SensorService {
     ///
     /// register callback as acclStream.listen() and return if it was succesful or not
     ///
-    throw UnimplementedError();
+    return _internalService.registerAcclStream(samplingPeriod, callback);
   }
   bool registerGyroDataStream({required Duration samplingPeriod, required Function() callback}) {
     throw UnimplementedError();
@@ -66,23 +66,23 @@ class SensorService {
     ///
     /// return last datapoint from acclData
     ///
-    throw UnimplementedError();
+    return _internalService.acclData;
   }
   ImuSensorData getGyroData() {
-    throw UnimplementedError();
+    return _internalService.gyroData;
   }
   ImuSensorData getMagData() {
-    throw UnimplementedError();
+    return _internalService.magData;
   }
   LuxSensorData getLuxData() {
-    throw UnimplementedError();
+    return _internalService.luxData;
   }
 
   bool stopAcclDataStream() {
     ///
     /// start data aquisition and unregister callback stop internal datastreams
     ///
-    throw UnimplementedError();
+    return _internalService.cancelAcclStream();
   }
   bool stopGyroDataStream() {
     throw UnimplementedError();
