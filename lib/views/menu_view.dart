@@ -24,8 +24,9 @@ class MenuView extends StatelessWidget {
         itemBuilder: (context, index) {
           return Card(
             clipBehavior: Clip.hardEdge,
+            color: colorScheme.secondaryContainer,
             child: InkWell(
-              splashColor: colorScheme.primaryContainer,
+              splashColor: colorScheme.onPrimary,
               onTap: () {
                 navigatorViewModel.selectPage(menuViewModel.pages[index]);
               },

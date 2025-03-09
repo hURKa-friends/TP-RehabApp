@@ -49,13 +49,16 @@ class MyMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var settingsViewModel = context.watch<SettingsViewModel>();
     return MaterialApp(
       title: 'Tele-rehabilitation App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+        brightness: settingsViewModel.brightness,
         colorScheme: ColorScheme.fromSeed(
           seedColor: Color.fromARGB(255, 255, 185, 0), // Marek signature gold color
+          brightness: settingsViewModel.brightness,
         ),
       ),
       home: PageNavigatorView(),
