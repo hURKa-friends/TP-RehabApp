@@ -3,6 +3,7 @@ import 'package:rehab_app/internal/models/page_model.dart';
 ///
 /// import your MVVM views here
 ///
+import 'package:rehab_app/views/pose_detection_view.dart';
 import 'package:rehab_app/views/settings_view.dart';
 
 class MenuViewModel extends ChangeNotifier {
@@ -12,6 +13,7 @@ class MenuViewModel extends ChangeNotifier {
     ///
     /// You can add your pages here
     ///
+    PageModel(icon: Icons.accessibility_new, title: "Pose detection", body: PoseDetectionView()),
     PageModel(icon: Icons.settings, title: "Settings", body: SettingsView()),
   ];
 
