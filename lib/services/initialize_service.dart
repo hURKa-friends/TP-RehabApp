@@ -1,4 +1,5 @@
 import 'internal/initialize_service_internal.dart';
+import 'package:rehab_app/services/models/init_models.dart';
 
 /// Public API for InitializeService
 /// Public API for LoggerService
@@ -16,15 +17,19 @@ class InitResourcesService {
   }
 
   // Public Methods
-  bool isFooPresent() {
-    ///
-    /// Implement some method from InitResourcesServiceInternal
-    ///
-    throw UnimplementedError();
+  SensorInfo? getAccel() {
+    return _internalService.accelData();
   }
 
-  ///
-  /// Add other meaningful methods that will return state of peripherals or other in app components
-  ///
+  SensorInfo? getGyro() {
+    return _internalService.gyroData();
+  }
 
+  SensorInfo? getMagneto() {
+    return _internalService.magnetoData();
+  }
+
+  SensorInfo? getLight() {
+    return _internalService.lightData();
+  }
 }
