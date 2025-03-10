@@ -11,19 +11,21 @@ class PoseDetectionViewModel extends ChangeNotifier{
   late CustomPaint? customPaint;
   String? _text;
   bool _isBusy = false;
-  final Function() onUpdate; // Callback function to trigger UI updates
-  final bool mounted;
+  //final Function() onUpdate; // Callback function to trigger UI updates
+  late bool mounted = false;
   bool _canProcess = true;
+
+  late bool _isCameraInitialized = false;
 
   late List<Pose> _poses;
 
   // Constructor
-  PoseDetectionViewModel(this.mounted, this.onUpdate()) {
-    _initCamera();
+  PoseDetectionViewModel() {
     _initPoseDetector();
+    _initCamera();
   }
 
-  @override
+  @override // Deconstructor
   void dispose() {
     _canProcess = false;
     _poseDetector.close();
@@ -32,49 +34,37 @@ class PoseDetectionViewModel extends ChangeNotifier{
   }
 
   void _initPoseDetector() {
-    final options = PoseDetectorOptions();
-    _poseDetector = PoseDetector(options: options);
+    _poseDetector = PoseDetector(options: PoseDetectorOptions());
   }
 
-  Future<void> _initCamera() async {
-    _cameras = await availableCameras(); // Initialize cameras
-    _frontCamera = _cameras.firstWhere(
-            (camera) => camera.lensDirection == CameraLensDirection.front);
+  void _initCamera() async {
+    await _asyncInitCamera();
+  }
 
+  Future<void> _asyncInitCamera() async {
+    _cameras = await availableCameras();
+    _frontCamera = _cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front);
     cameraController = CameraController(_frontCamera, ResolutionPreset.max);
-    try {
-      await cameraController.initialize();
-      if (mounted) {
-        // state.setState(() {});
-        onUpdate();
-      }
-      // Start listening to camera frames
-      cameraController.startImageStream((CameraImage cameraImage) {
-        if (!_isBusy && _canProcess) {
-          _isBusy = true;
-          _processCameraFrame(cameraImage);
-        }
-      });
-    } catch (e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-          // Handle access errors here.
-            break;
-          default:
-          // Handle other errors here.
-            break;
-        }
-      }
-    }
+    await cameraController.initialize();
+    cameraController.startImageStream((CameraImage cameraImage) {
+        _processCameraFrame(cameraImage);
+    });
   }
 
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
-    print('Hello');
     final inputImage = await _convertCameraImageToInputImage(cameraImage);
-    if(inputImage == null) return;
-    _poses = await _poseDetector.processImage(inputImage);
+
+    if(inputImage == null) {
+      return;
+    }
+
+
+    print('Hello');
+
+    // _poses = await _poseDetector.processImage(inputImage);
     final poses = await _poseDetector.processImage(inputImage);
+    print('Ahoj');
+
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
       final painter = PosePainter(
@@ -84,25 +74,26 @@ class PoseDetectionViewModel extends ChangeNotifier{
       customPaint = CustomPaint(painter: painter);
     } else {
       _text = 'Poses found: ${poses.length}\n\n';
-      // TODO: set _customPaint to draw landmarks on top of image
       customPaint = null;
     }
     _isBusy = false;
-    onUpdate(); // Notify the UI that the frame has been processed
+    notifyListeners();
   }
 
   Future<InputImage?> _convertCameraImageToInputImage(CameraImage image) async{
+    /// TODO REPAIR THIS FOOKIN CONVERSION (not working
     // get image format
     final format = InputImageFormatValue.fromRawValue(image.format.raw);
     // only supported format is nv21 for Android
-    if (format == null || format != InputImageFormat.nv21) {
+    if (format == null || format != InputImageFormat.yuv_420_888) {
       return null;
     }
     // since format is constraint to nv21, it only has one plane
-    if (image.planes.length != 1) return null;
+    // if (image.planes.length != 1) return null;
     final plane = image.planes.first;
 
     // compose InputImage using bytes
+    print('conversion');
     return InputImage.fromBytes(
       bytes: plane.bytes,
       metadata: InputImageMetadata(

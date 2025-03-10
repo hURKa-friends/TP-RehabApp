@@ -8,6 +8,7 @@ import 'package:rehab_app/internal/views/page_navigator_view.dart';
 import 'package:rehab_app/services/logger_service.dart';
 // MVVM application dependencies
 import 'package:rehab_app/view_models/menu_view_model.dart';
+import 'package:rehab_app/view_models/pose_detection_view_model.dart';
 ///
 /// import your MVVM ViewModels here
 ///
@@ -37,6 +38,7 @@ class ChangeNotifierInjector extends StatelessWidget {
         ///
         /// You can add your ViewModels here
         ///
+        ChangeNotifierProvider(create: (context) => PoseDetectionViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],
       child: MyMaterialApp(),
