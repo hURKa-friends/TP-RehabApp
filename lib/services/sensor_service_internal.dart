@@ -33,6 +33,7 @@ class SensorServiceInternal {
     if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) {
       return false;
     }
+    _acclStreamController = StreamController();
     _acclEventSubscription = accelerometerEventStream(samplingPeriod: samplingPeriod).listen((event) {
       acclData = ImuSensorData(x:event.x, y:event.y, z:event.z, timeStamp: DateTime.now(), state: SensorState.on);
       _acclStreamController.add(acclData);
@@ -41,9 +42,10 @@ class SensorServiceInternal {
   }
 
   bool initializeGyroStream (Duration samplingPeriod) {
-    if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) { 
+    if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) {
       return false;
     }
+    _gyroStreamController = StreamController();
     _gyroEventSubscription = gyroscopeEventStream(samplingPeriod: samplingPeriod).listen((event) {
       gyroData = ImuSensorData(x:event.x, y:event.y, z:event.z, timeStamp: DateTime.now(), state: SensorState.on);
       _gyroStreamController.add(gyroData);
@@ -55,6 +57,7 @@ class SensorServiceInternal {
     if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) {
       return false;
     }
+    _magStreamController = StreamController();
     _magEventSubscription = magnetometerEventStream(samplingPeriod: samplingPeriod).listen((event) {
       magData = ImuSensorData(x:event.x, y:event.y, z:event.z, timeStamp: DateTime.now(), state: SensorState.on);
       _magStreamController.add(magData);
@@ -64,6 +67,7 @@ class SensorServiceInternal {
 
   bool initializeLuxStream () {
     try {
+      _luxStreamController = StreamController();
       _luxEventSubscription = LightSensor.luxStream().listen((lux) {
         luxData = LuxSensorData(lux: lux, timeStamp: DateTime.now(), state: SensorState.on);
         _luxStreamController.add(luxData);

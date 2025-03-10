@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   sensors_plus: ^6.1.1
   light_sensor: ^3.0.1
+  syncfusion_flutter_charts: ^28.2.6
 
 dev_dependencies:
   flutter_test:
