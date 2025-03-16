@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 
 class PoseDetectionViewModel extends ChangeNotifier{
@@ -8,28 +10,34 @@ class PoseDetectionViewModel extends ChangeNotifier{
   late CameraDescription _frontCamera;
   late CameraController cameraController;
   late PoseDetector _poseDetector;
-  late CustomPaint? customPaint;
+  CustomPaint? customPaint;
   String? _text;
   bool _isBusy = false;
   //final Function() onUpdate; // Callback function to trigger UI updates
   late bool mounted = false;
   bool _canProcess = true;
 
-  late bool _isCameraInitialized = false;
-
   late List<Pose> _poses;
 
   // Constructor
   PoseDetectionViewModel() {
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _asyncInitCamera();
     _initPoseDetector();
-    _initCamera();
+    notifyListeners(); // Ensure UI rebuilds when camera is initialized
   }
 
   @override // Deconstructor
   void dispose() {
     _canProcess = false;
     _poseDetector.close();
-    cameraController.dispose();
+    if (cameraController.value.isInitialized) {
+      cameraController.stopImageStream();  // Stop the image stream before disposal
+      cameraController.dispose();
+    }
     super.dispose();
   }
 
@@ -37,33 +45,41 @@ class PoseDetectionViewModel extends ChangeNotifier{
     _poseDetector = PoseDetector(options: PoseDetectorOptions());
   }
 
-  void _initCamera() async {
-    await _asyncInitCamera();
-  }
-
   Future<void> _asyncInitCamera() async {
     _cameras = await availableCameras();
+    /// setup front camera only
     _frontCamera = _cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front);
-    cameraController = CameraController(_frontCamera, ResolutionPreset.max);
+    cameraController = CameraController(_frontCamera,
+        ResolutionPreset.high,
+        enableAudio: false,
+        imageFormatGroup: Platform.isAndroid
+            ? ImageFormatGroup.nv21
+            : ImageFormatGroup.bgra8888);
     await cameraController.initialize();
-    cameraController.startImageStream((CameraImage cameraImage) {
+
+    notifyListeners();
+
+    if(cameraController.value.isInitialized){
+      cameraController.startImageStream((CameraImage cameraImage) {
         _processCameraFrame(cameraImage);
-    });
+      });
+    }
   }
 
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
+    if (_isBusy) return; // Skip if already processing a frame
+
+    _isBusy = true;
+    final format = InputImageFormatValue.fromRawValue(cameraImage.format.raw);
+
     final inputImage = await _convertCameraImageToInputImage(cameraImage);
 
     if(inputImage == null) {
+      _isBusy = false;
       return;
     }
 
-
-    print('Hello');
-
-    // _poses = await _poseDetector.processImage(inputImage);
     final poses = await _poseDetector.processImage(inputImage);
-    print('Ahoj');
 
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
@@ -73,7 +89,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
       );
       customPaint = CustomPaint(painter: painter);
     } else {
-      _text = 'Poses found: ${poses.length}\n\n';
       customPaint = null;
     }
     _isBusy = false;
@@ -81,15 +96,16 @@ class PoseDetectionViewModel extends ChangeNotifier{
   }
 
   Future<InputImage?> _convertCameraImageToInputImage(CameraImage image) async{
-    /// TODO REPAIR THIS FOOKIN CONVERSION (not working
+    /// TODO REPAIR THIS CONVERSION (not working)
     // get image format
     final format = InputImageFormatValue.fromRawValue(image.format.raw);
     // only supported format is nv21 for Android
-    if (format == null || format != InputImageFormat.yuv_420_888) {
+    if (format == null || format != InputImageFormat.nv21) {
+      print('---------------------------------- NO NV21 FORMAT -------------------------------');
       return null;
     }
+    print('----------------------NV21 FORMAT -----------------------');
     // since format is constraint to nv21, it only has one plane
-    // if (image.planes.length != 1) return null;
     final plane = image.planes.first;
 
     // compose InputImage using bytes
@@ -103,6 +119,8 @@ class PoseDetectionViewModel extends ChangeNotifier{
         bytesPerRow: plane.bytesPerRow, // used only in iOS
       ),
     );
+
+
   }
 
 }
@@ -187,6 +205,7 @@ class PosePainter extends CustomPainter {
       paintLine(
           PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
     }
+    print("Pose printer");
   }
 
   @override

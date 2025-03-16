@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/services.dart';
-import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/view_models/pose_detection_view_model.dart';
 
@@ -12,9 +10,17 @@ class PoseDetectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var poseDetectionViewModel = context.watch<PoseDetectionViewModel>();
+
     if (!poseDetectionViewModel.cameraController.value.isInitialized) {
-      return Container(); ///returns empty container
+      return Center(child: CircularProgressIndicator()); // Show a loader
     }
-    return CameraPreview(poseDetectionViewModel.cameraController);
+    // return CameraPreview(poseDetectionViewModel.cameraController);
+    return Stack(
+      children: [
+        CameraPreview(poseDetectionViewModel.cameraController),
+        if (poseDetectionViewModel.customPaint != null)
+          Positioned.fill(child: poseDetectionViewModel.customPaint!),
+      ],
+    );
   }
 }
