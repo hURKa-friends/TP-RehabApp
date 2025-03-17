@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // Internals
 import 'package:rehab_app/models/page_model.dart';
+import 'package:rehab_app/services/sensor_service.dart';
+import 'package:rehab_app/view_models/accelerometer_view_model.dart';
 import 'package:rehab_app/view_models/page_navigator_view_model.dart';
 import 'package:rehab_app/views/page_navigator_view.dart';
 // Services
@@ -26,6 +28,7 @@ class ChangeNotifierInjector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoggerService();
+    SensorService();//.startAcclDataStream(samplingPeriod: Duration(milliseconds: 20));
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) =>
@@ -36,6 +39,7 @@ class ChangeNotifierInjector extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MenuViewModel()),
         ///
         /// You can add your ViewModels here
+        ChangeNotifierProvider(create: (context) => AccelerometerViewModel()),
         ///
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],

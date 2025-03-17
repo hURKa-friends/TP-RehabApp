@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rehab_app/models/page_model.dart';
+import 'package:rehab_app/views/accelerometer_view.dart';
 ///
 /// import your MVVM views here
 ///
@@ -11,6 +12,7 @@ class MenuViewModel extends ChangeNotifier {
     PageModel(icon: Icons.home, title: "Home", body: Placeholder()),
     ///
     /// You can add your pages here
+    PageModel(icon: Icons.add_chart_rounded, title: "Accelerometer", body: AccelerometerView()),
     ///
     PageModel(icon: Icons.settings, title: "Settings", body: SettingsView()),
   ];
