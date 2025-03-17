@@ -40,6 +40,7 @@ class _GyroViewState extends State<GyroView> {
     return Container(
         padding: EdgeInsets.only(bottom: 100),
         child: SfCartesianChart(
+          key: ValueKey(_viewModel.index),
           legend: Legend(isVisible: true),
           primaryXAxis: DateTimeAxis(
             minimum: _viewModel.imuData.isNotEmpty
