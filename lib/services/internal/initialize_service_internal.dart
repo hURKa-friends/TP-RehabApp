@@ -9,6 +9,9 @@ class InitResourcesServiceInternal {
 
   initialize() async {
     isDynamicSensorDiscoverySupported = await SensorManagerAndroid.instance.isDynamicSensorDiscoverySupported();
+
+    print("Dynamic Sensor Discovery Supported: $isDynamicSensorDiscoverySupported");
+
     sensors = SensorAvailability();
 
     _isAccelerometerAvailable();

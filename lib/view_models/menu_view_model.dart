@@ -5,6 +5,8 @@ import 'package:rehab_app/models/page_model.dart';
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
+import '../views/init_view.dart';
+
 class MenuViewModel extends ChangeNotifier {
   // Private Fields & Parameters
   final List<PageModel> _pages = [
@@ -13,6 +15,7 @@ class MenuViewModel extends ChangeNotifier {
     /// You can add your pages here
     ///
     PageModel(icon: Icons.settings, title: "Settings", body: SettingsView()),
+    PageModel(icon: Icons.sensors, title: "Sensors", body: InitView()),
   ];
 
   // Constructors (if needed)

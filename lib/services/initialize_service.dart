@@ -16,6 +16,10 @@ class InitResourcesService {
     _internalService.initialize();
   }
 
+  Future<void> _initializeService() async {
+    await _internalService.initialize();
+  }
+
   // Public Methods
   SensorInfo? getAccel() {
     return _internalService.accelData();
