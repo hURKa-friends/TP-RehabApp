@@ -105,7 +105,7 @@ class LoggerServiceInternal {
 
     switch(channel) {
       case LogChannel.csv:
-        _channelFiles[channel] = File('${dir.path}/${DateFormat('yyyy_MM_dd-HH_mm').format(DateTime.now())}-$fileName.txt');
+        _channelFiles[channel] = File('${dir.path}/${DateFormat('yyyy_MM_dd-HH_mm').format(DateTime.now())}-$fileName.csv');
         break;
       case LogChannel.error:
         _channelFiles[channel] = File('${dir.path}/${DateFormat('yyyy_MM_dd-HH_mm').format(DateTime.now())}-$fileName.log');
