@@ -6,7 +6,7 @@ class SensorServiceInternal {
   late ImuSensorData acclData;
   late StreamSubscription<ImuSensorData> acclSubscription;
   late StreamSubscription<AccelerometerEvent> _acclEventSubscription;
-  final StreamController<ImuSensorData> _acclStreamController = StreamController();
+  late StreamController<ImuSensorData> _acclStreamController;
 
   late ImuSensorData gyroData;
   late StreamSubscription<ImuSensorData> gyroSubscription;
