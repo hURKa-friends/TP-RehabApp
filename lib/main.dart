@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // Internals
 import 'package:rehab_app/models/page_model.dart';
+import 'package:rehab_app/services/sensor_service.dart';
 import 'package:rehab_app/view_models/page_navigator_view_model.dart';
 import 'package:rehab_app/views/page_navigator_view.dart';
 // Services
@@ -26,6 +27,7 @@ class ChangeNotifierInjector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoggerService();
+    SensorService();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) =>

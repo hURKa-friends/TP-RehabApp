@@ -29,11 +29,11 @@ class LoggerService {
     return _internalService.log(channel,ownerId,data);
   }
 
-  bool closeLogChannelSafely({required String ownerId, required LogChannel channel}) {
-    throw UnimplementedError();
+  void closeLogChannelSafely({required String ownerId, required LogChannel channel}) {
+    _internalService.disposeOfChannel(ownerId: ownerId, channel: channel, safeDisposal: true);
   }
 
-  bool closeLogChannel({required String ownerId, required LogChannel channel}) {
-    throw UnimplementedError();
+  void closeLogChannel({required String ownerId, required LogChannel channel}) {
+    _internalService.disposeOfChannel(ownerId: ownerId, channel: channel, safeDisposal: false);
   }
 }
