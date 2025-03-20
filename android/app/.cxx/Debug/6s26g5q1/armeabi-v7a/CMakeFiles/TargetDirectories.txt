@@ -1,2 +1,0 @@
-D:/ASProjekty/TP/TP-RehabApp/android/app/.cxx/Debug/6s26g5q1/armeabi-v7a/CMakeFiles/edit_cache.dir
-D:/ASProjekty/TP/TP-RehabApp/android/app/.cxx/Debug/6s26g5q1/armeabi-v7a/CMakeFiles/rebuild_cache.dir

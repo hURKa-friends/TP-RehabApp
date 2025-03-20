@@ -27,7 +27,6 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 **/.cxx/
-android/app/.cxx/
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -45,3 +44,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx/
