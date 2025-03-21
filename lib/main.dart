@@ -38,7 +38,6 @@ class ChangeNotifierInjector extends StatelessWidget {
         ///
         /// You can add your ViewModels here
         ///
-        ChangeNotifierProvider(create: (context) => GyroViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],
       child: MyMaterialApp(),

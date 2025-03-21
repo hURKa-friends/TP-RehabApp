@@ -78,30 +78,21 @@ class SensorServiceInternal {
     }
   }
 
-  bool registerAcclStream (Duration samplingPeriod, Function() callback) {
-    if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) {
-      return false;
-    }
+  bool registerAcclStream (Function() callback) {
     acclSubscription = _acclStreamController.stream.listen((data) {
       callback();
     });
     return true;
   }
 
-  bool registerGyroStream (Duration samplingPeriod, Function() callback) {
-    if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) {
-      return false;
-    }
+  bool registerGyroStream (Function() callback) {
     gyroSubscription = _gyroStreamController.stream.listen((data) {
       callback();
     });
     return true;
   }
 
-  bool registerMagStream (Duration samplingPeriod, Function() callback) {
-    if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) {
-      return false;
-    }
+  bool registerMagStream (Function() callback) {
     acclSubscription = _magStreamController.stream.listen((data) {
       callback();
     });
@@ -123,6 +114,7 @@ class SensorServiceInternal {
     try {
       acclSubscription.cancel();
       _acclEventSubscription.cancel();
+      acclData = ImuSensorData(x:0, y:0, z:0, timeStamp: DateTime.now(), state: SensorState.off);
       return true;
     } catch (e) {
       return false;
@@ -133,6 +125,7 @@ class SensorServiceInternal {
     try {
       gyroSubscription.cancel();
       _gyroEventSubscription.cancel();
+      gyroData = ImuSensorData(x:0, y:0, z:0, timeStamp: DateTime.now(), state: SensorState.off);
       return true;
     } catch (e) {
       return false;
@@ -143,6 +136,7 @@ class SensorServiceInternal {
     try {
       magSubscription.cancel();
       _magEventSubscription.cancel();
+      magData = ImuSensorData(x:0, y:0, z:0, timeStamp: DateTime.now(), state: SensorState.off);
       return true;
     } catch (e) {
       return false;
@@ -153,6 +147,7 @@ class SensorServiceInternal {
     try {
       luxSubscription.cancel();
       _luxEventSubscription.cancel();
+      luxData = LuxSensorData(lux: 0, timeStamp: DateTime.now(), state: SensorState.off);
       return true;
     } catch (e) {
       return false;
