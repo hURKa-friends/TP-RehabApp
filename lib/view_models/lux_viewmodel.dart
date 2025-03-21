@@ -27,7 +27,12 @@ class LuxViewModel extends ChangeNotifier {
   }
 
   void updateUI(Timer timer) {
+    if (luxData.length > 100) {
+      luxData.removeAt(0);
+    }
+    LuxSensorData data = service.getLuxData();
+    luxData.add(LuxSensorData(lux: data.lux, timeStamp: DateTime.now(), state: data.state));
+    index++;
     notifyListeners();
   }
-
 }

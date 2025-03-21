@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rehab_app/services/sensor_models.dart';
 import 'package:rehab_app/services/sensor_service.dart';
@@ -7,14 +6,12 @@ class AcclViewModel extends ChangeNotifier {
   late List<ImuSensorData> imuData;
   late SensorService service;
   int index = 0;
-  Timer? timer;
 
   AcclViewModel() {
     service = SensorService();
     imuData = List.empty(growable: true);
-    service.startAcclDataStream(samplingPeriod: Duration(milliseconds: 200));
-    service.registerAcclDataStream(samplingPeriod: Duration(milliseconds: 200), callback: onDataChanged);
-    timer = Timer.periodic(const Duration(milliseconds: 50), updateUI);
+    service.startAcclDataStream(samplingPeriod: Duration(milliseconds: 50));
+    service.registerAcclDataStream(callback: onDataChanged);
   }
 
   void onDataChanged() {
@@ -25,9 +22,4 @@ class AcclViewModel extends ChangeNotifier {
     index++;
     notifyListeners();
   }
-
-  void updateUI(Timer timer) {
-    notifyListeners();
-  }
-
 }
