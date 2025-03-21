@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:rehab_app/view_models/mag_viewmodel.dart';
@@ -13,41 +13,32 @@ class MagView extends StatefulWidget {
 }
 
 class _MagViewState extends State<MagView> {
-  // GUI Fields & Parameters
-  late MagViewModel _viewModel;
-  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = MagViewModel();
-    _timer = Timer.periodic(const Duration(milliseconds: 50), updateUI);
   }
 
   @override
   void dispose() {
-    _timer?.cancel(); // Cancel timer to prevent memory leaks
     super.dispose();
-  }
-
-  void updateUI(Timer timer) {
-    setState(() {});
   }
 
   // GUI widget tree
   @override
   Widget build(BuildContext context) {
+    var viewModel = context.watch<MagViewModel>();
     return Container(
         padding: EdgeInsets.only(bottom: 100),
         child: SfCartesianChart(
-          key: ValueKey(_viewModel.index),
+          key: ValueKey(viewModel.index),
           legend: Legend(isVisible: true),
           primaryXAxis: DateTimeAxis(
-            minimum: _viewModel.imuData.isNotEmpty
-                ? _viewModel.imuData.first.timeStamp
+            minimum: viewModel.imuData.isNotEmpty
+                ? viewModel.imuData.first.timeStamp
                 : null,
-            maximum: _viewModel.imuData.isNotEmpty
-                ? _viewModel.imuData.last.timeStamp
+            maximum: viewModel.imuData.isNotEmpty
+                ? viewModel.imuData.last.timeStamp
                 : null,
           ), // ✅ Ensures DateTime is handled correctly
           primaryYAxis: NumericAxis(
@@ -59,22 +50,22 @@ class _MagViewState extends State<MagView> {
           series: <LineSeries<ImuSensorData, DateTime>>[
             LineSeries<ImuSensorData, DateTime>(
                 name:
-                    "X-Axis (${_viewModel.imuData.isNotEmpty ? _viewModel.imuData.last.x.toStringAsFixed(2) : '0'})",
-                dataSource: _viewModel.imuData,
+                    "X-Axis (${viewModel.imuData.isNotEmpty ? viewModel.imuData.last.x.toStringAsFixed(2) : '0'})",
+                dataSource: viewModel.imuData,
                 xValueMapper: (ImuSensorData data, _) => data.timeStamp,
                 yValueMapper: (ImuSensorData data, _) => data.x,
                 animationDuration: 0),
             LineSeries<ImuSensorData, DateTime>(
                 name:
-                    "Y-Axis (${_viewModel.imuData.isNotEmpty ? _viewModel.imuData.last.y.toStringAsFixed(2) : '0'})",
-                dataSource: _viewModel.imuData,
+                    "Y-Axis (${viewModel.imuData.isNotEmpty ? viewModel.imuData.last.y.toStringAsFixed(2) : '0'})",
+                dataSource: viewModel.imuData,
                 xValueMapper: (ImuSensorData data, _) => data.timeStamp,
                 yValueMapper: (ImuSensorData data, _) => data.y,
                 animationDuration: 0),
             LineSeries<ImuSensorData, DateTime>(
                 name:
-                    "Z-Axis (${_viewModel.imuData.isNotEmpty ? _viewModel.imuData.last.z.toStringAsFixed(2) : '0'})",
-                dataSource: _viewModel.imuData,
+                    "Z-Axis (${viewModel.imuData.isNotEmpty ? viewModel.imuData.last.z.toStringAsFixed(2) : '0'})",
+                dataSource: viewModel.imuData,
                 xValueMapper: (ImuSensorData data, _) => data.timeStamp,
                 yValueMapper: (ImuSensorData data, _) => data.z,
                 animationDuration: 0),
