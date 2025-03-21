@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:rehab_app/view_models/mag_viewmodel.dart';
-import 'package:rehab_app/services/sensor_models.dart';
+import 'package:rehab_app/services/models/sensor_models.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MagView extends StatefulWidget {

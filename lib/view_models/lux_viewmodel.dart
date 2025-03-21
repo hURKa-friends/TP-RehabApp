@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:rehab_app/services/sensor_models.dart';
+import 'package:rehab_app/services/models/sensor_models.dart';
 import 'package:rehab_app/services/sensor_service.dart';
 
 class LuxViewModel extends ChangeNotifier {

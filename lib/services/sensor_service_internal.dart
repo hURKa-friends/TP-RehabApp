@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:light_sensor/light_sensor.dart';
-import 'package:rehab_app/services/sensor_models.dart';
+import 'package:rehab_app/services/models/sensor_models.dart';
 
 class SensorServiceInternal {
   late ImuSensorData acclData;
