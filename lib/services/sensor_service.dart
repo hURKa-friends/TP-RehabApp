@@ -46,16 +46,13 @@ class SensorService {
     return _internalService.initializeLuxStream();
   }
 
-  bool registerAcclDataStream({required Duration samplingPeriod, required Function() callback}) {
-    ///
-    /// register callback as acclStream.listen() and return if it was succesful or not
-    ///
+  bool registerAcclDataStream({required Function() callback}) {
     return _internalService.registerAcclStream(callback);
   }
-  bool registerGyroDataStream({required Duration samplingPeriod, required Function() callback}) {
+  bool registerGyroDataStream({required Function() callback}) {
     return _internalService.registerGyroStream(callback);
   }
-  bool registerMagDataStream({required Duration samplingPeriod, required Function() callback}) {
+  bool registerMagDataStream({required Function() callback}) {
     return _internalService.registerMagStream(callback);
   }
   bool registerLuxDataStream({required Function() callback}) {
