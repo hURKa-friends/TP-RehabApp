@@ -12,6 +12,10 @@ import 'package:rehab_app/view_models/menu_view_model.dart';
 ///
 /// import your MVVM ViewModels here
 ///
+import 'package:rehab_app/view_models/accl_viewmodel.dart';
+import 'package:rehab_app/view_models/gyro_viewmodel.dart';
+import 'package:rehab_app/view_models/lux_viewmodel.dart';
+import 'package:rehab_app/view_models/mag_viewmodel.dart';
 import 'package:rehab_app/view_models/settings_view_model.dart';
 import 'package:rehab_app/views/menu_view.dart';
 
@@ -39,6 +43,10 @@ class ChangeNotifierInjector extends StatelessWidget {
         ///
         /// You can add your ViewModels here
         ///
+        ChangeNotifierProvider(create: (context) => AcclViewModel()),
+        ChangeNotifierProvider(create: (context) => GyroViewModel()),
+        ChangeNotifierProvider(create: (context) => MagViewModel()),
+        ChangeNotifierProvider(create: (context) => LuxViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],
       child: MyMaterialApp(),

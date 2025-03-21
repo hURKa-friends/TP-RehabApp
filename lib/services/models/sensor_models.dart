@@ -17,7 +17,7 @@ class ImuSensorData {
 }
 
 class LuxSensorData {
-  final double lux;
+  final int lux;
   final DateTime timeStamp;
   final SensorState state;
 
