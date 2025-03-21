@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rehab_app/internal/view_models/page_navigator_view_model.dart';
+import 'package:rehab_app/view_models/page_navigator_view_model.dart';
 
 class PageNavigatorView extends StatelessWidget {
   const PageNavigatorView({super.key});

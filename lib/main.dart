@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // Internals
-import 'package:rehab_app/internal/models/page_model.dart';
-import 'package:rehab_app/internal/view_models/page_navigator_view_model.dart';
-import 'package:rehab_app/internal/views/page_navigator_view.dart';
+import 'package:rehab_app/models/page_model.dart';
+import 'package:rehab_app/services/sensor_service.dart';
+import 'package:rehab_app/view_models/page_navigator_view_model.dart';
+import 'package:rehab_app/views/page_navigator_view.dart';
 // Services
 import 'package:rehab_app/services/logger_service.dart';
 // MVVM application dependencies
@@ -30,6 +31,7 @@ class ChangeNotifierInjector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoggerService();
+    SensorService();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) =>
@@ -57,13 +59,16 @@ class MyMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var settingsViewModel = context.watch<SettingsViewModel>();
     return MaterialApp(
       title: 'Tele-rehabilitation App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+        brightness: settingsViewModel.brightness,
         colorScheme: ColorScheme.fromSeed(
           seedColor: Color.fromARGB(255, 255, 185, 0), // Marek signature gold color
+          brightness: settingsViewModel.brightness,
         ),
       ),
       home: PageNavigatorView(),

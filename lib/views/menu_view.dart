@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rehab_app/internal/view_models/page_navigator_view_model.dart';
+import 'package:rehab_app/view_models/page_navigator_view_model.dart';
 import 'package:rehab_app/view_models/menu_view_model.dart';
 
 class MenuView extends StatelessWidget {
@@ -24,8 +24,9 @@ class MenuView extends StatelessWidget {
         itemBuilder: (context, index) {
           return Card(
             clipBehavior: Clip.hardEdge,
+            color: colorScheme.secondaryContainer,
             child: InkWell(
-              splashColor: colorScheme.primaryContainer,
+              splashColor: colorScheme.onPrimary,
               onTap: () {
                 navigatorViewModel.selectPage(menuViewModel.pages[index]);
               },

@@ -5,7 +5,7 @@ import 'dart:collection';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rehab_app/main.dart';
-import 'package:rehab_app/services/logger_exception.dart';
+import 'package:rehab_app/services/models/logger_exception.dart';
 
 final String loggerDirectoryPath = '$baseAppDirectoryPath/logger';
 
@@ -15,11 +15,11 @@ enum ChannelStates { closed, open, busy }
 enum LogOperation { log, manage }
 
 class LoggerServiceInternal {
-  final Map<LogChannel, Queue<String>> _channelQueues = {};
   final Map<LogChannel, ChannelAccess> _channelAccessLevels = {};
   final Map<LogChannel, ChannelStates?> _channelStates = {};
   final Map<LogChannel, String?> _channelOwnerUIDs = {};
   final Map<LogChannel, File?> _channelFiles = {};
+  final Map<LogChannel, IOSink?> _channelSinks = {};
 
   initialize() async {
     final permissionState = await _managePermissions();
@@ -30,15 +30,12 @@ class LoggerServiceInternal {
     }
 
     for (var channel in LogChannel.values) {
-      _channelQueues[channel] = Queue<String>();
       _channelAccessLevels[channel] = ChannelAccess.private;
       _channelStates[channel] = ChannelStates.closed;
       _channelOwnerUIDs[channel] = null;
       _channelFiles[channel] = null;
+      _channelSinks[channel] = null;
     }
-
-    /// This function runs in the background indefinitely.
-    _processAllChannels();
   }
   Future<bool> _managePermissions() async {
     final storagePermission = await Permission.storage.request().isGranted;
@@ -109,7 +106,6 @@ class LoggerServiceInternal {
     switch(channel) {
       case LogChannel.csv:
         _channelFiles[channel] = File('${dir.path}/${DateFormat('yyyy_MM_dd-HH_mm').format(DateTime.now())}-$fileName.csv');
-        await _channelFiles[channel]!.writeAsString('$headerData\n'); //TODO: Replace with "log" method
         break;
       case LogChannel.error:
         _channelFiles[channel] = File('${dir.path}/${DateFormat('yyyy_MM_dd-HH_mm').format(DateTime.now())}-$fileName.log');
@@ -122,9 +118,15 @@ class LoggerServiceInternal {
         break;
     }
 
+    _channelSinks[channel] = _channelFiles[channel]!.openWrite(mode: FileMode.append);
     _channelAccessLevels[channel] = access;
     _channelStates[channel] = ChannelStates.open;
     _channelOwnerUIDs[channel] = _generateOwnerUID();
+
+    if (channel == LogChannel.csv) {
+      log(channel, _channelOwnerUIDs[channel]!, '$headerData\n');
+    }
+
     return _channelOwnerUIDs[channel];
   }
   bool log(LogChannel channel, String ownerUID, String data) {
@@ -132,38 +134,23 @@ class LoggerServiceInternal {
       return false;
     }
     if(_channelStates[channel]! != ChannelStates.closed) {
-      _channelQueues[channel]!.add(data);
+      _channelSinks[channel]!.write(data);
       return true;
     }
     return false;
   }
 
-  Future<void> _processAllChannels() async {
-    while (true) {
-      for (var channel in LogChannel.values) {
-        // Check if the queue is not empty
-        if (_channelQueues[channel]!.isNotEmpty) {
-          // Process the next item in the queue
-          final data = _channelQueues[channel]!.removeLast();
-          await _writeChannelDataToFile(channel, data);
-        }
-      }
-      // Add a small delay to avoid tight polling (to prevent a busy loop)
-      await Future.delayed(Duration(milliseconds: 1));
-    }
+  Future<void> _flushChannelDataToFile({required LogChannel channel}) async {
+    await _channelSinks[channel]!.flush();
   }
-  Future<void> _writeChannelDataToFile(LogChannel channel, String data) async {
-    if(_channelStates[channel]! != ChannelStates.closed) {
-      if(_channelFiles[channel] != null) {
-        await _channelFiles[channel]!.writeAsString('$data\n', mode: FileMode.append);
-      }
+  Future<void> disposeOfChannel({required String ownerId, required LogChannel channel, required bool safeDisposal}) async {
+    if (safeDisposal) {
+      await _flushChannelDataToFile(channel: channel);
     }
-  }
 
-  void _flushChannelDataToFile({required LogChannel channel}) {
-    throw UnimplementedError();
-  }
-  void _disposeOfChannel({required String ownerId, required LogChannel channel, required bool safeDisposal}) {
-    throw UnimplementedError();
+    await _channelSinks[channel]!.close();
+    _channelStates[channel] = ChannelStates.closed;
+    _channelFiles[channel] = null;
+    _channelOwnerUIDs[channel] = null;
   }
 }
