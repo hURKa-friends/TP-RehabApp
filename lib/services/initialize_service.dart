@@ -1,5 +1,6 @@
 import 'internal/initialize_service_internal.dart';
 import 'package:rehab_app/services/models/init_models.dart';
+import 'package:camera/camera.dart';
 
 /// Public API for InitializeService
 /// Public API for LoggerService
@@ -16,11 +17,16 @@ class InitResourcesService {
     _internalService.initialize();
   }
 
-  Future<void> _initializeService() async {
-    await _internalService.initialize();
+  // Public Methods
+  bool? getMultiTouchSupport() {
+    return _internalService.multiTouchSupport();
   }
 
-  // Public Methods
+  Map<CameraDescription?, bool> getCamera() {
+    Future.delayed(Duration(milliseconds: 500));
+    return _internalService.camInfo();
+  }
+
   SensorInfo? getAccel() {
     return _internalService.accelData();
   }

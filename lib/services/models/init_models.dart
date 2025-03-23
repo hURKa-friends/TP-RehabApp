@@ -1,4 +1,5 @@
 import 'package:sensor_manager_android/sensor.dart';
+import 'package:camera/camera.dart';
 
 enum SensorAvailEnum { present, notAvail, unknown }
 
@@ -16,4 +17,8 @@ class SensorInfo {
     this.samplingRate,
     this.resolution,
   });
+}
+
+class CameraDetails {
+  final Map<CameraDescription?, bool> cameraInfo = {};
 }
