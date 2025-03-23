@@ -14,7 +14,7 @@ class PoseDetectionView extends StatelessWidget {
     if (!poseDetectionViewModel.cameraController.value.isInitialized) {
       return Center(child: CircularProgressIndicator()); // Show a loader
     }
-    // return CameraPreview(poseDetectionViewModel.cameraController);
+
     return Stack(
       children: [
         CameraPreview(poseDetectionViewModel.cameraController),
