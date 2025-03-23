@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rehab_app/internal/models/page_model.dart';
+import 'package:rehab_app/models/page_model.dart';
 
 class PageNavigatorViewModel extends ChangeNotifier {
   // Private Fields & Parameters

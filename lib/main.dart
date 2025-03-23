@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // Internals
-import 'package:rehab_app/internal/models/page_model.dart';
-import 'package:rehab_app/internal/view_models/page_navigator_view_model.dart';
-import 'package:rehab_app/internal/views/page_navigator_view.dart';
+import 'package:rehab_app/models/page_model.dart';
+import 'package:rehab_app/services/sensor_service.dart';
+import 'package:rehab_app/view_models/page_navigator_view_model.dart';
+import 'package:rehab_app/views/page_navigator_view.dart';
 // Services
 import 'package:rehab_app/services/logger_service.dart';
 // MVVM application dependencies
@@ -12,6 +13,10 @@ import 'package:rehab_app/view_models/pose_detection_view_model.dart';
 ///
 /// import your MVVM ViewModels here
 ///
+import 'package:rehab_app/view_models/accl_viewmodel.dart';
+import 'package:rehab_app/view_models/gyro_viewmodel.dart';
+import 'package:rehab_app/view_models/lux_viewmodel.dart';
+import 'package:rehab_app/view_models/mag_viewmodel.dart';
 import 'package:rehab_app/view_models/settings_view_model.dart';
 import 'package:rehab_app/views/menu_view.dart';
 
@@ -27,6 +32,7 @@ class ChangeNotifierInjector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoggerService();
+    SensorService();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) =>
@@ -38,6 +44,10 @@ class ChangeNotifierInjector extends StatelessWidget {
         ///
         /// You can add your ViewModels here
         ///
+        ChangeNotifierProvider(create: (context) => AcclViewModel()),
+        ChangeNotifierProvider(create: (context) => GyroViewModel()),
+        ChangeNotifierProvider(create: (context) => MagViewModel()),
+        ChangeNotifierProvider(create: (context) => LuxViewModel()),
         ChangeNotifierProvider(create: (context) => PoseDetectionViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],

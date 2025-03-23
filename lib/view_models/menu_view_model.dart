@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rehab_app/internal/models/page_model.dart';
+import 'package:rehab_app/models/page_model.dart';
+import 'package:rehab_app/views/graph_view.dart';
 ///
 /// import your MVVM views here
 ///
@@ -13,6 +14,7 @@ class MenuViewModel extends ChangeNotifier {
     ///
     /// You can add your pages here
     ///
+    PageModel(icon: Icons.data_thresholding, title: "Graphs", body: GraphView()),
     PageModel(icon: Icons.accessibility_new, title: "Pose detection", body: PoseDetectionView()),
     PageModel(icon: Icons.settings, title: "Settings", body: SettingsView()),
   ];
