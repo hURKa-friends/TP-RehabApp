@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'dart:math';
+import 'package:vector_math/vector_math.dart' as vmath;
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
+
 
 class PoseDetectionViewModel extends ChangeNotifier{
   // Fields
@@ -11,13 +14,12 @@ class PoseDetectionViewModel extends ChangeNotifier{
   late CameraController cameraController;
   late PoseDetector _poseDetector;
   CustomPaint? customPaint;
-  String? _text;
   bool _isBusy = false;
-  //final Function() onUpdate; // Callback function to trigger UI updates
+
   late bool mounted = false;
   bool _canProcess = true;
 
-  late List<Pose> _poses;
+
 
   // Constructor
   PoseDetectionViewModel() {
@@ -40,13 +42,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
     }
     super.dispose();
   }
-
-  // final _orientations = {
-  //   DeviceOrientation.portraitUp: 0,
-  //   DeviceOrientation.landscapeLeft: 90,
-  //   DeviceOrientation.portraitDown: 180,
-  //   DeviceOrientation.landscapeRight: 270,
-  // };
 
   void _initPoseDetector() {
     _poseDetector = PoseDetector(options: PoseDetectorOptions());
@@ -88,6 +83,16 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
     final poses = await _poseDetector.processImage(inputImage);
 
+    double? angleRad = calculateAngleRad(
+                                  poses,
+                                  PoseLandmarkType.rightWrist,
+                                  PoseLandmarkType.rightElbow,
+                                  PoseLandmarkType.rightShoulder);
+    // if (angleRad != null){
+    //   double angleDeg = angleRad * (180 / pi);
+    //   print("angle in elbow: $angleDeg\n");
+    // }
+
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
       final painter = PosePainter(
@@ -109,32 +114,12 @@ class PoseDetectionViewModel extends ChangeNotifier{
     final format = InputImageFormatValue.fromRawValue(image.format.raw);
     // only supported format is nv21 for Android
     if (format == null || format != InputImageFormat.nv21) {
-      print('---------------------- NO NV21 FORMAT -----------------------');
       return null;
     }
-    print('---------------------- NV21 FORMAT -----------------------');
     // since format is constraint to nv21, it only has one plane
     final plane = image.planes.first;
 
-    // final sensorOrientation = _frontCamera.sensorOrientation;
-    // InputImageRotation? rotation;
-    // var rotationCompensation =
-    // _orientations[cameraController.value.deviceOrientation];
-    //
-    // if (rotationCompensation == null) return null;
-    // if (_frontCamera.lensDirection == CameraLensDirection.front) {
-    //   // front-facing
-    //   rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
-    // } else {
-    //   // back-facing
-    //   rotationCompensation =
-    //       (sensorOrientation - rotationCompensation + 360) % 360;
-    // }
-    // rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
-    // if (rotation == null) return null;
-
     // compose InputImage using bytes
-    print('conversion');
     return InputImage.fromBytes(
       bytes: plane.bytes,
       metadata: InputImageMetadata(
@@ -144,8 +129,32 @@ class PoseDetectionViewModel extends ChangeNotifier{
         bytesPerRow: plane.bytesPerRow,
       ),
     );
+  } // _convertCameraImageToInputImage
 
+  double? calculateAngleRad(
+      pose,
+      PoseLandmarkType type1,
+      PoseLandmarkType type2,
+      PoseLandmarkType type3
+      ) {
+    final PoseLandmark joint1 = pose.landmarks[type1]!;
+    final PoseLandmark joint2 = pose.landmarks[type2]!;
+    final PoseLandmark joint3 = pose.landmarks[type3]!;
 
+    if (joint1.x > 0 && joint1.y > 0 &&
+        joint2.x > 0 && joint2.y > 0 &&
+        joint3.x > 0 && joint3.y > 0) {
+      vmath.Vector2 vectorA = vmath.Vector2(joint2.x - joint1.x,
+          joint2.y - joint1.y);
+      vmath.Vector2 vectorB = vmath.Vector2(joint3.x - joint2.x,
+          joint3.y - joint2.y);
+
+      double angleRad = vectorA.angleTo(vectorB);
+
+      return angleRad;
+    } else {
+      return null;
+    }
   }
 
 }
@@ -207,24 +216,6 @@ class PosePainter extends CustomPainter {
         final PoseLandmark joint1 = pose.landmarks[type1]!;
         final PoseLandmark joint2 = pose.landmarks[type2]!;
 
-        final offsetX_back = translateX(
-          joint1.x,
-          size,
-          imageSize,
-          rotation,
-          CameraLensDirection.back,
-        );
-
-        final offsetX_front = translateX(
-          joint1.x,
-          size,
-          imageSize,
-          rotation,
-          CameraLensDirection.front,
-        );
-
-        print("offsetX_back: $offsetX_back \noffsetY_front $offsetX_front\n");
-
         canvas.drawLine(
             Offset(
                 translateX(
@@ -282,7 +273,6 @@ class PosePainter extends CustomPainter {
       paintLine(
           PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
     }
-    print("Pose printer");
   }
 
   double translateX(
@@ -294,7 +284,6 @@ class PosePainter extends CustomPainter {
       ) {
     if (cameraLensDirection == CameraLensDirection.front){
       x = canvasSize.height - x;
-      print("iS: $imageSize.width \ncS: $canvasSize.width \nx: $x");
     }
     switch (rotation) {
       case InputImageRotation.rotation90deg:
