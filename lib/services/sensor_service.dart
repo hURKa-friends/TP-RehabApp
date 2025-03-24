@@ -1,6 +1,5 @@
 import 'package:rehab_app/services/models/sensor_models.dart';
-
-import 'internal/sensor_service_internal.dart';
+import 'sensor_service_internal.dart';
 
 /// Public API for SensorService
 class SensorService {
@@ -31,32 +30,38 @@ class SensorService {
   }
 
   bool startAcclDataStream({required Duration samplingPeriod}) {
+    ///
+    /// start data aquisition and return if it was succesful
+    ///
     return _internalService.initializeAcclStream(samplingPeriod);
   }
   bool startGyroDataStream({required Duration samplingPeriod}) {
-    throw UnimplementedError();
+    return _internalService.initializeGyroStream(samplingPeriod);
   }
   bool startMagDataStream({required Duration samplingPeriod}) {
-    throw UnimplementedError();
+    return _internalService.initializeMagStream(samplingPeriod);
   }
   bool startLuxDataStream() {
-    throw UnimplementedError();
+    return _internalService.initializeLuxStream();
   }
 
-  bool registerAcclDataStream({required Duration samplingPeriod, required Function() callback}) {
-    return _internalService.registerAcclStream(samplingPeriod, callback);
+  bool registerAcclDataStream({required Function() callback}) {
+    return _internalService.registerAcclStream(callback);
   }
-  bool registerGyroDataStream({required Duration samplingPeriod, required Function() callback}) {
-    throw UnimplementedError();
+  bool registerGyroDataStream({required Function() callback}) {
+    return _internalService.registerGyroStream(callback);
   }
-  bool registerMagDataStream({required Duration samplingPeriod, required Function() callback}) {
-    throw UnimplementedError();
+  bool registerMagDataStream({required Function() callback}) {
+    return _internalService.registerMagStream(callback);
   }
   bool registerLuxDataStream({required Function() callback}) {
-    throw UnimplementedError();
+    return _internalService.registerLuxStream(callback);
   }
 
   ImuSensorData getAcclData() {
+    ///
+    /// return last datapoint from acclData
+    ///
     return _internalService.acclData;
   }
   ImuSensorData getGyroData() {
@@ -70,15 +75,18 @@ class SensorService {
   }
 
   bool stopAcclDataStream() {
+    ///
+    /// start data aquisition and unregister callback stop internal datastreams
+    ///
     return _internalService.cancelAcclStream();
   }
   bool stopGyroDataStream() {
-    throw UnimplementedError();
+    return _internalService.cancelGyroStream();
   }
   bool stopMagDataStream() {
-    throw UnimplementedError();
+    return _internalService.cancelMagStream();
   }
   bool stopLuxDataStream() {
-    throw UnimplementedError();
+    return _internalService.cancelLuxStream();
   }
 }
