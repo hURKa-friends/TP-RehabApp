@@ -3,7 +3,7 @@ import 'package:camera/camera.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'dart:math';
-import 'package:vector_math/vector_math.dart' as vmath;
+// import 'package:vector_math/vector_math.dart' as vmath;
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 
 
@@ -71,6 +71,9 @@ class PoseDetectionViewModel extends ChangeNotifier{
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
     if (_isBusy) return; // Skip if already processing a frame
 
+    final stopwatch = Stopwatch();
+    stopwatch.start();
+
     _isBusy = true;
     final format = InputImageFormatValue.fromRawValue(cameraImage.format.raw);
 
@@ -83,15 +86,17 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
     final poses = await _poseDetector.processImage(inputImage);
 
+
     double? angleRad = calculateAngleRad(
                                   poses,
                                   PoseLandmarkType.rightWrist,
                                   PoseLandmarkType.rightElbow,
                                   PoseLandmarkType.rightShoulder);
-    // if (angleRad != null){
-    //   double angleDeg = angleRad * (180 / pi);
-    //   print("angle in elbow: $angleDeg\n");
-    // }
+    if (angleRad != null){
+      double angleDeg = angleRad * (180 / pi);
+      print("angle in elbow: $angleDeg\n");
+    }
+
 
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
@@ -106,6 +111,8 @@ class PoseDetectionViewModel extends ChangeNotifier{
       customPaint = null;
     }
     _isBusy = false;
+    // print(stopwatch.elapsedMilliseconds);
+    stopwatch.stop();
     notifyListeners();
   }
 
@@ -132,28 +139,36 @@ class PoseDetectionViewModel extends ChangeNotifier{
   } // _convertCameraImageToInputImage
 
   double? calculateAngleRad(
-      pose,
-      PoseLandmarkType type1,
-      PoseLandmarkType type2,
-      PoseLandmarkType type3
-      ) {
-    final PoseLandmark joint1 = pose.landmarks[type1]!;
-    final PoseLandmark joint2 = pose.landmarks[type2]!;
-    final PoseLandmark joint3 = pose.landmarks[type3]!;
+      List<Pose> poses, PoseLandmarkType type1, PoseLandmarkType type2, PoseLandmarkType type3) {
+    for (final pose in poses) {
+      final PoseLandmark joint1 = pose.landmarks[type1]!;
+      final PoseLandmark joint2 = pose.landmarks[type2]!;
+      final PoseLandmark joint3 = pose.landmarks[type3]!;
 
-    if (joint1.x > 0 && joint1.y > 0 &&
-        joint2.x > 0 && joint2.y > 0 &&
-        joint3.x > 0 && joint3.y > 0) {
-      vmath.Vector2 vectorA = vmath.Vector2(joint2.x - joint1.x,
-          joint2.y - joint1.y);
-      vmath.Vector2 vectorB = vmath.Vector2(joint3.x - joint2.x,
-          joint3.y - joint2.y);
+      if (joint1.x > 0 &&
+          joint1.y > 0 &&
+          joint2.x > 0 &&
+          joint2.y > 0 &&
+          joint3.x > 0 &&
+          joint3.y > 0) {
+        double v1x = joint1.x - joint2.x;
+        double v1y = joint1.y - joint2.y;
+        double v2x = joint3.x - joint2.x;
+        double v2y = joint3.y - joint2.y;
 
-      double angleRad = vectorA.angleTo(vectorB);
+        double dotProduct = v1x * v2x + v1y * v2y;
 
-      return angleRad;
-    } else {
-      return null;
+        double v1Length = sqrt(v1x * v1x + v1y * v1y);
+        double v2Length = sqrt(v2x * v2x + v2y * v2y);
+
+        if (v1Length == 0 || v2Length == 0) return null;
+
+        double angleRad = acos(dotProduct / (v1Length * v2Length));
+
+        return angleRad;
+      } else {
+        return null;
+      }
     }
   }
 
