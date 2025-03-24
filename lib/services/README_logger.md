@@ -4,16 +4,16 @@ This tutorial covers all of the available functions in file **logger_service.dar
 You can basically see channel as a 'file'.
 
 ### Examples
-Open new _csv_ channel
-`String? ownerId = await openCsvLogChannel(ChannelAccess.private, 'myFile', 'Header1, Header2, Header3');`
+Open new _csv_ channel  
+`String? ownerId = await openCsvLogChannel(ChannelAccess.private, 'myFile', 'Header1, Header2, Header3');`  
 
-Write some data to the _csv_ channel
-`bool wasSuccessful = log(LogChannel.csv, ownerId, 'Some Data');`
+Write some data to the _csv_ channel  
+`bool wasSuccessful = log(LogChannel.csv, ownerId, 'Some Data');`  
 
-Close the _csv_ channel
+Close the _csv_ channel  
 `closeLogChannelSafely(ownerId, LogChannel.csv);`
 
-
+### Functions
 #### `Future<String> openLogChannel({required ChannelAccess access, required String fileName, required LogChannel channel})`
 - This function opens new channel for logging data.
 - **@access** - If others can access this channel. This can either be private, protected or public.
