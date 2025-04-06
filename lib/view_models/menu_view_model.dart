@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rehab_app/models/page_model.dart';
 import 'package:rehab_app/views/graph_view.dart';
+import 'package:rehab_app/views/FMS_phone_pickup_view.dart';
+
 ///
 /// import your MVVM views here
 ///
@@ -10,6 +12,7 @@ class MenuViewModel extends ChangeNotifier {
   // Private Fields & Parameters
   final List<PageModel> _pages = [
     PageModel(icon: Icons.home, title: "Home", body: Placeholder()),
+    PageModel(icon: Icons.motion_photos_on, title: "Motion", body: MotionDetectionPage()),
     ///
     /// You can add your pages here
     ///
