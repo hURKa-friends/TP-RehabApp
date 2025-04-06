@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'dart:math';
 // import 'package:vector_math/vector_math.dart' as vmath;
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-
+import '../models/pose_detection_model.dart';
 
 class PoseDetectionViewModel extends ChangeNotifier{
   // Fields
@@ -18,6 +18,9 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
   late bool mounted = false;
   bool _canProcess = true;
+
+  int repetitions = 0;
+  double currentAngleShoulder = 0;
 
   // Constructor
   PoseDetectionViewModel() {
@@ -68,8 +71,8 @@ class PoseDetectionViewModel extends ChangeNotifier{
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
     if (_isBusy) return; // Skip if already processing a frame
 
-    final stopwatch = Stopwatch();
-    stopwatch.start();
+    // final stopwatch = Stopwatch();
+    // stopwatch.start();
 
     _isBusy = true;
     final format = InputImageFormatValue.fromRawValue(cameraImage.format.raw);
@@ -90,9 +93,9 @@ class PoseDetectionViewModel extends ChangeNotifier{
                                   PoseLandmarkType.rightElbow,
                                   PoseLandmarkType.rightShoulder);
     if (angleRad != null){
-      double angleDeg = angleRad * (180 / pi);
-      print("angle in elbow: $angleDeg\n");
+      currentAngleShoulder = angleRad * (180 / pi);
     }
+
 
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
@@ -108,7 +111,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
     }
     _isBusy = false;
     // print(stopwatch.elapsedMilliseconds);
-    stopwatch.stop();
+    // stopwatch.stop();
     notifyListeners();
   }
 
@@ -339,3 +342,4 @@ class PosePainter extends CustomPainter {
     return oldDelegate.imageSize != imageSize || oldDelegate.poses != poses;
   }
 }
+

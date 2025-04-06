@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 
 class ShoulderExercise {
-  final Map<List<PoseLandmarkType>, AngleLimitsDeg> jointLimits;
+  final List<List<PoseLandmarkType>> jointAngleLocations;
+  final List<AngleLimitsDeg> jointLimits;
   final double repetitions;
 
   ShoulderExercise({
+    required this.jointAngleLocations,
     required this.jointLimits,
     required this.repetitions,
   });
@@ -13,16 +15,29 @@ class ShoulderExercise {
 
 class ShoulderForwardElevationActive extends ShoulderExercise {
 
-  List<PoseLandmarkType> rightShoulderPoints = [
+  static List<PoseLandmarkType> rightShoulderPoints = [
     PoseLandmarkType.rightHip,
     PoseLandmarkType.rightShoulder,
     PoseLandmarkType.rightElbow,
   ];
 
+  static List<List<PoseLandmarkType>> anglePoints = [
+    rightShoulderPoints,
+  ];
+
+  static List<AngleLimitsDeg> limits = [
+    AngleLimitsDeg(
+        upper: 180,
+        lower: 20,
+        tolerance: 10,
+        ),
+  ];
+
   ShoulderForwardElevationActive()
-    : super(jointLimits: Map<>,
-          repetitions: 5,
-  );
+    : super(jointAngleLocations: anglePoints,
+            jointLimits: limits,
+            repetitions: 5,
+    ); //super
 }
 
 class AngleLimitsDeg {

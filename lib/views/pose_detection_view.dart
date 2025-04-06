@@ -18,8 +18,41 @@ class PoseDetectionView extends StatelessWidget {
     return Stack(
       children: [
         CameraPreview(poseDetectionViewModel.cameraController),
+
         if (poseDetectionViewModel.customPaint != null)
           Positioned.fill(child: poseDetectionViewModel.customPaint!),
+
+        Positioned(
+          top: 16,
+          left: 16,
+          right: 16, // ADD THIS to give width constraints
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            color: Colors.black54,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+              children: [
+                Text(
+                  'Reps: ${poseDetectionViewModel.repetitions}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8), // Space between text widgets
+                Text(
+                  'Shoulder Angle: ${poseDetectionViewModel.currentAngleShoulder}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
