@@ -19,8 +19,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
   late bool mounted = false;
   bool _canProcess = true;
 
-
-
   // Constructor
   PoseDetectionViewModel() {
     _initialize();
@@ -34,6 +32,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
   @override // Deconstructor
   void dispose() {
+    print('Disposing PoseDetectionViewModel...');
     _canProcess = false;
     _poseDetector.close();
     if (cameraController.value.isInitialized) {
@@ -58,8 +57,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
             ? ImageFormatGroup.nv21
             : ImageFormatGroup.bgra8888);
     await cameraController.initialize();
-
-    // notifyListeners();
 
     if(cameraController.value.isInitialized){
       cameraController.startImageStream((CameraImage cameraImage) {
@@ -96,7 +93,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
       double angleDeg = angleRad * (180 / pi);
       print("angle in elbow: $angleDeg\n");
     }
-
 
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
@@ -139,7 +135,10 @@ class PoseDetectionViewModel extends ChangeNotifier{
   } // _convertCameraImageToInputImage
 
   double? calculateAngleRad(
-      List<Pose> poses, PoseLandmarkType type1, PoseLandmarkType type2, PoseLandmarkType type3) {
+      List<Pose> poses,
+      PoseLandmarkType type1,
+      PoseLandmarkType type2,
+      PoseLandmarkType type3) {
     for (final pose in poses) {
       final PoseLandmark joint1 = pose.landmarks[type1]!;
       final PoseLandmark joint2 = pose.landmarks[type2]!;
@@ -170,9 +169,8 @@ class PoseDetectionViewModel extends ChangeNotifier{
         return null;
       }
     }
-  }
-
-}
+  }   // calculateAngleRad
+}   // PoseDetectionViewModel
 
 class PosePainter extends CustomPainter {
   PosePainter(
