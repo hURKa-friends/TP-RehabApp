@@ -1,5 +1,5 @@
 import 'package:rehab_app/services/models/sensor_models.dart';
-import 'sensor_service_internal.dart';
+import 'internal/sensor_service_internal.dart';
 
 /// Public API for SensorService
 class SensorService {
@@ -30,9 +30,6 @@ class SensorService {
   }
 
   bool startAcclDataStream({required Duration samplingPeriod}) {
-    ///
-    /// start data aquisition and return if it was succesful
-    ///
     return _internalService.initializeAcclStream(samplingPeriod);
   }
   bool startGyroDataStream({required Duration samplingPeriod}) {
@@ -59,9 +56,6 @@ class SensorService {
   }
 
   ImuSensorData getAcclData() {
-    ///
-    /// return last datapoint from acclData
-    ///
     return _internalService.acclData;
   }
   ImuSensorData getGyroData() {
@@ -75,9 +69,6 @@ class SensorService {
   }
 
   bool stopAcclDataStream() {
-    ///
-    /// start data aquisition and unregister callback stop internal datastreams
-    ///
     return _internalService.cancelAcclStream();
   }
   bool stopGyroDataStream() {
