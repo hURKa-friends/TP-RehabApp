@@ -1,5 +1,5 @@
-import 'package:rehab_app/services/models/sensor_models.dart';
-import 'internal/sensor_service_internal.dart';
+import 'package:rehab_app/models/sensor_models.dart';
+import '../internal/sensor_service_internal.dart';
 
 /// Public API for SensorService
 class SensorService {
