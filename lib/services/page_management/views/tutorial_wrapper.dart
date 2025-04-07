@@ -98,6 +98,7 @@ class _TutorialWrapperState extends State<TutorialWrapper> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: SingleChildScrollView(
+                      controller: _scrollController,
                       child: Text(
                         currentStep.description,
                         textAlign: TextAlign.justify,
