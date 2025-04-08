@@ -113,9 +113,6 @@ class FooView extends StatelessPage {
 ---
 ### API Documentation
 
-> [!TIP]
-> Recommended ONLY for `event`, `error` channel types.
-
 > #### Future<String?> openLogChannel({required ChannelAccess access, required String fileName, required LogChannel channel})
 > Function that opens a new channel of type `LogChannel` for data logging.
 > - **@access** - Required input argument that specifies `ChannelAccess` property of newly opened channel.
@@ -123,23 +120,23 @@ class FooView extends StatelessPage {
 > - **@channel** - Required input argument that specifies what type of channel you want to create. This can either be `csv`, `error`, `event` or `plain`. The file will be saved in corresponding directory.
 > - **@returns** - Return parameter of type `String` containing generated unique ownerId.
 
+> [!TIP]
+> Recommended ONLY for `event`, `error` channel types.
+---
 > #### Future<String?> openCsvLogChannel({required ChannelAccess access, required String fileName, required String headerData})
 > Function that opens a new channel of type `csv` for data logging.
 > - **@access** - Required input argument that specifies `ChannelAccess` property of newly opened channel.
 > - **@fileName** - Required input argument that specifies name of created file. Every filename starts with current DateTime in `yyyy_MM_dd-HH_mm` format.
 > - **@headerData** - Required input argument that will be used as CSV header on the first line in the csv file. e.g. `Time, X, Y, Z`.
 > - **@returns** - Return parameter of type `String` containing generated unique ownerId.
-
+---
 > #### Future<String?> openPlainLogChannel({required ChannelAccess access, required String fileName, String subChannel = ""})
 > Function that opens a new channel of type `plain` for data logging.
 > - **@access** - Required input argument that specifies `ChannelAccess` property of newly opened channel.
 > - **@fileName** - Required input argument that specifies name of created file. Every filename starts with current DateTime in `yyyy_MM_dd-HH_mm` format.
 > - **subChannel** - **Optional** input argument that will be used as additional directory subfolder name. 
 > - **@returns** - Return parameter of type `String` containing generated unique ownerId.
-
-> [!CAUTION]
-> If you try to write to un-opened channel it may cause issues.
-
+---
 > #### bool log({required LogChannel channel, required String ownerId, required String data})
 > This function logs data to specified `LogChannel` channel.
 > - **@channel** - Required input argument `LogChannel` where you want to log data.
@@ -147,15 +144,18 @@ class FooView extends StatelessPage {
 > - **@data** - Required input argument of data to log into file.
 > - **@returns** - True if logging was successful. Returns false otherwise _(e.g. if the channel is closed)_.
 
+> [!CAUTION]
+> If you try to write to un-opened channel it may cause issues.
+---
 >#### void closeLogChannelSafely({required String ownerId, required LogChannel channel})
 > This function closes opened channel safely. Safely means it flushes _Stream_ into file before closing it.
 > - **@channel** - Required input argument `LogChannel` which you want to close.
 > - **@ownerId** - Required input argument of unique ownerId that you received when opening a file.
-
-> [!WARNING] 
-> This closes channel without flushing the data. Data loss can happen.
-
+---
 >#### void closeLogChannel({required String ownerId, required LogChannel channel})
 >  This function closes opened channel. It doesn't flush data from _Stream_ into file, meaning any unflushed data will be lost.
 > - **@channel** - Required input argument `LogChannel` which you want to close.
 > - **@ownerId** - Required input argument of unique ownerId that you received when opening a file.
+
+> [!WARNING]
+> This closes channel without flushing the data. Data loss can happen.
