@@ -10,7 +10,7 @@ Internally in `LoggerServiceInternal` every channel is represented as separate `
 Therefore **you can think of a channel as a "FileStream"** of some sort. The main difference is that 
 these "FileStreams" have custom features to enhance `LoggerService` functionality.
 
-### 1. Multiple channels
+### Multiple channels
 As was mentioned `LoggerService` provides multiple channels each having its own function.
 ```dart
 enum LogChannel { csv, error, event, plain }
@@ -22,7 +22,7 @@ enum LogChannel { csv, error, event, plain }
 |    event     | Channel that creates local `.log` file in `app\logger\event\` folder intended for event logs.                                                                                                                                        |
 |    plain     | Channel that creates local `.txt` file in `app\logger\plain\subfolder` folder. Subfolder location is **required** when opening this channel. This channel is intended for other use cases when provided channels are not sufficient. |
 
-### 2. Channel access
+### Channel access
 `LoggerService` uses "Channel Ownership" and simple "Access Management" to ensure channel security.
 When developer opens channel he gets `UOID` (Unique Owner ID) that paired with channel access setting
 can be used to access and or manage the channel.
@@ -111,7 +111,7 @@ class FooView extends StatelessPage {
 ```
 
 ---
-### API Documentation
+## API Documentation
 
 > #### Future<String?> openLogChannel({required ChannelAccess access, required String fileName, required LogChannel channel})
 > Function that opens a new channel of type `LogChannel` for data logging.
