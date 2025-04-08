@@ -110,7 +110,6 @@ class FooView extends StatelessPage {
 }
 ```
 
----
 ## API Documentation
 
 > [!WARNING]

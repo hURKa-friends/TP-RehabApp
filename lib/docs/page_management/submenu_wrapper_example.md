@@ -98,7 +98,7 @@ class MenuViewModel extends ChangeNotifier {
 
 > [!TIP]
 > If you want to create choice menu for your final page that will change its behaviour based on the 
-> selection can use `FooView's` constructor to pass attributes changing its behaviour. 
+> selection you can use `FooView's` constructor to pass attributes changing its behaviour. 
 ```dart
 import 'package:flutter/material.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
