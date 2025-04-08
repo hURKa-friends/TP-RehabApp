@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rehab_app/services/page_management/models/stateless_page_model.dart';
 import 'package:rehab_app/view_models/settings_view_model.dart';
 
-class SettingsView extends StatelessWidget {
-  const SettingsView({super.key});
+class SettingsView extends StatelessPage {
+  const SettingsView({
+    super.key,
+    required super.icon,
+    required super.title,
+    super.subPages,
+    super.tutorialSteps
+  });
 
   @override
-  Widget build(BuildContext context) {
+  void initPage(BuildContext context) {
+    // Intentionally left empty as no setup is needed here
+  }
+
+  @override
+  void closePage(BuildContext context) {
+    // Intentionally left empty as no cleanup is needed here
+  }
+
+  @override
+  Widget buildPage(BuildContext context) {
     var settingsViewModel = context.watch<SettingsViewModel>();
     return Padding(
       padding: EdgeInsets.only(top: 16.0),
