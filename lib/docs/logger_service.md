@@ -113,6 +113,9 @@ class FooView extends StatelessPage {
 ---
 ## API Documentation
 
+> [!WARNING]
+> This section was Semi-auto generated. If you encounter any issues report them.
+
 > #### Future<String?> openLogChannel({required ChannelAccess access, required String fileName, required LogChannel channel})
 > Function that opens a new channel of type `LogChannel` for data logging.
 > - **@access** - Required input argument that specifies `ChannelAccess` property of newly opened channel.

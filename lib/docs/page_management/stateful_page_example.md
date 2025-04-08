@@ -92,6 +92,7 @@ class ChangeNotifierInjector extends StatelessWidget {
         ///
         /// Add your ViewModels here
         ///
+        ChangeNotifierProvider(create: (context) => FooViewModel()),
         ChangeNotifierProvider(create: (context) => AcclViewModel()),
         ChangeNotifierProvider(create: (context) => GyroViewModel()),
         ChangeNotifierProvider(create: (context) => MagViewModel()),
