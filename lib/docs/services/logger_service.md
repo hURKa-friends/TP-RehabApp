@@ -1,3 +1,4 @@
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)
 # Logger Service documentation
 `LoggerService` is a singleton class that provides public service API for `LoggerServiceInternal`
 that implements asynchronous logging operations using `IOSink` with custom `LogChannel` and 
@@ -109,6 +110,12 @@ class FooView extends StatelessPage {
 }
 ```
 
+---
+
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)
+
+---
+
 ## API Documentation
 
 > [!WARNING]
@@ -160,3 +167,5 @@ class FooView extends StatelessPage {
 
 > [!WARNING]
 > This closes channel without flushing the data. Data loss can happen.
+
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)

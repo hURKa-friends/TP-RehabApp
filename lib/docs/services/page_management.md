@@ -1,3 +1,4 @@
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)
 # Page Management documentation
 `PageManagement` is collection of abstract, view, view model, model classes and page navigator MVVM
 component that ensures correct page stack management with page initialization, closing, tutorial
@@ -56,6 +57,11 @@ This section provides links to examples that show you how to use `PageManagement
 - [Using `PageManagement` directly in your code](./page_management/direct_pagemanagment_example.md)
 
 ---
+
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)
+
+---
+
 ## API Documentation
 
 > [!WARNING]
@@ -155,3 +161,5 @@ View model that handles custom stack-based navigation between `BasePage`s. Track
 > - **selectPage(BuildContext context, BasePage page)** - Pushes a new page onto the stack, calls its `initPage()` method, and sets it as the current page. Triggers UI updates via `notifyListeners()`.
 > - **goBack(BuildContext context)** - Pops the current page off the stack, calls its `closePage()` method, and updates the current page to the previous one. No action taken if already at root.
 > - **backToRoot(BuildContext context)** - Repeatedly calls `goBack()` until the stack is reduced to a single root page.
+
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)

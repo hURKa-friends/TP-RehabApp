@@ -1,3 +1,4 @@
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)
 # Sensor Service documentation
 `SensorService` is a singleton class that provides public service API for `SensorServiceInternal`
 that wraps asynchronous periodic data polling from sensors (`accl`,`gyro`,`mag`,`lux`) through data
@@ -72,6 +73,12 @@ class FooView extends StatelessPage {
   }
 }
 ```
+
+---
+
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)
+
+---
 
 ## API Documentation
 > [!WARNING]
@@ -171,3 +178,5 @@ class FooView extends StatelessPage {
 > #### bool stopLuxDataStream()
 > Stops the lux (light) sensor data stream.
 > - **@returns** - Returns `true` if the stream was successfully stopped, otherwise `false`.
+
+[Back to **Documentation for `Tele-Rehabilitation` mobile application and its components**](../rehab_app.md)
