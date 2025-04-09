@@ -78,31 +78,31 @@ class SensorServiceInternal {
     }
   }
 
-  bool registerAcclStream (Function() callback) {
+  bool registerAcclStream (Function(ImuSensorData) callback) {
     acclSubscription = _acclStreamController.stream.listen((data) {
-      callback();
+      callback(data);
     });
     return true;
   }
 
-  bool registerGyroStream (Function() callback) {
+  bool registerGyroStream (Function(ImuSensorData) callback) {
     gyroSubscription = _gyroStreamController.stream.listen((data) {
-      callback();
+      callback(data);
     });
     return true;
   }
 
-  bool registerMagStream (Function() callback) {
+  bool registerMagStream (Function(ImuSensorData) callback) {
     acclSubscription = _magStreamController.stream.listen((data) {
-      callback();
+      callback(data);
     });
     return true;
   }
 
-  bool registerLuxStream (Function() callback) {
+  bool registerLuxStream (Function(LuxSensorData) callback) {
     try {
       luxSubscription = _luxStreamController.stream.listen((data) {
-        callback();
+        callback(data);
       });
     return true;
     } catch (e) {

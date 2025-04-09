@@ -12,14 +12,14 @@ class AcclViewModel extends ChangeNotifier {
 
   void registerSensorService() {
     SensorService().startAcclDataStream(samplingPeriod: Duration(milliseconds: 50));
-    SensorService().registerAcclDataStream(callback: onDataChanged);
+    SensorService().registerAcclDataStream(callback: (ImuSensorData data) => onDataChanged(data));
   }
 
-  void onDataChanged() {
+  void onDataChanged(ImuSensorData data) {
     if (imuData.length > 100) {
       imuData.removeAt(0);
     }
-    imuData.add(SensorService().getAcclData());
+    imuData.add(data);
     index++;
     notifyListeners();
   }

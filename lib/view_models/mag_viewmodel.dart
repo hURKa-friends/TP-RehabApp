@@ -12,14 +12,14 @@ class MagViewModel extends ChangeNotifier {
 
   void registerSensorService() {
     SensorService().startMagDataStream(samplingPeriod: Duration(milliseconds: 50));
-    SensorService().registerMagDataStream(callback: onDataChanged);
+    SensorService().registerMagDataStream(callback: (ImuSensorData data) => onDataChanged(data));
   }
 
-  void onDataChanged() {
+  void onDataChanged(ImuSensorData data) {
     if (imuData.length > 100) {
       imuData.removeAt(0);
     }
-    imuData.add(SensorService().getMagData());
+    imuData.add(data);
     index++;
     notifyListeners();
   }

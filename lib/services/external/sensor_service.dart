@@ -42,16 +42,16 @@ class SensorService {
     return _internalService.initializeLuxStream();
   }
 
-  bool registerAcclDataStream({required Function() callback}) {
+  bool registerAcclDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerAcclStream(callback);
   }
-  bool registerGyroDataStream({required Function() callback}) {
+  bool registerGyroDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerGyroStream(callback);
   }
-  bool registerMagDataStream({required Function() callback}) {
+  bool registerMagDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerMagStream(callback);
   }
-  bool registerLuxDataStream({required Function() callback}) {
+  bool registerLuxDataStream({required Function(LuxSensorData) callback}) {
     return _internalService.registerLuxStream(callback);
   }
 

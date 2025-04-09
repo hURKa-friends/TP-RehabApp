@@ -14,15 +14,15 @@ class LuxViewModel extends ChangeNotifier {
 
   void registerSensorService() {
     SensorService().startLuxDataStream();
-    SensorService().registerLuxDataStream(callback: onDataChanged);
+    SensorService().registerLuxDataStream(callback: (LuxSensorData data) => onDataChanged(data));
     timer = Timer.periodic(const Duration(milliseconds: 50), updateUI);
   }
 
-  void onDataChanged() {
+  void onDataChanged(LuxSensorData data) {
     if (luxData.length > 100) {
       luxData.removeAt(0);
     }
-    luxData.add(SensorService().getLuxData());
+    luxData.add(data);
     index++;
     notifyListeners();
   }

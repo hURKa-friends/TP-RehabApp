@@ -12,14 +12,14 @@ class GyroViewModel extends ChangeNotifier {
 
   void registerSensorService() {
     SensorService().startGyroDataStream(samplingPeriod: Duration(milliseconds: 50));
-    SensorService().registerGyroDataStream(callback: onDataChanged);
+    SensorService().registerGyroDataStream(callback: (ImuSensorData data) => onDataChanged(data));
   }
 
-  void onDataChanged() {
+  void onDataChanged(ImuSensorData data) {
     if (imuData.length > 100) {
       imuData.removeAt(0);
     }
-    imuData.add(SensorService().getGyroData());
+    imuData.add(data);
     index++;
     notifyListeners();
   }
