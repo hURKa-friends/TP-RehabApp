@@ -4,7 +4,6 @@ that implements asynchronous logging operations using `IOSink` with custom `LogC
 `ChannelAccess` logic. This allows developers to simply log multiple streams of data without doing
 necessary file management whilst keeping some channel access functions.
 
-
 ## Technical Information
 Internally in `LoggerServiceInternal` every channel is represented as separate `IOSink`-`File` pair.
 Therefore **you can think of a channel as a "FileStream"** of some sort. The main difference is that 
