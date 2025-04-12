@@ -1,5 +1,5 @@
-import 'package:rehab_app/services/models/sensor_models.dart';
-import 'sensor_service_internal.dart';
+import 'package:rehab_app/models/sensor_models.dart';
+import '../internal/sensor_service_internal.dart';
 
 /// Public API for SensorService
 class SensorService {
@@ -30,9 +30,6 @@ class SensorService {
   }
 
   bool startAcclDataStream({required Duration samplingPeriod}) {
-    ///
-    /// start data aquisition and return if it was succesful
-    ///
     return _internalService.initializeAcclStream(samplingPeriod);
   }
   bool startGyroDataStream({required Duration samplingPeriod}) {
@@ -45,23 +42,20 @@ class SensorService {
     return _internalService.initializeLuxStream();
   }
 
-  bool registerAcclDataStream({required Function() callback}) {
+  bool registerAcclDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerAcclStream(callback);
   }
-  bool registerGyroDataStream({required Function() callback}) {
+  bool registerGyroDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerGyroStream(callback);
   }
-  bool registerMagDataStream({required Function() callback}) {
+  bool registerMagDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerMagStream(callback);
   }
-  bool registerLuxDataStream({required Function() callback}) {
+  bool registerLuxDataStream({required Function(LuxSensorData) callback}) {
     return _internalService.registerLuxStream(callback);
   }
 
   ImuSensorData getAcclData() {
-    ///
-    /// return last datapoint from acclData
-    ///
     return _internalService.acclData;
   }
   ImuSensorData getGyroData() {
@@ -75,9 +69,6 @@ class SensorService {
   }
 
   bool stopAcclDataStream() {
-    ///
-    /// start data aquisition and unregister callback stop internal datastreams
-    ///
     return _internalService.cancelAcclStream();
   }
   bool stopGyroDataStream() {

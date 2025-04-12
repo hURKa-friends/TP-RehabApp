@@ -1,25 +1,29 @@
+// System and External dependencies
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// Internals
-import 'package:rehab_app/models/page_model.dart';
-import 'package:rehab_app/services/sensor_service.dart';
-import 'package:rehab_app/view_models/page_navigator_view_model.dart';
-import 'package:rehab_app/views/page_navigator_view.dart';
-// Services
-import 'package:rehab_app/services/logger_service.dart';
+
+// App core dependencies
+import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
+import 'package:rehab_app/services/page_management/views/page_navigator_view.dart';
+import 'package:rehab_app/views/menu_view.dart';
+
+// Service dependencies
+import 'package:rehab_app/services/external/logger_service.dart';
+import 'package:rehab_app/services/external/sensor_service.dart';
+
 // MVVM application dependencies
 import 'package:rehab_app/view_models/menu_view_model.dart';
 import 'package:rehab_app/view_models/pose_detection_view_model.dart';
 ///
-/// import your MVVM ViewModels here
+/// Import your MVVM ViewModels here
 ///
 import 'package:rehab_app/view_models/accl_viewmodel.dart';
 import 'package:rehab_app/view_models/gyro_viewmodel.dart';
 import 'package:rehab_app/view_models/lux_viewmodel.dart';
 import 'package:rehab_app/view_models/mag_viewmodel.dart';
 import 'package:rehab_app/view_models/settings_view_model.dart';
-import 'package:rehab_app/views/menu_view.dart';
 
+// Useful defines
 final String baseAppDirectoryPath = '/storage/emulated/0/RehabApp';
 
 void main() {
@@ -31,18 +35,18 @@ class ChangeNotifierInjector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ///
+    /// Initialize all services here
+    ///
     LoggerService();
     SensorService();
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) =>
-            PageNavigatorViewModel(
-                PageModel(title: "App menu", icon:Icons.home, body: MenuView())
-            ),
-        ),
+        ChangeNotifierProvider(create: (context) => PageNavigatorViewModel(context,
+            MenuView(icon: Icons.home, title: "App Menu"))),
         ChangeNotifierProvider(create: (context) => MenuViewModel()),
         ///
-        /// You can add your ViewModels here
+        /// Add your ViewModels here
         ///
         ChangeNotifierProvider(create: (context) => AcclViewModel()),
         ChangeNotifierProvider(create: (context) => GyroViewModel()),
