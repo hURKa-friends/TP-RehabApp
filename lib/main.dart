@@ -52,7 +52,7 @@ class ChangeNotifierInjector extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => GyroViewModel()),
         ChangeNotifierProvider(create: (context) => MagViewModel()),
         ChangeNotifierProvider(create: (context) => LuxViewModel()),
-        ChangeNotifierProvider(create: (context) => PoseDetectionViewModel()),
+        // ChangeNotifierProvider(create: (context) => PoseDetectionViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],
       child: MyMaterialApp(),

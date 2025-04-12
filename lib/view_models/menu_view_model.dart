@@ -4,6 +4,7 @@ import 'package:rehab_app/services/page_management/models/tutorial_step_model.da
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
 import 'package:rehab_app/views/example_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
+import 'package:rehab_app/views/pose_detection/pose_detection_view.dart';
 ///
 /// import your MVVM views here
 ///
@@ -64,7 +65,25 @@ class MenuViewModel extends ChangeNotifier {
         ),
       ],
     ),
-
+    // Pose detection exercise tutorials
+    SubMenuPageWrapper(icon: Icons.accessibility_new, title: "Pose detection",
+      subPages: [
+        SubMenuPageWrapper(icon: Icons.menu, title: "Rehabilitácia ramena",
+          subPages: [
+            PoseDetectionView(icon: Icons.accessibility_new, title: "Cvik 1",
+              exerciseName:"ShoulderForwardElevationActive",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/pose_detection/WIP_image.png',
+                  heading: 'This is fancy heading...',
+                  description: 'Amazing description...',
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
     SettingsView(icon: Icons.settings, title: "Settings"),
   ];
 
