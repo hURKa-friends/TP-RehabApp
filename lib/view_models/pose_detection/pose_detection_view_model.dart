@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'dart:math';
 // import 'package:vector_math/vector_math.dart' as vmath;
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-import '../models/pose_detection_model.dart';
+import '../../models/pose_detection_model.dart';
 
 class PoseDetectionViewModel extends ChangeNotifier{
   // Fields

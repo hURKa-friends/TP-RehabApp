@@ -13,7 +13,7 @@ import 'package:rehab_app/services/external/sensor_service.dart';
 
 // MVVM application dependencies
 import 'package:rehab_app/view_models/menu_view_model.dart';
-import 'package:rehab_app/view_models/pose_detection_view_model.dart';
+import 'package:rehab_app/view_models/pose_detection/pose_detection_view_model.dart';
 ///
 /// Import your MVVM ViewModels here
 ///

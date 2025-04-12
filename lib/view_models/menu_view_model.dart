@@ -64,6 +64,7 @@ class MenuViewModel extends ChangeNotifier {
         ),
       ],
     ),
+
     SettingsView(icon: Icons.settings, title: "Settings"),
   ];
 

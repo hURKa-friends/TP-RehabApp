@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
-import 'package:rehab_app/view_models/pose_detection_view_model.dart';
+import 'package:rehab_app/view_models/pose_detection/pose_detection_view_model.dart';
 
 class PoseDetectionView extends StatelessWidget {
   /// Default Constructor
