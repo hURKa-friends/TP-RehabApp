@@ -1,4 +1,4 @@
-import 'internal/initialize_service_internal.dart';
+import '../internal/initialize_service_internal.dart';
 
 /// Public API for InitializeService
 /// Public API for LoggerService

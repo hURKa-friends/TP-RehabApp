@@ -1,24 +1,55 @@
 import 'package:flutter/material.dart';
-import 'gyro_view.dart';
-import 'accl_view.dart';
-import 'lux_view.dart';
-import 'mag_view.dart';
+import 'package:provider/provider.dart';
+import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
+import 'package:rehab_app/views/gyro_view.dart';
+import 'package:rehab_app/views/accl_view.dart';
+import 'package:rehab_app/views/lux_view.dart';
+import 'package:rehab_app/views/mag_view.dart';
+import 'package:rehab_app/view_models/gyro_viewmodel.dart';
+import 'package:rehab_app/view_models/accl_viewmodel.dart';
+import 'package:rehab_app/view_models/lux_viewmodel.dart';
+import 'package:rehab_app/view_models/mag_viewmodel.dart';
 
 enum Graphs { gyro, accl, mag, lux }
 
-class GraphView extends StatefulWidget {
-  //const GraphView({super.key});
+class GraphView extends StatefulPage {
   final Graphs graphs = Graphs.gyro;
 
-  const GraphView({super.key});
-
+  const GraphView({
+    super.key,
+    required super.icon,
+    required super.title
+  });
 
   @override
-  State<StatefulWidget> createState() => _GraphViewState();
+  void initPage(BuildContext context) {
+    var gyroViewModel = Provider.of<GyroViewModel>(context, listen: false);
+    var acclViewModel = Provider.of<AcclViewModel>(context, listen: false);
+    var magViewModel = Provider.of<MagViewModel>(context, listen: false);
+    var luxViewModel = Provider.of<LuxViewModel>(context, listen: false);
+    gyroViewModel.registerSensorService();
+    acclViewModel.registerSensorService();
+    magViewModel.registerSensorService();
+    luxViewModel.registerSensorService();
+  }
+
+  @override
+  void closePage(BuildContext context) {
+    var gyroViewModel = Provider.of<GyroViewModel>(context, listen: false);
+    var acclViewModel = Provider.of<AcclViewModel>(context, listen: false);
+    var magViewModel = Provider.of<MagViewModel>(context, listen: false);
+    var luxViewModel = Provider.of<LuxViewModel>(context, listen: false);
+    gyroViewModel.onClose();
+    acclViewModel.onClose();
+    magViewModel.onClose();
+    luxViewModel.onClose();
+  }
+
+  @override
+  GraphViewState createState() => GraphViewState();
 }
 
-
-class _GraphViewState extends State<GraphView> {
+class GraphViewState extends StatefulPageState {
   Set<Graphs> _selected = {Graphs.gyro};
   Widget _body = GyroView();
 
@@ -26,6 +57,7 @@ class _GraphViewState extends State<GraphView> {
     setState(() {
       _selected = newSelection;
       if (_selected.first == Graphs.gyro) {
+
         _body = GyroView();
       } else if (_selected.first == Graphs.accl) {
         _body = AcclView();
@@ -38,7 +70,7 @@ class _GraphViewState extends State<GraphView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildPage(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Column(
@@ -66,9 +98,8 @@ class _GraphViewState extends State<GraphView> {
               selected: _selected,
               onSelectionChanged: updateSelected,
             ),
-         _body,
+            _body,
           ],
-
         ),
       ),
     );
