@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rehab_app/models/pose_detection/pose_detection_model.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
@@ -71,7 +72,7 @@ class MenuViewModel extends ChangeNotifier {
         SubMenuPageWrapper(icon: Icons.menu, title: "Rehabilitácia ramena",
           subPages: [
             PoseDetectionView(icon: Icons.accessibility_new, title: "Cvik 1",
-              exerciseName:"ShoulderForwardElevationActive",
+              exerciseType: ExerciseType.shoulderAbductionActive,
               tutorialSteps: [
                 TutorialStep(
                   assetURI: 'assets/pose_detection/WIP_image.png',

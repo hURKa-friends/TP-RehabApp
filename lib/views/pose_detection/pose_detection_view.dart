@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
+import 'package:rehab_app/models/pose_detection/pose_detection_model.dart';
 
 import 'package:rehab_app/view_models/pose_detection/pose_detection_view_model.dart';
 
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 
 class PoseDetectionView extends StatefulPage {
+  final ExerciseType exerciseType;
+
   const PoseDetectionView({
     super.key,
     required super.icon,
     required super.title,
-    required exerciseName,
+    required this.exerciseType,
     super.tutorialSteps
   });
 
   @override
   void initPage(BuildContext context) {
-    // Intentionally left empty as no setup is needed here
+    var poseDetectionViewModel = Provider.of<PoseDetectionViewModel>(context, listen: false);
+    poseDetectionViewModel.setExercise(exerciseType);
+    // poseDetectionViewModel.onInit();
   }
 
   @override
   void closePage(BuildContext context) {
-    // Intentionally left empty as no cleanup is needed here
+    // var poseDetectionViewModel = Provider.of<PoseDetectionViewModel>(context, listen: false);
+    // poseDetectionViewModel.onClose();
   }
 
   @override
@@ -47,7 +53,6 @@ class PoseDetectionViewState extends StatefulPageState {
   @override
   Widget buildPage(BuildContext context) {
     var poseDetectionViewModel = context.watch<PoseDetectionViewModel>();
-
     return Stack(
       children: [
         if (poseDetectionViewModel.cameraController.value.isInitialized)

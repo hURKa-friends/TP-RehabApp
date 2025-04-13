@@ -3,9 +3,13 @@ import 'package:camera/camera.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'dart:math';
-// import 'package:vector_math/vector_math.dart' as vmath;
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-import '../../models/pose_detection_model.dart';
+import 'package:rehab_app/services/internal/logger_service_internal.dart';
+import '../../models/pose_detection/pose_detection_model.dart';
+import '../../services/external/logger_service.dart';
+
+// enum LogChannel { csv, error, event, plain }
+// enum ChannelAccess { public, protected, private }
 
 class PoseDetectionViewModel extends ChangeNotifier{
   // Fields
@@ -13,9 +17,12 @@ class PoseDetectionViewModel extends ChangeNotifier{
   late CameraDescription _frontCamera;
   late CameraController cameraController;
   late PoseDetector _poseDetector;
+  late ExerciseType _exerciseType;
+  late ShoulderExercise exercise;
   CustomPaint? customPaint;
-  bool _isBusy = false;
+  late String? UOID;
 
+  bool _isBusy = false;
   late bool mounted = false;
   bool _canProcess = true;
 
@@ -30,6 +37,8 @@ class PoseDetectionViewModel extends ChangeNotifier{
   Future<void> _initialize() async {
     await _asyncInitCamera();
     _initPoseDetector();
+    ChannelAccess channelAccess = ChannelAccess.private;
+    UOID = await LoggerService().openCsvLogChannel(access: channelAccess, fileName: 'testFile', headerData: 'HeaderData1, HeaderData2, HeaderData3');
     notifyListeners(); // Ensure UI rebuilds when camera is initialized
   }
 
@@ -44,6 +53,19 @@ class PoseDetectionViewModel extends ChangeNotifier{
     }
     super.dispose();
   }
+
+  Future<void> onInit() async {
+    ChannelAccess channelAccess = ChannelAccess.private;
+    // UOID = await LoggerService().openCsvLogChannel(access: channelAccess, fileName: 'testFile', headerData: 'HeaderData1, HeaderData2, HeaderData3');
+  }
+
+  void onClose() {
+    LoggerService().closeLogChannelSafely(ownerId: UOID!, channel: LogChannel.csv);
+  }
+
+  // void onDataChanged() {
+  //   bool wasSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: 'Dataaaaa');
+  // }
 
   void _initPoseDetector() {
     _poseDetector = PoseDetector(options: PoseDetectorOptions());
@@ -68,6 +90,12 @@ class PoseDetectionViewModel extends ChangeNotifier{
     }
   }
 
+  void setExercise(ExerciseType type){
+    _exerciseType = type;
+    exercise = ExerciseFactory.create(type);
+    // print("Exercise set to $_exerciseType \n");
+  }
+
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
     if (_isBusy) return; // Skip if already processing a frame
 
@@ -86,15 +114,14 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
     final poses = await _poseDetector.processImage(inputImage);
 
-
     double? angleRad = calculateAngleRad(
                                   poses,
-                                  PoseLandmarkType.rightWrist,
-                                  PoseLandmarkType.rightElbow,
-                                  PoseLandmarkType.rightShoulder);
+                                  exercise.jointAngleLocations[0]);
     if (angleRad != null){
       currentAngleShoulder = angleRad * (180 / pi);
     }
+
+    repetitions += checkCorrectRep(exercise, currentAngleShoulder);
 
 
     if (inputImage.metadata?.size != null &&
@@ -112,6 +139,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
     _isBusy = false;
     // print(stopwatch.elapsedMilliseconds);
     // stopwatch.stop();
+    // print(LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: 'Dataaaaa'));
     notifyListeners();
   }
 
@@ -137,15 +165,11 @@ class PoseDetectionViewModel extends ChangeNotifier{
     );
   } // _convertCameraImageToInputImage
 
-  double? calculateAngleRad(
-      List<Pose> poses,
-      PoseLandmarkType type1,
-      PoseLandmarkType type2,
-      PoseLandmarkType type3) {
+  double? calculateAngleRad(List<Pose> poses, List<PoseLandmarkType> types) {
     for (final pose in poses) {
-      final PoseLandmark joint1 = pose.landmarks[type1]!;
-      final PoseLandmark joint2 = pose.landmarks[type2]!;
-      final PoseLandmark joint3 = pose.landmarks[type3]!;
+      final PoseLandmark joint1 = pose.landmarks[types[0]]!;
+      final PoseLandmark joint2 = pose.landmarks[types[1]]!;
+      final PoseLandmark joint3 = pose.landmarks[types[2]]!;
 
       if (joint1.x > 0 &&
           joint1.y > 0 &&
@@ -173,8 +197,22 @@ class PoseDetectionViewModel extends ChangeNotifier{
       }
     }
   }   // calculateAngleRad
-}   // PoseDetectionViewModel
+  }   // PoseDetectionViewModel
 
+  int checkCorrectRep(ShoulderExercise e, double angle){
+  if(angle > e.jointLimits[0].lower - e.jointLimits[0].tolerance &&
+      angle < e.jointLimits[0].lower + e.jointLimits[0].tolerance){
+    e.jointLimits[0].reachedLow = true;
+  }
+  else if((angle > e.jointLimits[0].upper - e.jointLimits[0].tolerance &&
+          angle < e.jointLimits[0].upper + e.jointLimits[0].tolerance) &&
+          e.jointLimits[0].reachedLow){
+    // e.jointLimits[0].reachedHigh = true;
+    e.jointLimits[0].reachedLow = false;
+    return 1;
+  }
+  return 0;
+  }
 class PosePainter extends CustomPainter {
   PosePainter(
       this.poses,
