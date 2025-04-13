@@ -61,6 +61,11 @@ flutter:
     - assets/example/002_exercise.gif
     - assets/example/003_exercise.gif
     - assets/example/FEI_logo.gif
+    - assets/arm_rehab/orient_front_up.jpg
+    - assets/arm_rehab/orient_front_down.jpg
+    - assets/arm_rehab/orient_back_up.jpg
+    - assets/arm_rehab/orient_back_down.jpg
+    - assets/arm_rehab/armband.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

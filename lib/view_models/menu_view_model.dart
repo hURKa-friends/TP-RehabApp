@@ -6,6 +6,7 @@ import 'package:rehab_app/views/example_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
 ///
 /// import your MVVM views here
+import 'package:rehab_app/arm_rehab/views/arm_select_view.dart';
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
@@ -14,6 +15,14 @@ class MenuViewModel extends ChangeNotifier {
   final List<BasePage> _pages = [
     ///
     /// You can add your pages here
+    ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation",
+      tutorialSteps: [
+        TutorialStep(
+          assetURI: "assets/arm_rehab/armband.jpg",
+          heading: "Armband required",
+          description: "For this arm rehabilitation, you need armband to mount your phone.")
+      ],
+    ),
     ///
     GraphView(icon: Icons.data_thresholding_outlined, title: "Sensor graph example"),
     SubMenuPageWrapper(icon: Icons.account_tree_outlined, title: "Submenu example",
