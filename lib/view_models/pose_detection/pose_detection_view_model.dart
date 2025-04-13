@@ -39,7 +39,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
     _canProcess = false;
     _poseDetector.close();
     if (cameraController.value.isInitialized) {
-      cameraController.stopImageStream();  // Stop the image stream before disposal
+      cameraController.stopImageStream();
       cameraController.dispose();
     }
     super.dispose();

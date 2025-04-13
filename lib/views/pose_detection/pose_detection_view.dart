@@ -30,6 +30,19 @@ class PoseDetectionView extends StatefulPage {
 }
 
 class PoseDetectionViewState extends StatefulPageState {
+  PoseDetectionViewModel? _poseDetectionViewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _poseDetectionViewModel ??= Provider.of<PoseDetectionViewModel>(context);
+  }
+
+  @override
+  void dispose() {
+    _poseDetectionViewModel?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget buildPage(BuildContext context) {
@@ -37,7 +50,10 @@ class PoseDetectionViewState extends StatefulPageState {
 
     return Stack(
       children: [
-        CameraPreview(poseDetectionViewModel.cameraController),
+        if (poseDetectionViewModel.cameraController.value.isInitialized)
+          CameraPreview(poseDetectionViewModel.cameraController)
+        else
+          const Center(child: CircularProgressIndicator()),
 
         if (poseDetectionViewModel.customPaint != null)
           Positioned.fill(child: poseDetectionViewModel.customPaint!),
