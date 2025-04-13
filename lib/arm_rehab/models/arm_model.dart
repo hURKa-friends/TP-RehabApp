@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 enum SelectedArm {left, right}
 enum SelectedPos {shoulder, wrist}
@@ -18,6 +18,37 @@ Widget space(double size) {
   return SizedBox(
     height: size,
     width: size,
+  );
+}
+
+Row exercise(String name, String description, int exerciseNumber, void Function() selectPage) {
+  return Row( // Exercise
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Flexible(
+        child: Text(
+          name,
+        ),
+      ),
+      space(15),
+      Flexible(
+        child: Text(
+          description,
+        ),
+      ),
+      space(20),
+      ElevatedButton(
+        onPressed: () {
+          selectPage();
+          SelectedOptions.exercise = exerciseNumber;
+        },
+        child: Text(
+          "Select",
+          style: buttonTextStyle(),
+        ),
+      ),
+    ],
   );
 }
 

@@ -4,8 +4,6 @@ import 'package:rehab_app/arm_rehab/models/arm_model.dart';
 import 'package:rehab_app/arm_rehab/views/orient_select_view.dart';
 import 'package:rehab_app/services/page_management/models/stateless_page_model.dart';
 
-import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
-
 import 'package:rehab_app/arm_rehab/view_models/pos_select_view_model.dart';
 
 class PosSelectView extends StatelessPage {
@@ -33,6 +31,8 @@ class PosSelectView extends StatelessPage {
 
   @override
   Widget buildPage(BuildContext context) {
+    var posSelectViewModel = context.watch<PosSelectViewModel>();
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -47,7 +47,7 @@ class PosSelectView extends StatelessPage {
             space(40),
             ElevatedButton(
               onPressed:() {
-                _selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                 SelectedOptions.pos = SelectedPos.shoulder;
               },
               child: Text(
@@ -58,7 +58,7 @@ class PosSelectView extends StatelessPage {
             space(20),
             ElevatedButton(
               onPressed: () {
-                _selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                 SelectedOptions.pos = SelectedPos.wrist;
               },
               child: Text(
@@ -71,9 +71,4 @@ class PosSelectView extends StatelessPage {
       ),
     );
   }
-}
-
-void _selectPage(BuildContext context, StatelessPage page) {
-  var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
-  navigatorViewModel.selectPage(context, page);
 }

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/arm_rehab/models/arm_model.dart';
-import 'package:rehab_app/arm_rehab/views/pos_select_view.dart';
+import 'package:rehab_app/arm_rehab/views/exercise_start_view.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 
 import 'package:rehab_app/arm_rehab/view_models/repetition_select_view_model.dart';
-
-import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 
 class RepetitionSelectView extends StatefulPage {
   const RepetitionSelectView({
@@ -44,9 +42,6 @@ class RepetitionSelectView extends StatefulPage {
 class RepetitionSelectState extends StatefulPageState {
   @override
   Widget buildPage(BuildContext context) {
-    /*bool validValue = false;
-    int? repetitions;*/
-    //var repetitionSelectViewModel = Provider.of<RepetitionSelectViewModel>(context, listen: false);
     var repetitionSelectViewModel = context.watch<RepetitionSelectViewModel>();
 
     return Scaffold(
@@ -79,22 +74,17 @@ class RepetitionSelectState extends StatefulPageState {
           ],
         ),
       ),
-      floatingActionButton: Visibility(
-        visible: repetitionSelectViewModel.validValue,
-        child: FloatingActionButton(
-          backgroundColor: Colors.lightGreen,
-          onPressed: () {
-            //_selectPage(context, );
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightGreen,
+        onPressed: () {
+          if (repetitionSelectViewModel.validValue) {
+            // ROZHODNUT SA CI STLESS ALEBO STFUL
+            //repetitionSelectViewModel.selectPage(context, ExerciseStartView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
             SelectedOptions.repetitions = repetitionSelectViewModel.repetitions;
-          },
-          child: Icon(Icons.check),
-        ),
+          }
+        },
+        child: Icon(Icons.check),
       ),
     );
   }
-}
-
-void _selectPage(BuildContext context, StatefulPage page) {
-  var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
-  navigatorViewModel.selectPage(context, page);
 }

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
+import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 
 class RepetitionSelectViewModel extends ChangeNotifier {
   bool _validValue = false;
@@ -14,6 +18,7 @@ class RepetitionSelectViewModel extends ChangeNotifier {
 
   void onClose() {
     // Here you can call ViewModel disposal code.
+    _validValue = false;
   }
 
   void parseInput(String input) {
@@ -27,11 +32,15 @@ class RepetitionSelectViewModel extends ChangeNotifier {
       return;
     }
 
-    print("Num of reps: $reps");
     _repetitions = reps;
     _validValue = true;
 
     notifyListeners();
+  }
+
+  void selectPage(BuildContext context, StatefulPage page) {
+    var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
+    navigatorViewModel.selectPage(context, page);
   }
 
   bool get validValue => _validValue;

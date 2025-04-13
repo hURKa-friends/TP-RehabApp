@@ -20,6 +20,7 @@ import 'package:rehab_app/arm_rehab/view_models/pos_select_view_model.dart';
 import 'package:rehab_app/arm_rehab/view_models/orient_select_view_model.dart';
 import 'package:rehab_app/arm_rehab/view_models/exercise_select_view_model.dart';
 import 'package:rehab_app/arm_rehab/view_models/repetition_select_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/exercise_start_view_model.dart';
 ///
 import 'package:rehab_app/view_models/accl_viewmodel.dart';
 import 'package:rehab_app/view_models/gyro_viewmodel.dart';
@@ -56,6 +57,7 @@ class ChangeNotifierInjector extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => OrientSelectViewModel()),
         ChangeNotifierProvider(create: (context) => ExerciseSelectViewModel()),
         ChangeNotifierProvider(create: (context) => RepetitionSelectViewModel()),
+        ChangeNotifierProvider(create: (context) => ExerciseStartViewModel()),
         ///
         ChangeNotifierProvider(create: (context) => AcclViewModel()),
         ChangeNotifierProvider(create: (context) => GyroViewModel()),
