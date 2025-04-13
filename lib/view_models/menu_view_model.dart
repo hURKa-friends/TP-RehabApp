@@ -67,6 +67,210 @@ class MenuViewModel extends ChangeNotifier {
       ],
     ),
     SettingsView(icon: Icons.settings, title: "Settings"),
+    SubMenuPageWrapper(icon: Icons.account_tree_outlined, title: "FMS",
+      subPages: [
+        SubMenuPageWrapper(icon: Icons.pan_tool, title: "Left hand",
+          subPages: [
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+          ],
+        ),
+        SubMenuPageWrapper(icon: Icons.pan_tool_outlined, title: "Right Hand",
+          subPages: [
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/example/000_exercise.gif',
+                  heading: '1. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/001_exercise.gif',
+                  heading: '2. Krok',
+                  description: '.',
+                ),
+                TutorialStep(
+                  assetURI: 'assets/example/FEI_logo.gif',
+                  heading: '3. Krok',
+                  description: '',
+                ),
+                TutorialStep(
+                    assetURI: 'assets/example/002_exercise.gif',
+                    heading: 'Potvrdenie',
+                    description: ''
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
   ];
 
   // Getters
