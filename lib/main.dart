@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 // App core dependencies
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 import 'package:rehab_app/services/page_management/views/page_navigator_view.dart';
+import 'package:rehab_app/view_models/knee_rehab_view_model.dart';
 import 'package:rehab_app/views/menu_view.dart';
 
 // Service dependencies
@@ -52,6 +53,7 @@ class ChangeNotifierInjector extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MagViewModel()),
         ChangeNotifierProvider(create: (context) => LuxViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
+        ChangeNotifierProvider(create: (context) => KneeRehabViewModel()),
       ],
       child: MyMaterialApp(),
     );

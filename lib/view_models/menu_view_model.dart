@@ -3,6 +3,7 @@ import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
 import 'package:rehab_app/views/example_view.dart';
+import 'package:rehab_app/views/knee_rehab_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
 ///
 /// import your MVVM views here
@@ -63,6 +64,25 @@ class MenuViewModel extends ChangeNotifier {
                        'zobrazí sa pôvodne otvorená stránka.',
         ),
       ],
+    ),
+    KneeRehabView(icon: Icons.health_and_safety_outlined, title: "Knee rehabilitation",
+    tutorialSteps: [
+      TutorialStep(assetURI: "assets/knee_rehab/leg_extensions01.jpg",
+          heading: "1. Krok",
+          description: "Sit up straight on a chair or bench."
+      ),
+      TutorialStep(
+          assetURI: "assets/knee_rehab/leg_extensions02.jpg",
+          heading: "2. Krok",
+          description: " Tighten your thigh muscles and slowly straighten and raise your affected leg as high as possible."
+      ),
+      TutorialStep(
+          assetURI: "assets/knee_rehab/leg_extensions03.jpg",
+          heading: "3. Krok",
+          description: "Squeeze your thigh muscles and hold this position for 5 seconds. "
+                       "Relax and bring your foot to the floor. Repeat."
+      )
+    ],
     ),
     SettingsView(icon: Icons.settings, title: "Settings"),
   ];
