@@ -69,18 +69,24 @@ class MenuViewModel extends ChangeNotifier {
     tutorialSteps: [
       TutorialStep(assetURI: "assets/knee_rehab/leg_extensions01.jpg",
           heading: "1. Krok",
-          description: "Sit up straight on a chair or bench."
+          description: "Sadni si rovno na stoličku alebo lavičku."
       ),
       TutorialStep(
           assetURI: "assets/knee_rehab/leg_extensions02.jpg",
           heading: "2. Krok",
-          description: " Tighten your thigh muscles and slowly straighten and raise your affected leg as high as possible."
+          description: "Napni stehenné svaly a pomaly vystieraj a zdvíhaj vybranú nohu čo najvyššie."
       ),
       TutorialStep(
           assetURI: "assets/knee_rehab/leg_extensions03.jpg",
           heading: "3. Krok",
-          description: "Squeeze your thigh muscles and hold this position for 5 seconds. "
-                       "Relax and bring your foot to the floor. Repeat."
+          description: "Stiahni stehenné svaly a podrž túto pozíciu 3 sekundy. "
+                       "Uvoľni sa a polož chodidlo na podlahu a počkaj 3 sekundy. Zopakuj 10-krát."
+      ),
+      TutorialStep(
+          assetURI: "assets/knee_rehab/something.png",
+          heading: "Upozornenie!",
+          description: "Nekývaj nohou ani nepoužívaj prudkú silu na jej zdvihnutie. "
+                       "Snaž sa ísť chodidlom priamo hore a rovnako aj dole, rovnakou rýchlosťou."
       )
     ],
     ),

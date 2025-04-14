@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 import 'package:rehab_app/views/accl_view.dart';
 import 'package:rehab_app/views/gyro_view.dart';
-import '../services/page_management/models/stateless_page_model.dart';
 import '../view_models/accl_viewmodel.dart';
 import '../view_models/gyro_viewmodel.dart';
 import '../view_models/knee_rehab_view_model.dart';
 
-class KneeRehabView extends StatelessPage {
+class KneeRehabView extends StatefulPage {
   const KneeRehabView({
     super.key,
     required super.icon,
     required super.title,
-    super.subPages, // Optional
     super.tutorialSteps // Optional
   });
 
@@ -39,15 +38,44 @@ class KneeRehabView extends StatelessPage {
   }
 
   @override
+  KneeRehabViewState createState() => KneeRehabViewState();
+}
+
+class KneeRehabViewState extends StatefulPageState {
+  String _dropdownValue = "Pravá noha";
+
+  @override
   Widget buildPage(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GyroView(),
-          AcclView()
-        ],
+      child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+          child: Column(
+          children: [
+            Padding(padding: const EdgeInsets.symmetric(vertical: 8),
+              child: DropdownButton<String>(
+                  value: _dropdownValue,
+                  isExpanded: true,
+                  items: const [
+                    DropdownMenuItem(value: "Pravá noha", child: Text("Ľavá noha")),
+                    DropdownMenuItem(value: "Ľavá noha", child: Text("Pravá noha"))
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _dropdownValue = value!;
+                    });
+                  }
+              ),
+            ),
+            Padding(padding: const EdgeInsets.symmetric(vertical: 8),
+            child: GyroView()
+            ),
+            Padding(padding: const EdgeInsets.symmetric(vertical: 8),
+            child: AcclView(),
+            ),
+          ],
+      ),
       ),
     );
   }
+
 }
