@@ -61,6 +61,14 @@ flutter:
     - assets/example/002_exercise.gif
     - assets/example/003_exercise.gif
     - assets/example/FEI_logo.gif
+    - assets/eating_rehab/eating.png
+    - assets/eating_rehab/eat_spoon.png
+    - assets/eating_rehab/secure_phone.png
+    - assets/eating_rehab/ok.png
+    - assets/eating_rehab/start.png
+    - assets/eating_rehab/stop.png
+    - assets/eating_rehab/measure.gif
+    - assets/eating_rehab/click.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
