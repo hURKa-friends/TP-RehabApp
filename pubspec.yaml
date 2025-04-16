@@ -66,6 +66,10 @@ flutter:
     - assets/arm_rehab/orient_back_up.jpg
     - assets/arm_rehab/orient_back_down.jpg
     - assets/arm_rehab/armband.jpg
+    - assets/arm_rehab/left_hand.jpg
+    - assets/arm_rehab/right_hand.jpg
+    - assets/arm_rehab/shoulder.png
+    - assets/arm_rehab/wrist.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

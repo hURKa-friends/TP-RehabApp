@@ -5,7 +5,7 @@ import 'package:rehab_app/services/page_management/models/stateful_page_model.da
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 
 class RepetitionSelectViewModel extends ChangeNotifier {
-  bool _validValue = false;
+  late bool _validValue;
   late int _repetitions;
 
   RepetitionSelectViewModel() {
@@ -14,17 +14,21 @@ class RepetitionSelectViewModel extends ChangeNotifier {
 
   Future<void> onInit() async {
     // Here you can call ViewModel initialization code.
+    _validValue = false;
+    _repetitions = 0;
   }
 
   void onClose() {
     // Here you can call ViewModel disposal code.
     _validValue = false;
+    _repetitions = 0;
   }
 
   void parseInput(String input) {
     int? reps = int.tryParse(input);
 
     if (reps == null || reps < 1 || reps > 100) {
+      _repetitions = 0;
       _validValue = false;
 
       notifyListeners();

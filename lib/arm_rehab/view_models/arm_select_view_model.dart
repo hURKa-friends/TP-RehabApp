@@ -5,6 +5,8 @@ import 'package:rehab_app/services/page_management/models/stateless_page_model.d
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 
 class ArmSelectViewModel extends ChangeNotifier {
+  final imageSize = 175.0;
+
   ArmSelectViewModel() {
     // Default constructor
   }

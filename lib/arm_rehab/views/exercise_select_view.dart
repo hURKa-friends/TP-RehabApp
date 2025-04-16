@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/arm_rehab/models/arm_model.dart';
-import 'package:rehab_app/arm_rehab/views/repetition_select_view.dart';
+import 'package:rehab_app/arm_rehab/views/arm_select_view.dart';
 import 'package:rehab_app/services/page_management/models/stateless_page_model.dart';
 
 import 'package:rehab_app/arm_rehab/view_models/exercise_select_view_model.dart';
@@ -73,7 +73,7 @@ class ExerciseSelectView extends StatelessPage {
                         "arms straight, and retract your shoulder blades.",
                     1,
                     () {
-                      exerciseSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                      exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                     }
                   ),
                   space(25),
@@ -83,7 +83,7 @@ class ExerciseSelectView extends StatelessPage {
                           "You need some sort of stick for this exercise, for example a broom.",
                       2,
                       () {
-                        exerciseSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                       }
                   ),
                   space(25),
@@ -93,7 +93,7 @@ class ExerciseSelectView extends StatelessPage {
                           "You will need some sort of stick for this exercise, for example a broom.",
                       3,
                       () {
-                        exerciseSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                       }
                   ),
                   space(25),
@@ -103,7 +103,7 @@ class ExerciseSelectView extends StatelessPage {
                           "You will need a glass or a bottle.",
                       4,
                       () {
-                        exerciseSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                       }
                   ),
                   space(25),

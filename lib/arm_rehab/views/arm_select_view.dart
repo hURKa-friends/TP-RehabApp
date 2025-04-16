@@ -45,26 +45,34 @@ class ArmSelectView extends StatelessPage {
                 textAlign: TextAlign.center,
               ),
               space(40),
-              ElevatedButton(
-                onPressed:() {
-                  armSelectViewModel.selectPage(context, PosSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                  SelectedOptions.arm = SelectedArm.right;
-                },
-                child: Text(
-                  "Right",
-                  style: buttonTextStyle(),
-                ),
-              ),
-              space(20),
-              ElevatedButton(
-                onPressed: () {
-                  armSelectViewModel.selectPage(context, PosSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                  SelectedOptions.arm = SelectedArm.left;
-                },
-                child: Text(
-                  "Left",
-                  style: buttonTextStyle(),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: armSelectViewModel.imageSize,
+                    width: armSelectViewModel.imageSize,
+                    child: IconButton(
+                      onPressed: () {
+                        armSelectViewModel.selectPage(context, PosSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        SelectedOptions.arm = SelectedArm.left;
+                      },
+                      icon: Image.asset("assets/arm_rehab/left_hand.jpg"),
+                    ),
+                  ),
+                  space(20),
+                  SizedBox(
+                    height: armSelectViewModel.imageSize,
+                    width: armSelectViewModel.imageSize,
+                    child: IconButton(
+                      onPressed:() {
+                        armSelectViewModel.selectPage(context, PosSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        SelectedOptions.arm = SelectedArm.right;
+                      },
+                      icon: Image.asset("assets/arm_rehab/right_hand.jpg"),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

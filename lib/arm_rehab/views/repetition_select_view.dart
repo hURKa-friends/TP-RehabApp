@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rehab_app/arm_rehab/models/arm_model.dart';
 import 'package:rehab_app/arm_rehab/views/exercise_start_view.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
+import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 
 import 'package:rehab_app/arm_rehab/view_models/repetition_select_view_model.dart';
 
@@ -71,18 +72,26 @@ class RepetitionSelectState extends StatefulPageState {
                 repetitionSelectViewModel.parseInput(input);
               },
             ),
+            space(10),
+            Text("Selected number of repetitions: ${repetitionSelectViewModel.repetitions}")
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: repetitionSelectViewModel.validValue ? Colors.lightGreen : Colors.grey,
         onPressed: () {
           if (repetitionSelectViewModel.validValue) {
-            // ROZHODNUT SA CI STLESS ALEBO STFUL
-            //repetitionSelectViewModel.selectPage(context, ExerciseStartView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+            repetitionSelectViewModel.selectPage(context, ExerciseStartView(icon: Icons.accessibility_new, title: "Arm rehabilitation"),
+              /*tutorialSteps:
+                TutorialStep(assetURI: "assets/",
+                    heading: "",
+                    description: ""
+                )*/
+            );
             SelectedOptions.repetitions = repetitionSelectViewModel.repetitions;
           }
         },
+
         child: Icon(Icons.check),
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/arm_rehab/models/arm_model.dart';
-import 'package:rehab_app/arm_rehab/views/exercise_select_view.dart';
+import 'package:rehab_app/arm_rehab/views/repetition_select_view.dart';
 import 'package:rehab_app/services/page_management/models/stateless_page_model.dart';
 
 import 'package:rehab_app/arm_rehab/view_models/orient_select_view_model.dart';
@@ -31,7 +31,6 @@ class OrientSelectView extends StatelessPage {
 
   @override
   Widget buildPage(BuildContext context) {
-    const imageSize = 175.0;
     var orientSelectViewModel = context.watch<OrientSelectViewModel>();
 
     return Scaffold(
@@ -52,11 +51,11 @@ class OrientSelectView extends StatelessPage {
                 physics: AlwaysScrollableScrollPhysics(),
                 children: <Widget>[
                   SizedBox(
-                    width: imageSize,
-                    height: imageSize,
+                    width: orientSelectViewModel.imageSize,
+                    height: orientSelectViewModel.imageSize,
                     child: IconButton(
                       onPressed:() {
-                        orientSelectViewModel.selectPage(context, ExerciseSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.frontUp;
                       },
                       icon: Image.asset("assets/arm_rehab/orient_front_up.jpg"),
@@ -64,11 +63,11 @@ class OrientSelectView extends StatelessPage {
                   ),
                   space(10),
                   SizedBox(
-                    width: imageSize,
-                    height: imageSize,
+                    width: orientSelectViewModel.imageSize,
+                    height: orientSelectViewModel.imageSize,
                     child: IconButton(
                       onPressed:() {
-                        orientSelectViewModel.selectPage(context, ExerciseSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.frontDown;
                       },
                       icon: Image.asset("assets/arm_rehab/orient_front_down.jpg"),
@@ -76,11 +75,11 @@ class OrientSelectView extends StatelessPage {
                   ),
                   space(10),
                   SizedBox(
-                    width: imageSize,
-                    height: imageSize,
+                    width: orientSelectViewModel.imageSize,
+                    height: orientSelectViewModel.imageSize,
                     child: IconButton(
                       onPressed:() {
-                        orientSelectViewModel.selectPage(context, ExerciseSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.backUp;
                       },
                       icon: Image.asset("assets/arm_rehab/orient_back_up.jpg"),
@@ -88,11 +87,11 @@ class OrientSelectView extends StatelessPage {
                   ),
                   space(10),
                   SizedBox(
-                    width: imageSize,
-                    height: imageSize,
+                    width: orientSelectViewModel.imageSize,
+                    height: orientSelectViewModel.imageSize,
                     child: IconButton(
                       onPressed:() {
-                        orientSelectViewModel.selectPage(context, ExerciseSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.backDown;
                       },
                       icon: Image.asset("assets/arm_rehab/orient_back_down.jpg"),

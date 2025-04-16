@@ -35,39 +35,86 @@ class PosSelectView extends StatelessPage {
 
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+        child: (SelectedOptions.exercise != 3)
+          ?
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Select position of your phone",
+                  style: headerStyle(),
+                  textAlign: TextAlign.center,
+                ),
+                space(40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: posSelectViewModel.imageHeight,
+                      width: posSelectViewModel.imageWidth,
+                      child: IconButton(
+                        onPressed:() {
+                          posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                          SelectedOptions.pos = SelectedPos.shoulder;
+                        },
+                        icon: Image.asset("assets/arm_rehab/shoulder.png"),
+                      ),
+                    ),
+                    space(20),
+                    SizedBox(
+                      height: posSelectViewModel.imageHeight,
+                      width: posSelectViewModel.imageWidth,
+                      child: IconButton(
+                        onPressed: () {
+                          posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+                          SelectedOptions.pos = SelectedPos.wrist;
+                        },
+                        icon: Image.asset("assets/arm_rehab/wrist.png"),
+                      ),
+                    ),
+                  ],
+                ),
+                space(10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Shoulder",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    space(125),
+                    Text(
+                      "Wrist",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    space(20),
+                  ],
+                )
+              ],
+            )
+          :
             Text(
-              "Select position of your phone",
+              "During this exercise, you can have your phone on your wrist only",
               style: headerStyle(),
               textAlign: TextAlign.center,
             ),
-            space(40),
-            ElevatedButton(
-              onPressed:() {
-                posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                SelectedOptions.pos = SelectedPos.shoulder;
-              },
-              child: Text(
-                "Shoulder",
-                style: buttonTextStyle(),
-              ),
-            ),
-            space(20),
-            ElevatedButton(
-              onPressed: () {
-                posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                SelectedOptions.pos = SelectedPos.wrist;
-              },
-              child: Text(
-                "Wrist",
-                style: buttonTextStyle(),
-              ),
-            ),
-          ],
         ),
+      floatingActionButton: posSelectViewModel.wristOnlyFloatingButton(
+        SelectedOptions.exercise,
+        () {
+          posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+        }
       ),
     );
   }
