@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 
 class FingerModel{
-  /*
-  //Variables for tracking
-  int numberOfFingers; // sets the number of fingers that it will use
-  String hand; // left or right
-  Offset offsetOfFinger; //Offset(80, 80)
-  Offset displayOffset; //Offset(50, 50)
-  bool fingerDetected = false;
 
-  Map<int, Offset> activeFingers = {};
-  Map<int, List<Offset>> pointerPaths = {};
-  */
-  String fingerName;
+  String fingerName; // 1 = index, 2 = middle, 3 = ring, 4 = pinky, 5 = thumb
   bool pointerFingerActive = false;
   Map<int, Offset> pointerFinger = {};
   List<Offset> pointerFingerTrajectory = [];
 
+  FingerModel({
+    required this.fingerName,
+    required this.pointerFingerActive,
+    required this.pointerFinger,
+    required this.pointerFingerTrajectory,
+  });
+
   //Individual finger data
+  /*
   bool pointerIndexActive = false;
   Map<int, Offset> pointerIndex = {};
   List<Offset> pointerIndexTrajectory = [];
@@ -37,7 +35,7 @@ class FingerModel{
   bool pointerThumbActive = false;
   Map<int, Offset> pointerThumb = {};
   List<Offset> pointerThumbTrajectory = [];
-
+  */
   /*
   FingerModel({
     required this.numberOfFingers,
@@ -46,12 +44,7 @@ class FingerModel{
     required this.displayOffset,
   });
    */
-  FingerModel({
-    required this.fingerName,
-    required this.pointerFingerActive,
-    required this.pointerFinger,
-    required this.pointerFingerTrajectory,
-  });
+
   /*
   void initializeTrajectories() {
     pointerIndexTrajectory.add(Offset.zero);

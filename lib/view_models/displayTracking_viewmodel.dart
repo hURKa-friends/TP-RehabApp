@@ -1,187 +1,176 @@
 import 'package:rehab_app/models/finger_model.dart';
+import 'package:rehab_app/models/displayTracking_model.dart';
 import 'package:flutter/material.dart';
 
 class DisplayTrackingViewModel extends ChangeNotifier {
-  late FingerModel fingerModel;
-  late Offset offsetOfFinger;
-  late Offset displayOffset;
+  String msgDisplayTrackingViewModel = "";
+  List<FingerModel> fingers = [];
 
-  var fingerModel1 = FingerModel(
-    fingerName: "Index",
-    pointerFingerActive: false,
-    pointerFinger: {},
-    pointerFingerTrajectory: [],
-  );
+  var displayTrackingModel;
 
-
-  /*
+  ///Constructor
   DisplayTrackingViewModel({
-    required this.fingerModel,
-    required this.offsetOfFinger,
-    required this.displayOffset,
+    required numberOfFingers,
+    required hand,
+    required identification,
+    required fingersBackAssignment,
+    required offsetOfFinger,
+    required displayOffset,
   }) {
-    fingerModel.initializeTrajectories();
+    displayTrackingModel = DisplayTrackingModel(
+      numberOfFingers: numberOfFingers,
+      hand: hand,
+      identification: identification,
+      fingersBackAssignment: fingersBackAssignment,
+      offsetOfFinger: offsetOfFinger,
+      displayOffset: displayOffset,
+    );
+
+    // Initialize fingers
+    fingers = List.generate(numberOfFingers, (index) {
+      return FingerModel(
+        fingerName: 'Finger${index + 1}',
+        pointerFingerActive: false,
+        pointerFinger: {},
+        pointerFingerTrajectory: [],
+      );
+    });
   }
-  */
 
-  /*
-  void _onPointerDown(PointerEvent event) {
-    ///For pointer down sorts the pointer to which finger - for now they go by the order from index finger to pinky finger
-    // Index finger
-    if (fingerModel.fingerDetected && (!fingerModel.pointerIndexActive && (event.position < fingerModel.pointerIndexTrajectory.last + offsetOfFinger && event.position > fingerModel.pointerIndexTrajectory.last - offsetOfFinger))) {
-      fingerModel.pointerIndexActive = true;
-      fingerModel.pointerIndex[event.pointer] = event.position;
-      fingerModel.pointerIndexTrajectory.add(event.position);
-      print("Index Down/Activated");
-    }
-    // Middle finger
-    else if (fingerModel.fingerDetected && (!fingerModel.pointerMiddleActive && (event.position < fingerModel.pointerMiddleTrajectory.last + offsetOfFinger && event.position > fingerModel.pointerMiddleTrajectory.last - offsetOfFinger))) {
-      fingerModel.pointerMiddleActive = true;
-      fingerModel.pointerMiddle[event.pointer] = event.position;
-      fingerModel.pointerMiddleTrajectory.add(event.position);
-      print("Middle Down/Activated");
-    }
-    // Ring finger
-    else if (fingerModel.fingerDetected && (!fingerModel.pointerRingActive && (event.position < fingerModel.pointerRingTrajectory.last + offsetOfFinger && event.position > fingerModel.pointerRingTrajectory.last - offsetOfFinger))) {
-      fingerModel.pointerRingActive = true;
-      fingerModel.pointerRing[event.pointer] = event.position;
-      fingerModel.pointerRingTrajectory.add(event.position);
-      print("Ring Down/Activated");
-    }
-    // Pinky finger
-    else if (fingerModel.fingerDetected && (!fingerModel.pointerPinkyActive && (event.position < fingerModel.pointerPinkyTrajectory.last + offsetOfFinger && event.position > fingerModel.pointerPinkyTrajectory.last - offsetOfFinger))) {
-      fingerModel.pointerPinkyActive = true;
-      fingerModel.pointerPinky[event.pointer] = event.position;
-      fingerModel.pointerPinkyTrajectory.add(event.position);
-      print("Pinky Down/Activated");
-    } else {
-      print("No finger detected");
-    }
+  List<Offset> getTrajectory(String name) {
+    return fingers.firstWhere((f) => f.fingerName == name).pointerFingerTrajectory;
+  }
 
-    fingerModel.activeFingers[event.pointer] = event.position;
-
-    // Detection
-    if (fingerModel.activeFingers.length == fingerModel.numberOfFingers &&
-        !fingerModel.fingerDetected) {
-      print("All fingers are active");
-      var sortedEntries = fingerModel.activeFingers.entries.toList()
-        ..sort((a, b) => a.value.dy.compareTo(b.value.dy));
-
-      if (fingerModel.hand == "Right") {
-        // Index finger
-        fingerModel.pointerIndexActive = true;
-        fingerModel.pointerIndex[sortedEntries[3].key] = sortedEntries[3].value;
-        fingerModel.pointerIndexTrajectory.add(sortedEntries[3].value);
-        // Middle finger
-        fingerModel.pointerMiddleActive = true;
-        fingerModel.pointerMiddle[sortedEntries[2].key] = sortedEntries[2].value;
-        fingerModel.pointerMiddleTrajectory.add(sortedEntries[2].value);
-        // Ring finger
-        fingerModel.pointerRingActive = true;
-        fingerModel.pointerRing[sortedEntries[1].key] = sortedEntries[1].value;
-        fingerModel.pointerRingTrajectory.add(sortedEntries[1].value);
-        // Pinky finger
-        fingerModel.pointerPinkyActive = true;
-        fingerModel.pointerPinky[sortedEntries[0].key] = sortedEntries[0].value;
-        fingerModel.pointerPinkyTrajectory.add(sortedEntries[0].value);
-      } else if (fingerModel.hand == "Left") {
-        // Index finger
-        fingerModel.pointerIndexActive = true;
-        fingerModel.pointerIndex[sortedEntries[0].key] = sortedEntries[0].value;
-        fingerModel.pointerIndexTrajectory.add(sortedEntries[0].value);
-        // Middle finger
-        fingerModel.pointerMiddleActive = true;
-        fingerModel.pointerMiddle[sortedEntries[1].key] = sortedEntries[1].value;
-        fingerModel.pointerMiddleTrajectory.add(sortedEntries[1].value);
-        // Ring finger
-        fingerModel.pointerRingActive = true;
-        fingerModel.pointerRing[sortedEntries[2].key] = sortedEntries[2].value;
-        fingerModel.pointerRingTrajectory.add(sortedEntries[2].value);
-        // Pinky finger
-        fingerModel.pointerPinkyActive = true;
-        fingerModel.pointerPinky[sortedEntries[3].key] = sortedEntries[3].value;
-        fingerModel.pointerPinkyTrajectory.add(sortedEntries[3].value);
-      } else {
-        print("ERROR in hand detection");
+  void onPointerDown(PointerEvent event) {
+    ///Back assignment of the fingers
+    if(displayTrackingModel.fingersBackAssignment){
+      if(displayTrackingModel.fingersDetected){
+        print("-----------------------------------------------");
+        print("Back assignment of the fingers - start");
+        for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
+          print("Finger ${fingers[i].fingerName} - ${fingers[i].pointerFingerActive}");
+          if(fingers[i].pointerFingerActive == false && (event.position < fingers[i].pointerFingerTrajectory.last + displayTrackingModel.offsetOfFinger && event.position > fingers[i].pointerFingerTrajectory.last - displayTrackingModel.offsetOfFinger)){
+            fingers[i].pointerFingerActive = true;
+            fingers[i].pointerFinger[event.pointer] = event.position;
+            fingers[i].pointerFingerTrajectory.add(event.position);
+            print("Back assigned finger ${fingers[i].fingerName} to pointer ${event.pointer}");
+            break;
+          }
+        }
       }
+    }else{
+      if(displayTrackingModel.fingersDetected){
+        print("-----------------------------------------------");
+        print("No back assignment of the fingers - start");
+        for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
+          print("Finger ${fingers[i].fingerName} - ${fingers[i].pointerFingerActive}");
+          if(fingers[i].pointerFingerActive == false){
+            fingers[i].pointerFingerActive = true;
+            fingers[i].pointerFinger[event.pointer] = event.position;
+            fingers[i].pointerFingerTrajectory.add(event.position);
+            print("Back assigned finger ${fingers[i].fingerName} to pointer ${event.pointer}");
+            break;
+          }
+        }
+      }
+    }
 
-      fingerModel.fingerDetected = true;
+    displayTrackingModel.activeFingers[event.pointer] = event.position;
+    print(displayTrackingModel.activeFingers);
+
+    ///Initial assignment of the fingers
+    if(displayTrackingModel.identification){
+      print("Identification of the fingers - start");
+      ///Identification of the fingers with recognition
+      if (displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers && !displayTrackingModel.fingersDetected) {
+        print("All fingers are active");
+        var sortedEntries = displayTrackingModel.activeFingers.entries.toList()..sort((MapEntry<int, Offset> a, MapEntry<int, Offset> b) => a.value.dy.compareTo(b.value.dy));
+
+        if (displayTrackingModel.hand == "Right") {
+          for (int i = 0; i < displayTrackingModel.numberOfFingers; i++) {
+            fingers[i].pointerFingerActive = true;
+            fingers[i].pointerFinger[sortedEntries[displayTrackingModel
+                .numberOfFingers - i - 1].key] =
+                sortedEntries[displayTrackingModel.numberOfFingers - i - 1]
+                    .value;
+            fingers[i].pointerFingerTrajectory.add(
+                sortedEntries[displayTrackingModel.numberOfFingers - i - 1]
+                    .value);
+          }
+          print("Right hand detected");
+        } else if (displayTrackingModel.hand == "Left") {
+          for (int i = 0; i < displayTrackingModel.numberOfFingers; i++) {
+            fingers[i].pointerFingerActive = true;
+            fingers[i].pointerFinger[sortedEntries[i].key] =
+                sortedEntries[i].value;
+            fingers[i].pointerFingerTrajectory.add(sortedEntries[i].value);
+          }
+          print("Left hand detected");
+        } else {
+          print("ERROR in hand detection");
+        }
+        displayTrackingModel.fingersDetected = true;
+        print("Fingers detected with identification");
+      }//Detection of the fingers
+    }else{
+      ///Without identification of the fingers
+      if(displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers  && !displayTrackingModel.fingersDetected){
+        //Assignment of the fingers
+        var entries = displayTrackingModel.activeFingers.entries.toList();//convert to list
+
+        for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
+          if(displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers){
+            fingers[i].pointerFingerActive = true;
+            fingers[i].pointerFinger[entries[i].key] = entries[i].value;
+            fingers[i].pointerFingerTrajectory.add(entries[i].value);
+          }
+        }
+        displayTrackingModel.fingersDetected = true;
+        print("Fingers detected without identification");
+      }
     }
 
     notifyListeners();
+  }//onPointerDown END
 
-  }
-
-  void _onPointerMove(PointerEvent event) {
-    //1
-    if(fingerModel.pointerIndex.containsKey(event.pointer)){
-      fingerModel.pointerIndexTrajectory.add(event.position);
-    }
-    //2
-    else if(fingerModel.pointerMiddle.containsKey(event.pointer)){
-      fingerModel.pointerMiddleTrajectory.add(event.position);
-    }
-    //3
-    else if(fingerModel.pointerRing.containsKey(event.pointer)){
-      fingerModel.pointerRingTrajectory.add(event.position);
-    }
-    //4
-    else if(fingerModel.pointerPinky.containsKey(event.pointer)){
-      fingerModel.pointerPinkyTrajectory.add(event.position);
+  void onPointerMove(PointerEvent event) {
+    for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
+      if(fingers[i].pointerFinger.containsKey(event.pointer)){
+        fingers[i].pointerFingerTrajectory.add(event.position);
+      }
     }
 
-    fingerModel.activeFingers[event.pointer] = event.position;
-    //pointerPaths[event.pointer]?.add(event.position);
     notifyListeners();
-  }
+  }//onPointerMove END
 
-  void _onPointerUp(PointerEvent event) {
-    //1
-    if(fingerModel.pointerIndex.containsKey(event.pointer)){
-      fingerModel.pointerIndexActive = false;
-      fingerModel.pointerIndexTrajectory.add(event.position);
-      print("Index Up/Deactivated");
-    }
-    //2
-    else if(fingerModel.pointerMiddle.containsKey(event.pointer)){
-      fingerModel.pointerMiddleActive = false;
-      fingerModel.pointerMiddleTrajectory.add(event.position);
-      print("Middle Up/Deactivated");
-    }
-    //3
-    else if(fingerModel.pointerRing.containsKey(event.pointer)){
-      fingerModel.pointerRingActive = false;
-      fingerModel.pointerRingTrajectory.add(event.position);
-      print("Ring Up/Deactivated");
-    }
-    //4
-    else if(fingerModel.pointerPinky.containsKey(event.pointer)){
-      fingerModel.pointerPinkyActive = false;
-      fingerModel.pointerPinkyTrajectory.add(event.position);
-      print("Pinky Up/Deactivated");
+  void onPointerUp(PointerEvent event) {
+    ///Unassignment of the fingers
+    for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
+      if(fingers[i].pointerFinger.containsKey(event.pointer)){
+        fingers[i].pointerFingerActive = false;
+        fingers[i].pointerFingerTrajectory.add(event.position);
+        print("Unassigned finger ${fingers[i].fingerName} of pointer ${event.pointer}");
+      }
     }
 
-    //Delete - for testing purposes on Chrome
-    if(fingerModel.activeFingers.length == 4){
+    //[/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/] Delete - for testing purposes on Chrome
+    //Deletes the finger that were used and assigned in detection - because for testing purposes they wont be on the screen
+    if(displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers){
       //Reset detection and other stuff
-      fingerModel.activeFingers.clear();
-      fingerModel.pointerIndexActive=false;
-      fingerModel.pointerMiddleActive=false;
-      fingerModel.pointerRingActive=false;
-      fingerModel.pointerPinkyActive=false;
-      //fingerDetected=false;
+      displayTrackingModel.activeFingers.clear();
+      for (int i=0; i<displayTrackingModel.numberOfFingers; i++) {
+        fingers[i].pointerFingerActive = false;
+      }
+      //displayTrackingModel.fingersDetected=false;
     }
-    //activeFingers.remove(event.pointer);
-    if(fingerModel.fingerDetected){
-      fingerModel.activeFingers.remove(event.pointer);
+    //[/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/][/] For testing purposes on Chrome
+
+    //Remove the finger from the active fingers
+    if(displayTrackingModel.fingersDetected){
+      displayTrackingModel.activeFingers.remove(event.pointer);
     }
 
-    if(fingerModel.activeFingers.length == 0){
-      //Reset detection and other stuff
-      //fingerDetected=false;
-    }
     notifyListeners();
-  }
-   */
+  }//onPointerUp END
 
 }

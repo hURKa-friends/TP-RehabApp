@@ -61,6 +61,8 @@ flutter:
     - assets/example/002_exercise.gif
     - assets/example/003_exercise.gif
     - assets/example/FEI_logo.gif
+    - assets/images/fingerTrackingWorkInProgress.png
+    - assets/images/CopperBusines.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
