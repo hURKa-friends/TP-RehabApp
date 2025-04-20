@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
-import 'dart:collection';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rehab_app/main.dart';
-import 'package:rehab_app/services/models/logger_exception.dart';
 
 final String loggerDirectoryPath = '$baseAppDirectoryPath/logger';
 
@@ -26,7 +24,7 @@ class LoggerServiceInternal {
     final directoryState = await _initializeStorage();
 
     if(!(permissionState && directoryState)) {
-      throw LoggerException("Permission or directory creation failed.");
+      throw Exception("Permission or directory creation failed.");
     }
 
     for (var channel in LogChannel.values) {
