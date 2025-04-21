@@ -5,7 +5,7 @@ import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
 import 'package:rehab_app/views/example_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
 ///
-/// import your MVVM views here
+import 'package:rehab_app/views/fingersTrackingExercises_view.dart';
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
@@ -62,6 +62,15 @@ class MenuViewModel extends ChangeNotifier {
           description: 'Posledný krok obsahuje tlačidlo potvrdenia, ktorým sa ukončí tutoriál a '
                        'zobrazí sa pôvodne otvorená stránka.',
         ),
+      ],
+    ),
+    SubMenuPageWrapper(icon: Icons.install_mobile_rounded, title: "Fine motor skills exercise",
+      subPages: [
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 1"),
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 2"),
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 3"),
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 4"),
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 5"),
       ],
     ),
     SettingsView(icon: Icons.settings, title: "Settings"),
