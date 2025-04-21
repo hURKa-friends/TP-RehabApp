@@ -133,21 +133,6 @@ class _DisplayTrackingViewState extends State<DisplayTrackingView> {
     });
   }
 
-  /*
-  void initializeFingerTrackingExerciseNo1View(int numberOfFingers, String hand, bool identification, bool fingersBackAssignment) {
-    setState(() {
-      viewModelExerciseNo1 = DisplayTrackingViewModel(
-        numberOfFingers: numberOfFingers,
-        hand: hand,
-        identification: identification,
-        fingersBackAssignment: fingersBackAssignment,
-        offsetOfFinger: const Offset(50, 50),
-        displayOffset: const Offset(0, 50), //The app bar takes 50 pixels
-      );
-    });
-  }
-  */
-
   Widget _buildFingerMarkerNameTag(String label) {
     return Container(
       width: fingerMarkerSize.dx,

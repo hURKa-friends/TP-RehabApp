@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
+import 'package:rehab_app/views/displayTracking_view.dart';
 import 'package:rehab_app/views/example_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
 ///
@@ -64,15 +65,27 @@ class MenuViewModel extends ChangeNotifier {
         ),
       ],
     ),
+
     SubMenuPageWrapper(icon: Icons.install_mobile_rounded, title: "Fine motor skills exercise",
       subPages: [
-        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 1"),
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 1",
+          tutorialSteps: [
+            TutorialStep(
+              assetURI: 'assets/images/CopperBusines.png',
+              heading: '1. Step',
+              description: '->>- Text -<<-',
+            ),
+            TutorialStep(
+              assetURI: 'assets/images/fingerTrackingWorkInProgress.png',
+              heading: '2. Step',
+              description: '->>- Text -<<-',
+            ),
+          ],
+        ),
         FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 2"),
-        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 3"),
-        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 4"),
-        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 5"),
       ],
     ),
+
     SettingsView(icon: Icons.settings, title: "Settings"),
   ];
 
