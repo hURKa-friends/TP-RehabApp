@@ -73,12 +73,22 @@ class MenuViewModel extends ChangeNotifier {
             TutorialStep(
               assetURI: 'assets/images/CopperBusines.png',
               heading: '1. Step',
-              description: '->>- Text -<<-',
+              description: 'First select the hand you are going to exercises and then the difficult of the exercise.',
             ),
             TutorialStep(
-              assetURI: 'assets/images/fingerTrackingWorkInProgress.png',
+              assetURI: 'assets/images/LookiLooki.png',
               heading: '2. Step',
-              description: '->>- Text -<<-',
+              description: 'You will be holding and navigating the ball to the stop on the display with to fingers pinching the object.',
+            ),
+            TutorialStep(
+              assetURI: 'assets/images/NoSnacksOnGasStation.png',
+              heading: 'Caution',
+              description: 'Be careful don\'t squeeze the object too hard or too lightly, the object will indicated how hard are you pinching it.',
+            ),
+            TutorialStep(
+              assetURI: 'assets/images/YourPilotIsSpoking.png',
+              heading: 'Enjoy the ride',
+              description: 'Enjoy the exercise and improve.',
             ),
           ],
         ),

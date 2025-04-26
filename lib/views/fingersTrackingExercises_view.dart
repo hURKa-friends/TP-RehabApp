@@ -123,8 +123,8 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
     final isSelected = hand == side;
 
     return SizedBox(
-      width: 240,
-      height: 75,
+      width: 150,
+      height: 100,
       child: OutlinedButton(
         onPressed: () {
           setState(() {
@@ -158,7 +158,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
     );
   }
 
-  Widget _buildHardnessCheckbox(int value, String label, {double scale = 1.5}) {
+  Widget _buildDifficultyCheckbox(int value, String label, {double scale = 1.5}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -186,7 +186,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
       return Scaffold(
         body: Stack(
           children: [
-            //Background
+            //Background images
             Positioned.fill(
               child: Opacity(
                   opacity: 0.2,
@@ -197,13 +197,14 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
               ),
             ),
 
-            //Foreground content
+            //Foreground content - buttons
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  ///Buttons ---------------------------------------------------
                   Text(
-                    "Choose parameters of the exercise",
+                    "Choose the parameters of the exercise",
                     style: TextStyle(fontSize: dataTextSize, color: Colors.green[500]),
                   ),
                   SizedBox(height: buttonSpacing * 2),
@@ -221,92 +222,53 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                   SizedBox(height: buttonSpacing * 2),
 
                   // Hardness Checkboxes
-                  _buildHardnessCheckbox(1, "   Soft       ", scale: checkboxScale),
-                  SizedBox(height: buttonSpacing * 2),
-
-                  _buildHardnessCheckbox(2, "   Medium", scale: checkboxScale),
-                  SizedBox(height: buttonSpacing * 2),
-
-                  _buildHardnessCheckbox(3, "   Hard      ", scale: checkboxScale),
-                  SizedBox(height: buttonSpacing * 2),
-
-
-                  // Example button using the selected hand/hardness
-                  ElevatedButton(
-                    onPressed: () {
-                      //print("Exercise selected with: Hand = $hand, Hardness = $hardness");
-                      initializeViewModel(1, hand, false, false);
-                    },
-                    child: Text(
-                      "Start Exercise\nHand: $hand | Hardness: $hardness",
-                      style: TextStyle(fontSize: buttonTextSize, color: buttonTextColor),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            /*
-            //Foreground content (exercise selection)
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Chose parameters of the exercise",
-                    style: TextStyle(fontSize: dataTextSize, color: Colors.green[500]),
-                  ),
-                  SizedBox(height: buttonSpacing*3),
-
-                  ///Buttons ---------------------------------------------------
-                  ElevatedButton(
-                    onPressed: () => initializeViewModel(1, "Right", false, false),
-                    child: Text(
-                        "Exercise 1\n1, Right, Identification: false",
-                        style: TextStyle(fontSize: buttonTextSize, color: buttonTextColor),
-                        textAlign: TextAlign.center
-                    ),
-                  ),
+                  _buildDifficultyCheckbox(1, "   Soft       ", scale: checkboxScale),
                   SizedBox(height: buttonSpacing),
 
-                  SizedBox(
-                    width: 240,
-                    height: 70,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        print('OutlinedButton pressed!');
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                        side: BorderSide(
-                          color: Theme.of(context).colorScheme.primary, // Still themed border
-                          width: 3.0,
+                  _buildDifficultyCheckbox(2, "   Medium", scale: checkboxScale),
+                  SizedBox(height: buttonSpacing),
+
+                  _buildDifficultyCheckbox(3, "   Hard      ", scale: checkboxScale),
+                  SizedBox(height: buttonSpacing*2),
+
+
+                  //Starting the exercise
+                  Visibility(
+                    visible: hand.isNotEmpty && hardness != -1,
+                    child: SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          initializeViewModel(1, hand, false, false);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent, // your color
+                          foregroundColor: buttonTextColor, // for ripple effect etc.
+                          textStyle: TextStyle(fontSize: buttonTextSize),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12), // if you want rounded corners
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        'Button',
-                        style: TextStyle(
-                          fontSize: buttonTextSize,
-                          color: Theme.of(context).textTheme.bodyMedium?.color, // Text color adapts too
+                        child: Text(
+                          "Start Exercise",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: dataTextSize, color: Colors.black),
                         ),
                       ),
                     ),
-                  )
+                  ),
                   ///Buttons ---------------------------------------------------
                 ],
               ),
             ),
-            */
+
           ],
         ),
       );
     }
 
-    //Show when you have something to show
+    //Show when you have something to show - aka changes to the exercise
     return ChangeNotifierProvider.value(
       value: viewModel!,
       child: Consumer<DisplayTrackingViewModel>(
@@ -319,6 +281,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
               behavior: HitTestBehavior.translucent,
               child: Stack(
                 children: [
+                  //Background images
                   Positioned.fill(
                     child: Opacity(
                         opacity: 0.05,
