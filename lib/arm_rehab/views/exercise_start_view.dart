@@ -52,67 +52,52 @@ class ExerciseStartState extends StatefulPageState {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               space(15),
+              Text(
               switch (SelectedOptions.exercise) {
-                1 =>
-                  Text(
-                    "Retraction of shoulder blades",
-                    style: headerStyle(),
-                    textAlign: TextAlign.center,
-                  ),
-                2 =>
-                  Text(
-                    "Chest presses with stick",
-                    style: headerStyle(),
-                    textAlign: TextAlign.center,
-                  ),
-                3 =>
-                  Text(
-                    "Bicep curls with stick",
-                    style: headerStyle(),
-                    textAlign: TextAlign.center,
-                  ),
-                4 =>
-                  Text(
-                    "Drinking from glass / bottle",
-                    style: headerStyle(),
-                    textAlign: TextAlign.center,
-                  ),
-                int() => Text( // Out of range, this shouldn't happen
-                  "Error",
-                  style: headerStyle(),
-                  textAlign: TextAlign.center,
-                ),
+                1 => "Retraction of shoulder blades",
+                2 => "Chest presses with stick",
+                3 => "Bicep curls with stick",
+                4 => "Drinking from glass / bottle",
+                int() => "Error", // Out of range, this shouldn't happen
               },
-              space(30),
-              // obrazok pre dalsi pohyb
+              style: headerStyle(),
+                textAlign: TextAlign.center,
+              ),
+              space(100),
               Image.asset(
                 switch (SelectedOptions.exercise) {
                 1 =>
                   switch (exerciseStartViewModel.nextSetpoint) {
-                  0 => "assets/arm_rehab/images/shoulder_blades/",
-                  1 => "assets/arm_rehab/images/shoulder_blades/",
+                  0 => "assets/arm_rehab/images/exercises/shoulder_blades/shoulder_blades0",
+                  1 => "assets/arm_rehab/images/exercises/shoulder_blades/shoulder_blades1",
                   int() => "ErrorImage", // Out of range, this shouldn't happen
                   },
                 2 =>
                   switch (exerciseStartViewModel.nextSetpoint) {
-                    0 => "assets/arm_rehab/images/chest_press/",
-                    1 => "assets/arm_rehab/images/chest_press/",
+                    0 => "assets/arm_rehab/images/exercises/chest_press/chest_press0",
+                    1 => "assets/arm_rehab/images/exercises/chest_press/chest_press1",
                     int() => "ErrorImage", // Out of range, this shouldn't happen
                   },
                 3 =>
                   switch (exerciseStartViewModel.nextSetpoint) {
-                    0 => "assets/arm_rehab/images/bicep_curls/",
-                    1 => "assets/arm_rehab/images/bicep_curls/",
+                    0 => "assets/arm_rehab/images/exercises/bicep_curls/bicep_curls0",
+                    1 => "assets/arm_rehab/images/exercises/bicep_curls/bicep_curls1",
                     int() => "ErrorImage", // Out of range, this shouldn't happen
                   },
                 4 =>
                   switch (exerciseStartViewModel.nextSetpoint) {
-                    0 => "assets/arm_rehab/images/drinking/",
-                    1 => "assets/arm_rehab/images/drinking/",
+                    0 => "assets/arm_rehab/images/exercises/drinking/drinking0",
+                    1 => "assets/arm_rehab/images/exercises/drinking/drinking1",
                     int() => "ErrorImage", // Out of range, this shouldn't happen
                   },
                 int() => "ErrorImage", // Out of range, this shouldn't happen
                 },
+              ),
+              space(15),
+              Text("Number of repetitions"),
+              Text(
+                "${exerciseStartViewModel.repetitionCount} / ${SelectedOptions.repetitions}",
+                style: headerStyle(),
               ),
             ],
           ),

@@ -113,6 +113,7 @@ class PosSelectView extends StatelessPage {
       floatingActionButton: posSelectViewModel.wristOnlyFloatingButton(
         SelectedOptions.exercise,
         () {
+          SelectedOptions.pos = SelectedPos.wrist;
           posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
         }
       ),

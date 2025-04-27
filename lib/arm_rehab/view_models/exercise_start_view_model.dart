@@ -16,7 +16,7 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late int _nextSetpoint;
   late int _currentSetpoint;
   late int _repetitionCount;
-  late String? ownerID;
+  late String? _ownerID;
   late bool _writeSuccessful;
   late ImuSensorData _acclData;
   late ImuSensorData _gyroData;
@@ -39,9 +39,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
     _nextSetpoint = 1;
     _currentSetpoint = 0;
     _repetitionCount = 0;
-    _playerShort.setSource(AssetSource("assets/arm_rehab/sounds/beeps/short_beep.m4a"));
-    _playerLong.setSource(AssetSource("assets/arm_rehab/sounds/beeps/long_beep.m4a"));
-    ownerID = await LoggerService().openCsvLogChannel(
+    await _playerShort.setSource(AssetSource("arm_rehab/sounds/beeps/short_beep.m4a"));
+    await _playerLong.setSource(AssetSource("arm_rehab/sounds/beeps/long_beep.m4a"));
+    _ownerID = await LoggerService().openCsvLogChannel(
         access: ChannelAccess.private,
         fileName:
         switch (SelectedOptions.exercise) {
@@ -68,36 +68,41 @@ class ExerciseStartViewModel extends ChangeNotifier {
     //_isTimerActive = false;
     _playerShort.dispose();
     _playerLong.dispose();
-    LoggerService().closeLogChannelSafely(ownerId: ownerID!, channel: LogChannel.csv);
+    LoggerService().closeLogChannelSafely(ownerId: _ownerID!, channel: LogChannel.csv);
     SensorService().stopAcclDataStream();
     SensorService().stopGyroDataStream();
   }
 
   void _timerFinish(Timer timer) {
     _timerCount--;
-    playShortBeep();
-
-
-    if (_timerCount < 1) {
-      _countdownTimer.cancel();
-      _isTimerActive = false;
-      playLongBeep();
-    }
 
     notifyListeners();
+
+    if (_timerCount >= 1) {
+      playShortBeep();
+    }
+
+    if (_timerCount == 0) {
+      playLongBeep();
+      _isTimerActive = false;
+      _countdownTimer.cancel();
+    }
   }
 
   Future<void> playShortBeep() async {
+    //await _playerShort.stop();
+    await _playerShort.seek(Duration(milliseconds: 10));
     await _playerShort.resume();
   }
 
   Future<void> playLongBeep() async {
+    await _playerLong.seek(Duration(milliseconds: 10));
     await _playerLong.resume();
   }
 
   void writeToCsv(String data) {
     if (!_isTimerActive) {
-      _writeSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: ownerID!, data: data);
+      _writeSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: _ownerID!, data: data);
     }
 
     switch (SelectedOptions.exercise) {
@@ -190,6 +195,8 @@ class ExerciseStartViewModel extends ChangeNotifier {
       playLongBeep();
       // navigacia na dalsiu stranku//////////////////////////////////////////////////////////////////////////////
     }
+
+    notifyListeners();
   }
 
   bool get isTimerActive => _isTimerActive;
@@ -197,4 +204,5 @@ class ExerciseStartViewModel extends ChangeNotifier {
   ImuSensorData get acclData => _acclData;
   ImuSensorData get gyroData => _gyroData;
   int get nextSetpoint => _nextSetpoint;
+  int get repetitionCount => _repetitionCount;
 }

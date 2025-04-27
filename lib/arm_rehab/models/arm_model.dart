@@ -44,7 +44,7 @@ class Setpoints {
   late final double drinking1Z;
 
   Setpoints() {
-    switch (SelectedOptions.pos) {
+    switch (SelectedOptions.pos) { // Switch aj podla arm?
       case SelectedPos.shoulder:
         /*shoulderBlades0X = ;
         shoulderBlades0Y = ;

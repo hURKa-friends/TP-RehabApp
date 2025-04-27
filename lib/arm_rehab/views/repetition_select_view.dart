@@ -85,22 +85,22 @@ class RepetitionSelectState extends StatefulPageState {
               /*tutorialSteps:
               switch (SelectedOptions.exercise) {
               1 =>
-                TutorialStep(assetURI: "assets/images/exercises/",
+                TutorialStep(assetURI: "assets/images/exercises/shoulder_blades/shoulder_blades",
                     heading: "Retraction of shoulder blades",
                     description: "In this exercise, you hold your hands together, arms straight in front of you, and retract your shoulder blades."
                 ),
               2 =>
-                TutorialStep(assetURI: "assets/images/exercises/",
+                TutorialStep(assetURI: "assets/images/exercises/chest_press/chest_press",
                     heading: "Chest presses with stick",
                     description: "In this exercise, you will do chest presses while seated or standing. You need some sort of stick for this exercise, for example a broom."
                 ),
               3 =>
-                TutorialStep(assetURI: "assets/images/exercises/",
+                TutorialStep(assetURI: "assets/images/exercises/bicep_curls/bicep_curls",
                     heading: "Bicep curls with stick",
                     description: "In this exercise, you will do bicep curls while seated or standing. You will need some sort of stick for this exercise, for example a broom."
                 ),
               4 =>
-                TutorialStep(assetURI: "assets/images/exercises/",
+                TutorialStep(assetURI: "assets/images/exercises/drinking/drinking",
                     heading: "Drinking from glass / bottle",
                     description: "In this exercise, you will drink (imaginary) water. You will need a glass or a bottle. Or you can drink whatever you want. WARNING! Do not drink chemicals or other dangerous liquids!"
                 ),
