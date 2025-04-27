@@ -1,20 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../models/sensor_models.dart';
 import '../services/external/logger_service.dart';
 import '../services/external/sensor_service.dart';
 import '../services/internal/logger_service_internal.dart';
-import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
-
-enum Hand { left, right }
-
-enum Exercise {
-  exercise1, // Example: "Phone Pickup"
-  exercise2, // Example: "Wrist Rotation"
-  exercise3, // Example: "Finger Extension"
-  exercise4, // Example: "Grip Strength"
-}
 
 class MotionDetectionViewModel extends ChangeNotifier {
   ImuSensorData _acclData = ImuSensorData(
@@ -168,7 +157,6 @@ class MotionDetectionViewModel extends ChangeNotifier {
         );
       }
 
-      // Log touch data separately
       for (final touchData in _touchDataPoints) {
         LoggerService().log(
           channel: LogChannel.csv,

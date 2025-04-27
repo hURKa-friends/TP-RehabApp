@@ -11,6 +11,8 @@ import 'package:rehab_app/views/FMS_phone_pickup_view.dart';
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
+import '../views/Beerpour_view.dart';
+
 class MenuViewModel extends ChangeNotifier {
   final List<BasePage> _pages = [
 
@@ -67,6 +69,7 @@ class MenuViewModel extends ChangeNotifier {
       ],
     ),
     SettingsView(icon: Icons.settings, title: "Settings"),
+    BeerPourPage(icon: Icons.local_drink, title: "Beer pour"),
     SubMenuPageWrapper(icon: Icons.account_tree_outlined, title: "FMS",
       subPages: [
         SubMenuPageWrapper(icon: Icons.pan_tool, title: "Left hand",
