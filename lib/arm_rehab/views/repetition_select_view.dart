@@ -83,10 +83,33 @@ class RepetitionSelectState extends StatefulPageState {
           if (repetitionSelectViewModel.validValue) {
             repetitionSelectViewModel.selectPage(context, ExerciseStartView(icon: Icons.accessibility_new, title: "Arm rehabilitation"),
               /*tutorialSteps:
-                TutorialStep(assetURI: "assets/",
-                    heading: "",
-                    description: ""
-                )*/
+              switch (SelectedOptions.exercise) {
+              1 =>
+                TutorialStep(assetURI: "assets/images/exercises/",
+                    heading: "Retraction of shoulder blades",
+                    description: "In this exercise, you hold your hands together, arms straight in front of you, and retract your shoulder blades."
+                ),
+              2 =>
+                TutorialStep(assetURI: "assets/images/exercises/",
+                    heading: "Chest presses with stick",
+                    description: "In this exercise, you will do chest presses while seated or standing. You need some sort of stick for this exercise, for example a broom."
+                ),
+              3 =>
+                TutorialStep(assetURI: "assets/images/exercises/",
+                    heading: "Bicep curls with stick",
+                    description: "In this exercise, you will do bicep curls while seated or standing. You will need some sort of stick for this exercise, for example a broom."
+                ),
+              4 =>
+                TutorialStep(assetURI: "assets/images/exercises/",
+                    heading: "Drinking from glass / bottle",
+                    description: "In this exercise, you will drink (imaginary) water. You will need a glass or a bottle. Or you can drink whatever you want. WARNING! Do not drink chemicals or other dangerous liquids!"
+                ),
+              int() => // Out of range, this shouldn't happen
+                TutorialStep(assetURI: "ErrorImage",
+                    heading: "Error",
+                    description: "Error"
+                ),
+              }*/
             );
             SelectedOptions.repetitions = repetitionSelectViewModel.repetitions;
           }

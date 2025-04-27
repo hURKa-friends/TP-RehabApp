@@ -78,11 +78,42 @@ class ExerciseStartState extends StatefulPageState {
                     textAlign: TextAlign.center,
                   ),
                 int() => Text( // Out of range, this shouldn't happen
-                  "Drinking from glass / bottle",
+                  "Error",
                   style: headerStyle(),
                   textAlign: TextAlign.center,
                 ),
-              }
+              },
+              space(30),
+              // obrazok pre dalsi pohyb
+              Image.asset(
+                switch (SelectedOptions.exercise) {
+                1 =>
+                  switch (exerciseStartViewModel.nextSetpoint) {
+                  0 => "assets/arm_rehab/images/shoulder_blades/",
+                  1 => "assets/arm_rehab/images/shoulder_blades/",
+                  int() => "ErrorImage", // Out of range, this shouldn't happen
+                  },
+                2 =>
+                  switch (exerciseStartViewModel.nextSetpoint) {
+                    0 => "assets/arm_rehab/images/chest_press/",
+                    1 => "assets/arm_rehab/images/chest_press/",
+                    int() => "ErrorImage", // Out of range, this shouldn't happen
+                  },
+                3 =>
+                  switch (exerciseStartViewModel.nextSetpoint) {
+                    0 => "assets/arm_rehab/images/bicep_curls/",
+                    1 => "assets/arm_rehab/images/bicep_curls/",
+                    int() => "ErrorImage", // Out of range, this shouldn't happen
+                  },
+                4 =>
+                  switch (exerciseStartViewModel.nextSetpoint) {
+                    0 => "assets/arm_rehab/images/drinking/",
+                    1 => "assets/arm_rehab/images/drinking/",
+                    int() => "ErrorImage", // Out of range, this shouldn't happen
+                  },
+                int() => "ErrorImage", // Out of range, this shouldn't happen
+                },
+              ),
             ],
           ),
       ),

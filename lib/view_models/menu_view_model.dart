@@ -18,7 +18,7 @@ class MenuViewModel extends ChangeNotifier {
     ExerciseSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation",
       tutorialSteps: [
         TutorialStep(
-          assetURI: "assets/arm_rehab/armband.jpg",
+          assetURI: "assets/arm_rehab/images/armband.jpg",
           heading: "Armband required",
           description: "For this arm rehabilitation, you need armband to mount your phone.")
       ],

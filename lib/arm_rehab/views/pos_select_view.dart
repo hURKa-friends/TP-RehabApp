@@ -59,7 +59,7 @@ class PosSelectView extends StatelessPage {
                           posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                           SelectedOptions.pos = SelectedPos.shoulder;
                         },
-                        icon: Image.asset("assets/arm_rehab/shoulder.png"),
+                        icon: Image.asset("assets/arm_rehab/images/settings/pos_select/shoulder.png"),
                       ),
                     ),
                     space(20),
@@ -71,7 +71,7 @@ class PosSelectView extends StatelessPage {
                           posSelectViewModel.selectPage(context, OrientSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                           SelectedOptions.pos = SelectedPos.wrist;
                         },
-                        icon: Image.asset("assets/arm_rehab/wrist.png"),
+                        icon: Image.asset("assets/arm_rehab/images/settings/pos_select/wrist.png"),
                       ),
                     ),
                   ],

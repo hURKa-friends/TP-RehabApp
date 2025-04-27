@@ -58,7 +58,7 @@ class OrientSelectView extends StatelessPage {
                         orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.frontUp;
                       },
-                      icon: Image.asset("assets/arm_rehab/orient_front_up.jpg"),
+                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_front_up.jpg"),
                     ),
                   ),
                   space(10),
@@ -70,7 +70,7 @@ class OrientSelectView extends StatelessPage {
                         orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.frontDown;
                       },
-                      icon: Image.asset("assets/arm_rehab/orient_front_down.jpg"),
+                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_front_down.jpg"),
                     ),
                   ),
                   space(10),
@@ -82,7 +82,7 @@ class OrientSelectView extends StatelessPage {
                         orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.backUp;
                       },
-                      icon: Image.asset("assets/arm_rehab/orient_back_up.jpg"),
+                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_back_up.jpg"),
                     ),
                   ),
                   space(10),
@@ -94,7 +94,7 @@ class OrientSelectView extends StatelessPage {
                         orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
                         SelectedOptions.orient = SelectedOrient.backDown;
                       },
-                      icon: Image.asset("assets/arm_rehab/orient_back_down.jpg"),
+                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_back_down.jpg"),
                     ),
                   ),
                 ],

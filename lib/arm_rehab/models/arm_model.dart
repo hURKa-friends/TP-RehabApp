@@ -14,6 +14,101 @@ class SelectedOptions {
   SelectedOptions();
 }
 
+class Setpoints {
+  late final double shoulderBlades0X;
+  late final double shoulderBlades0Y;
+  late final double shoulderBlades0Z;
+  late final double shoulderBlades1X;
+  late final double shoulderBlades1Y;
+  late final double shoulderBlades1Z;
+
+  late final double chestPress0X;
+  late final double chestPress0Y;
+  late final double chestPress0Z;
+  late final double chestPress1X;
+  late final double chestPress1Y;
+  late final double chestPress1Z;
+
+  late final double bicepCurls0X;
+  late final double bicepCurls0Y;
+  late final double bicepCurls0Z;
+  late final double bicepCurls1X;
+  late final double bicepCurls1Y;
+  late final double bicepCurls1Z;
+
+  late final double drinking0X;
+  late final double drinking0Y;
+  late final double drinking0Z;
+  late final double drinking1X;
+  late final double drinking1Y;
+  late final double drinking1Z;
+
+  Setpoints() {
+    switch (SelectedOptions.pos) {
+      case SelectedPos.shoulder:
+        /*shoulderBlades0X = ;
+        shoulderBlades0Y = ;
+        shoulderBlades0Z = ;
+        shoulderBlades1X = ;
+        shoulderBlades1Y = ;
+        shoulderBlades1Z = ;
+
+        chestPress0X = ;
+        chestPress0Y = ;
+        chestPress0Z = ;
+        chestPress1X = ;
+        chestPress1Y = ;
+        chestPress1Z = ;
+
+        bicepCurls0X = ;
+        bicepCurls0Y = ;
+        bicepCurls0Z = ;
+        bicepCurls1X = ;
+        bicepCurls1Y = ;
+        bicepCurls1Z = ;
+
+        drinking0X = ;
+        drinking0Y = ;
+        drinking0Z = ;
+        drinking1X = ;
+        drinking1Y = ;
+        drinking1Z = ;*/
+
+        break;
+      case SelectedPos.wrist:
+        /*shoulderBlades0X = ;
+        shoulderBlades0Y = ;
+        shoulderBlades0Z = ;
+        shoulderBlades1X = ;
+        shoulderBlades1Y = ;
+        shoulderBlades1Z = ;
+
+        chestPress0X = ;
+        chestPress0Y = ;
+        chestPress0Z = ;
+        chestPress1X = ;
+        chestPress1Y = ;
+        chestPress1Z = ;
+
+        bicepCurls0X = ;
+        bicepCurls0Y = ;
+        bicepCurls0Z = ;
+        bicepCurls1X = ;
+        bicepCurls1Y = ;
+        bicepCurls1Z = ;
+
+        drinking0X = ;
+        drinking0Y = ;
+        drinking0Z = ;
+        drinking1X = ;
+        drinking1Y = ;
+        drinking1Z = ;*/
+
+        break;
+      };
+  }
+}
+
 Widget space(double size) {
   return SizedBox(
     height: size,
