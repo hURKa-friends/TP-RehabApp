@@ -28,6 +28,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
   int repetitions = 0;
   double currentAngleShoulder = 0;
+  bool outOfLimits = false;
 
   // Constructor
   PoseDetectionViewModel() {
@@ -116,13 +117,13 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
     double? angleRad = calculateAngleRad(
                                   poses,
-                                  exercise.jointAngleLocations[0]);
+                                  exercise.jointAngleLocations[1]);
     if (angleRad != null){
       currentAngleShoulder = angleRad * (180 / pi);
     }
+    outOfLimits = exercise.outOfLimits;
 
-    repetitions += checkCorrectRep(exercise, currentAngleShoulder);
-
+    repetitions += checkCorrectRepetition(exercise, poses);
 
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
@@ -183,7 +184,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
         double v2y = joint3.y - joint2.y;
 
         double dotProduct = v1x * v2x + v1y * v2y;
-
         double v1Length = sqrt(v1x * v1x + v1y * v1y);
         double v2Length = sqrt(v2x * v2x + v2y * v2y);
 
@@ -197,22 +197,52 @@ class PoseDetectionViewModel extends ChangeNotifier{
       }
     }
   }   // calculateAngleRad
-  }   // PoseDetectionViewModel
 
-  int checkCorrectRep(ShoulderExercise e, double angle){
-  if(angle > e.jointLimits[0].lower - e.jointLimits[0].tolerance &&
-      angle < e.jointLimits[0].lower + e.jointLimits[0].tolerance){
-    e.jointLimits[0].reachedLow = true;
+  int checkCorrectRepetition(ShoulderExercise e, List<Pose> poses){
+    for(int i = 0; i < e.jointLimits.length; i++){
+      double? angleRad = calculateAngleRad(
+          poses,
+          e.jointAngleLocations[i]);
+
+      if (angleRad != null){
+        double angle = angleRad * (180 / pi);
+
+        switch (e.jointLimits[i].limitType) {
+          case LimitType.inLimits: // checking if angle is out of interval
+            if(angle < (e.jointLimits[i].lower - e.jointLimits[i].tolerance) ||
+                angle > (e.jointLimits[i].upper + e.jointLimits[i].tolerance)) {
+              e.outOfLimits = true;
+            }
+            break;
+          case LimitType.reachLimits: // checking if rep angle limits were reached
+            if(angle > e.jointLimits[i].lower - e.jointLimits[i].tolerance &&
+                angle < e.jointLimits[i].lower + e.jointLimits[i].tolerance){
+              e.jointLimits[i].reachedLow = true;
+              e.outOfLimits = false;
+            }
+            else if((angle > e.jointLimits[i].upper - e.jointLimits[i].tolerance &&
+                angle < e.jointLimits[i].upper + e.jointLimits[i].tolerance) &&
+                e.jointLimits[i].reachedLow){
+              e.jointLimits[i].reachedLow = false;
+              if (!e.outOfLimits){
+                e.correctRepetition = true;
+              }
+            }
+            break;
+        }
+      }
+    }
+
+    if(e.correctRepetition == true){
+      e.correctRepetition = false;
+      return 1;
+    }
+    else{
+      return 0;
+    }
   }
-  else if((angle > e.jointLimits[0].upper - e.jointLimits[0].tolerance &&
-          angle < e.jointLimits[0].upper + e.jointLimits[0].tolerance) &&
-          e.jointLimits[0].reachedLow){
-    // e.jointLimits[0].reachedHigh = true;
-    e.jointLimits[0].reachedLow = false;
-    return 1;
-  }
-  return 0;
-  }
+}   // PoseDetectionViewModel
+
 class PosePainter extends CustomPainter {
   PosePainter(
       this.poses,

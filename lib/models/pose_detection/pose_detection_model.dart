@@ -6,11 +6,19 @@ enum ExerciseType {
   shoulderAbductionActive,
 }
 
+// part of AngleLimitsDeg (enum cannot be declared in class)
+enum LimitType{
+  inLimits,   // must be in limits to return true
+  reachLimits,  // must reach limits to return true
+}
+
 abstract class ShoulderExercise {
   final ExerciseType type;
   final List<List<PoseLandmarkType>> jointAngleLocations;
   final List<AngleLimitsDeg> jointLimits;
   final double repetitions;
+  bool correctRepetition = false;
+  bool outOfLimits = true;
 
   ShoulderExercise({
     required this.type,
@@ -28,16 +36,29 @@ class ShoulderAbductionActive extends ShoulderExercise {
     PoseLandmarkType.rightShoulder,
     PoseLandmarkType.rightElbow,
   ];
+  static List<PoseLandmarkType> rightElbowPoints = [
+    PoseLandmarkType.rightShoulder,
+    PoseLandmarkType.rightElbow,
+    PoseLandmarkType.rightWrist,
+  ];
 
   static List<List<PoseLandmarkType>> anglePoints = [
     rightShoulderPoints,
+    rightElbowPoints,
   ];
 
   static List<AngleLimitsDeg> limits = [
     AngleLimitsDeg(
+        limitType: LimitType.reachLimits,
         upper: 90,
         lower: 20,
         tolerance: 5,
+        ),
+    AngleLimitsDeg(
+        limitType: LimitType.inLimits,
+        upper: 180,
+        lower: 180,
+        tolerance: 15,
         ),
   ];
 
@@ -60,7 +81,10 @@ class ExerciseFactory {
   }
 }
 
+
+
 class AngleLimitsDeg {
+  final LimitType limitType;
   final double upper;
   final double lower;
   final double tolerance;
@@ -69,6 +93,7 @@ class AngleLimitsDeg {
   bool reachedHigh = false;
 
   AngleLimitsDeg({
+    required this.limitType,
     required this.upper,
     required this.lower,
     required this.tolerance,

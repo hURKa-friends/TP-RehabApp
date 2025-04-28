@@ -77,7 +77,7 @@ class PoseDetectionViewState extends StatefulPageState {
                   'Reps: ${poseDetectionViewModel.repetitions}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -86,7 +86,16 @@ class PoseDetectionViewState extends StatefulPageState {
                   'Shoulder Angle: ${poseDetectionViewModel.currentAngleShoulder}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8), // Space between text widgets
+                Text(
+                  'OOL: ${poseDetectionViewModel.outOfLimits}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
