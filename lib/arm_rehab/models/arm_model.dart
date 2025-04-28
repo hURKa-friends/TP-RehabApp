@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 enum SelectedArm {left, right}
 enum SelectedPos {shoulder, wrist}
-enum SelectedOrient {frontUp, frontDown, backUp, backDown}
 
 class SelectedOptions {
   static late SelectedArm arm;
   static late SelectedPos pos;
-  static late SelectedOrient orient;
   static late int exercise;
   static late int repetitions;
 
@@ -116,20 +114,14 @@ Widget space(double size) {
   );
 }
 
-Row exercise(String name, String description, int exerciseNumber, void Function() selectPage) {
+Row exercise(String name, int exerciseNumber, void Function() selectPage) {
   return Row( // Exercise
-    mainAxisAlignment: MainAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
       Flexible(
         child: Text(
           name,
-        ),
-      ),
-      space(15),
-      Flexible(
-        child: Text(
-          description,
         ),
       ),
       space(20),

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/arm_rehab/models/arm_model.dart';
 import 'package:rehab_app/arm_rehab/views/pos_select_view.dart';
-import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
+import 'package:rehab_app/services/page_management/models/stateless_page_model.dart';
 
 import 'package:rehab_app/arm_rehab/view_models/exercise_start_view_model.dart';
 
-class ExerciseStartView extends StatefulPage {
+class ExerciseStartView extends StatelessPage {
   const ExerciseStartView({
     super.key,
     required super.icon,
@@ -29,11 +29,6 @@ class ExerciseStartView extends StatefulPage {
     exerciseStartViewModel.onClose();
   }
 
-  @override
-  ExerciseStartState createState() => ExerciseStartState();
-}
-
-class ExerciseStartState extends StatefulPageState {
   @override
   Widget buildPage(BuildContext context) {
     var exerciseStartViewModel = context.watch<ExerciseStartViewModel>();

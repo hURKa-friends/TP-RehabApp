@@ -37,71 +37,24 @@ class OrientSelectView extends StatelessPage {
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Select orientation of your phone (camera aims towards your head)",
+              "Please orient your phone so that camera aims towards ground and display aims away from you)",
               style: headerStyle(),
               textAlign: TextAlign.center,
             ),
-            space(30),
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                physics: AlwaysScrollableScrollPhysics(),
-                children: <Widget>[
-                  SizedBox(
-                    width: orientSelectViewModel.imageSize,
-                    height: orientSelectViewModel.imageSize,
-                    child: IconButton(
-                      onPressed:() {
-                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                        SelectedOptions.orient = SelectedOrient.frontUp;
-                      },
-                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_front_up.jpg"),
-                    ),
-                  ),
-                  space(10),
-                  SizedBox(
-                    width: orientSelectViewModel.imageSize,
-                    height: orientSelectViewModel.imageSize,
-                    child: IconButton(
-                      onPressed:() {
-                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                        SelectedOptions.orient = SelectedOrient.frontDown;
-                      },
-                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_front_down.jpg"),
-                    ),
-                  ),
-                  space(10),
-                  SizedBox(
-                    width: orientSelectViewModel.imageSize,
-                    height: orientSelectViewModel.imageSize,
-                    child: IconButton(
-                      onPressed:() {
-                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                        SelectedOptions.orient = SelectedOrient.backUp;
-                      },
-                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_back_up.jpg"),
-                    ),
-                  ),
-                  space(10),
-                  SizedBox(
-                    width: orientSelectViewModel.imageSize,
-                    height: orientSelectViewModel.imageSize,
-                    child: IconButton(
-                      onPressed:() {
-                        orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
-                        SelectedOptions.orient = SelectedOrient.backDown;
-                      },
-                      icon: Image.asset("assets/arm_rehab/images/settings/orient_select/orient_back_down.jpg"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            Image.asset("assets/arm_rehab/images/settings/orient_select/"),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          orientSelectViewModel.selectPage(context, RepetitionSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
+        },
+        backgroundColor: Colors.lightGreen,
+        child: Icon(Icons.check),
       ),
     );
   }

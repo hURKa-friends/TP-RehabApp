@@ -46,7 +46,7 @@ class ExerciseSelectView extends StatelessPage {
             ),
             space(10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
@@ -69,8 +69,6 @@ class ExerciseSelectView extends StatelessPage {
                 children: <Widget>[
                   exercise(
                     "Retraction of shoulder blades",
-                    "In this exercise, you hold your hands together,"
-                        "arms straight, and retract your shoulder blades.",
                     1,
                     () {
                       exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
@@ -79,8 +77,6 @@ class ExerciseSelectView extends StatelessPage {
                   space(25),
                   exercise(
                       "Chest presses with stick",
-                      "In this exercise, you will do chest presses while seated or standing."
-                          "You need some sort of stick for this exercise, for example a broom.",
                       2,
                       () {
                         exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
@@ -89,8 +85,6 @@ class ExerciseSelectView extends StatelessPage {
                   space(25),
                   exercise(
                       "Bicep curls with stick",
-                      "In this exercise, you will do bicep curls while seated or standing."
-                          "You will need some sort of stick for this exercise, for example a broom.",
                       3,
                       () {
                         exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
@@ -99,8 +93,6 @@ class ExerciseSelectView extends StatelessPage {
                   space(25),
                   exercise(
                       "Drinking from glass / bottle",
-                      "In this exercise, you will drink (imaginary) water."
-                          "You will need a glass or a bottle.",
                       4,
                       () {
                         exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));

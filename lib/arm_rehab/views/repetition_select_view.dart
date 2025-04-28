@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/arm_rehab/models/arm_model.dart';
 import 'package:rehab_app/arm_rehab/views/exercise_start_view.dart';
-import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
+import 'package:rehab_app/services/page_management/models/stateless_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 
 import 'package:rehab_app/arm_rehab/view_models/repetition_select_view_model.dart';
 
-class RepetitionSelectView extends StatefulPage {
+class RepetitionSelectView extends StatelessPage {
   const RepetitionSelectView({
     super.key,
     required super.icon,
@@ -36,11 +36,6 @@ class RepetitionSelectView extends StatefulPage {
     repetitionSelectViewModel.onClose();
   }
 
-  @override
-  RepetitionSelectState createState() => RepetitionSelectState();
-}
-
-class RepetitionSelectState extends StatefulPageState {
   @override
   Widget buildPage(BuildContext context) {
     var repetitionSelectViewModel = context.watch<RepetitionSelectViewModel>();
@@ -81,35 +76,51 @@ class RepetitionSelectState extends StatefulPageState {
         backgroundColor: repetitionSelectViewModel.validValue ? Colors.lightGreen : Colors.grey,
         onPressed: () {
           if (repetitionSelectViewModel.validValue) {
-            repetitionSelectViewModel.selectPage(context, ExerciseStartView(icon: Icons.accessibility_new, title: "Arm rehabilitation"),
-              /*tutorialSteps:
-              switch (SelectedOptions.exercise) {
-              1 =>
-                TutorialStep(assetURI: "assets/images/exercises/shoulder_blades/shoulder_blades",
-                    heading: "Retraction of shoulder blades",
-                    description: "In this exercise, you hold your hands together, arms straight in front of you, and retract your shoulder blades."
+            repetitionSelectViewModel.selectPage(context,
+              ExerciseStartView(
+                    icon: Icons.accessibility_new,
+                    title: "Arm rehabilitation",
+                    tutorialSteps:
+                      switch (SelectedOptions.exercise) {
+                        1 =>
+                        repetitionSelectViewModel.addTutorial(
+                          TutorialStep(
+                            assetURI: "assets/images/exercises/shoulder_blades/shoulder_blades",
+                            heading: "Retraction of shoulder blades",
+                            description: "In this exercise, you hold your hands together, arms straight in front of you, and retract your shoulder blades."
+                          )
+                        ),
+                        2 =>
+                          repetitionSelectViewModel.addTutorial(
+                            TutorialStep(assetURI: "assets/images/exercises/chest_press/chest_press",
+                                heading: "Chest presses with stick",
+                                description: "In this exercise, you will do chest presses while seated or standing. You need some sort of stick for this exercise, for example a broom."
+                            ),
+                          ),
+                        3 =>
+                          repetitionSelectViewModel.addTutorial(
+                            TutorialStep(assetURI: "assets/images/exercises/bicep_curls/bicep_curls",
+                                heading: "Bicep curls with stick",
+                                description: "In this exercise, you will do bicep curls while seated or standing. You will need some sort of stick for this exercise, for example a broom."
+                            ),
+                          ),
+                        4 =>
+                          repetitionSelectViewModel.addTutorial(
+                            TutorialStep(assetURI: "assets/images/exercises/drinking/drinking",
+                                heading: "Drinking from glass / bottle",
+                                description: "In this exercise, you will drink (imaginary) water. You will need a glass or a bottle. Or you can drink whatever you want. WARNING! Do not drink chemicals or other dangerous liquids!"
+                            ),
+                          ),
+                        int() => // Out of range, this shouldn't happen
+                          repetitionSelectViewModel.addTutorial(
+                            TutorialStep(assetURI: "ErrorImage",
+                                heading: "Error",
+                                description: "Error"
+                            ),
+                          ),
+                      }
                 ),
-              2 =>
-                TutorialStep(assetURI: "assets/images/exercises/chest_press/chest_press",
-                    heading: "Chest presses with stick",
-                    description: "In this exercise, you will do chest presses while seated or standing. You need some sort of stick for this exercise, for example a broom."
-                ),
-              3 =>
-                TutorialStep(assetURI: "assets/images/exercises/bicep_curls/bicep_curls",
-                    heading: "Bicep curls with stick",
-                    description: "In this exercise, you will do bicep curls while seated or standing. You will need some sort of stick for this exercise, for example a broom."
-                ),
-              4 =>
-                TutorialStep(assetURI: "assets/images/exercises/drinking/drinking",
-                    heading: "Drinking from glass / bottle",
-                    description: "In this exercise, you will drink (imaginary) water. You will need a glass or a bottle. Or you can drink whatever you want. WARNING! Do not drink chemicals or other dangerous liquids!"
-                ),
-              int() => // Out of range, this shouldn't happen
-                TutorialStep(assetURI: "ErrorImage",
-                    heading: "Error",
-                    description: "Error"
-                ),
-              }*/
+
             );
             SelectedOptions.repetitions = repetitionSelectViewModel.repetitions;
           }

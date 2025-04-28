@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
+import 'package:rehab_app/services/page_management/models/stateless_page_model.dart';
+import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 
 class RepetitionSelectViewModel extends ChangeNotifier {
@@ -42,9 +43,15 @@ class RepetitionSelectViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectPage(BuildContext context, StatefulPage page) {
+  void selectPage(BuildContext context, StatelessPage page) {
     var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
     navigatorViewModel.selectPage(context, page);
+  }
+
+  List<TutorialStep> addTutorial(TutorialStep tutorial) {
+    List<TutorialStep> tutorialList = [tutorial];
+
+    return tutorialList;
   }
 
   bool get validValue => _validValue;
