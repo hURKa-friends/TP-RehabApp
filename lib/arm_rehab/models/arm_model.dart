@@ -8,6 +8,7 @@ class SelectedOptions {
   static late SelectedPos pos;
   static late int exercise;
   static late int repetitions;
+  static bool startTimer = false;
 
   SelectedOptions();
 }

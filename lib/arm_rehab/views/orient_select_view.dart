@@ -41,11 +41,11 @@ class OrientSelectView extends StatelessPage {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Please orient your phone so that camera aims towards ground and display aims away from you)",
+              "Please orient your phone so that camera and display aim away from you\n(See below)",
               style: headerStyle(),
               textAlign: TextAlign.center,
             ),
-            Image.asset("assets/arm_rehab/images/settings/orient_select/"),
+            Image.asset("assets/arm_rehab/images/settings/orient_select/armband_rotated.jpg"),
           ],
         ),
       ),

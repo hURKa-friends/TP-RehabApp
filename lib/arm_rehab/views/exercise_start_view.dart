@@ -64,7 +64,7 @@ class ExerciseStartView extends StatelessPage {
                 1 =>
                   switch (exerciseStartViewModel.nextSetpoint) {
                   0 => "assets/arm_rehab/images/exercises/shoulder_blades/shoulder_blades0",
-                  1 => "assets/arm_rehab/images/exercises/shoulder_blades/shoulder_blades1",
+                  1 => "assets/arm_rehab/images/exercises/shoulder_blades/shoulder_blades1.jpg",
                   int() => "ErrorImage", // Out of range, this shouldn't happen
                   },
                 2 =>

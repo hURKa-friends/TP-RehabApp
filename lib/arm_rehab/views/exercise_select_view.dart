@@ -55,12 +55,12 @@ class ExerciseSelectView extends StatelessPage {
                 ),
                 space(40),
                 Text(
-                  "Description",
+                  "Select",
                   style: headerStyle(),
                 ),
               ],
             ),
-            space(10),
+            space(20),
             Expanded(
               child: ListView(
                 shrinkWrap: true,

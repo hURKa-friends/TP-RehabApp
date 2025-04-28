@@ -54,12 +54,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
         headerData: "Timestamp, AcclX, AcclY, AcclZ, GyroX, GyroY, GyroZ"
     );
     SensorService().startAcclDataStream(samplingPeriod: Duration(milliseconds: 50));
-    SensorService().registerAcclDataStream(callback: (ImuSensorData data) => () {_acclData = data;});
+    SensorService().registerAcclDataStream(callback: (ImuSensorData data) => getAcclData(data));
     SensorService().startGyroDataStream(samplingPeriod: Duration(milliseconds: 50));
-    SensorService().registerGyroDataStream(callback: (ImuSensorData data) => () {
-      _gyroData = data;
-      writeToCsv("${_gyroData.timeStamp}, ${_acclData.x}, ${_acclData.y}, ${_acclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData.z}");
-    });
+    SensorService().registerGyroDataStream(callback: (ImuSensorData data) => getGyroData(data));
   }
 
   void onClose() {
@@ -73,19 +70,31 @@ class ExerciseStartViewModel extends ChangeNotifier {
     SensorService().stopGyroDataStream();
   }
 
+  void getAcclData(ImuSensorData data) {
+    _acclData = data;
+  }
+  
+  void getGyroData(ImuSensorData data) {
+    _gyroData = data;
+    writeToCsv("${_gyroData.timeStamp}, ${_acclData.x}, ${_acclData.y}, ${_acclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData.z}\n");
+  }
+
   void _timerFinish(Timer timer) {
-    _timerCount--;
+    if (SelectedOptions.startTimer) {
+      _timerCount--;
 
-    notifyListeners();
+      notifyListeners();
 
-    if (_timerCount >= 1) {
-      playShortBeep();
-    }
+      if (_timerCount >= 1) {
+        playShortBeep();
+      }
 
-    if (_timerCount == 0) {
-      playLongBeep();
-      _isTimerActive = false;
-      _countdownTimer.cancel();
+      if (_timerCount == 0) {
+        playLongBeep();
+        _isTimerActive = false;
+        SelectedOptions.startTimer = false;
+        _countdownTimer.cancel();
+      }
     }
   }
 
@@ -103,71 +112,81 @@ class ExerciseStartViewModel extends ChangeNotifier {
   void writeToCsv(String data) {
     if (!_isTimerActive) {
       _writeSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: _ownerID!, data: data);
-    }
 
-    switch (SelectedOptions.exercise) {
-    case 1:
-      switch (_nextSetpoint) {
-        case 0:
-          checkSetpoint(setpoints.shoulderBlades0X, setpoints.shoulderBlades0Y, setpoints.shoulderBlades0Z);
+      switch (SelectedOptions.exercise) {
+        case 1:
+          switch (_nextSetpoint) {
+            case 0:
+              checkSetpoint(
+                  setpoints.shoulderBlades0X, setpoints.shoulderBlades0Y,
+                  setpoints.shoulderBlades0Z);
+
+              break;
+            case 1:
+              checkSetpoint(
+                  setpoints.shoulderBlades1X, setpoints.shoulderBlades1Y,
+                  setpoints.shoulderBlades1Z);
+
+              break;
+            default:
+              break;
+          }
 
           break;
-        case 1:
-          checkSetpoint(setpoints.shoulderBlades1X, setpoints.shoulderBlades1Y, setpoints.shoulderBlades1Z);
+        case 2:
+          switch (_nextSetpoint) {
+            case 0:
+              checkSetpoint(setpoints.chestPress0X, setpoints.chestPress0Y,
+                  setpoints.chestPress0Z);
+
+              break;
+            case 1:
+              checkSetpoint(setpoints.chestPress1X, setpoints.chestPress1Y,
+                  setpoints.chestPress1Z);
+
+              break;
+            default:
+              break;
+          }
+
+          break;
+        case 3:
+          switch (_nextSetpoint) {
+            case 0:
+              checkSetpoint(setpoints.bicepCurls0X, setpoints.bicepCurls0Y,
+                  setpoints.bicepCurls0Z);
+
+              break;
+            case 1:
+              checkSetpoint(setpoints.bicepCurls1X, setpoints.bicepCurls1Y,
+                  setpoints.bicepCurls1Z);
+
+              break;
+            default:
+              break;
+          }
+
+          break;
+        case 4:
+          switch (_nextSetpoint) {
+            case 0:
+              checkSetpoint(setpoints.drinking0X, setpoints.drinking0Y,
+                  setpoints.drinking0Z);
+
+              break;
+            case 1:
+              checkSetpoint(setpoints.drinking1X, setpoints.drinking1Y,
+                  setpoints.drinking1Z);
+
+              break;
+            default:
+              break;
+          }
 
           break;
         default:
           break;
       }
-
-      break;
-    case 2:
-      switch (_nextSetpoint) {
-        case 0:
-          checkSetpoint(setpoints.chestPress0X, setpoints.chestPress0Y, setpoints.chestPress0Z);
-
-          break;
-        case 1:
-          checkSetpoint(setpoints.chestPress1X, setpoints.chestPress1Y, setpoints.chestPress1Z);
-
-          break;
-        default:
-          break;
-      }
-
-      break;
-    case 3:
-      switch (_nextSetpoint) {
-        case 0:
-          checkSetpoint(setpoints.bicepCurls0X, setpoints.bicepCurls0Y, setpoints.bicepCurls0Z);
-
-          break;
-        case 1:
-          checkSetpoint(setpoints.bicepCurls1X, setpoints.bicepCurls1Y, setpoints.bicepCurls1Z);
-
-          break;
-        default:
-          break;
-      }
-
-      break;
-    case 4:
-      switch (_nextSetpoint) {
-      case 0:
-        checkSetpoint(setpoints.drinking0X, setpoints.drinking0Y, setpoints.drinking0Z);
-
-        break;
-      case 1:
-        checkSetpoint(setpoints.drinking1X, setpoints.drinking1Y, setpoints.drinking1Z);
-
-        break;
-      default:
-        break;
-      }
-
-      break;
-    default:
-      break;
     }
   }
 

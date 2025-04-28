@@ -87,35 +87,40 @@ class RepetitionSelectView extends StatelessPage {
                           TutorialStep(
                             assetURI: "assets/images/exercises/shoulder_blades/shoulder_blades",
                             heading: "Retraction of shoulder blades",
-                            description: "In this exercise, you hold your hands together, arms straight in front of you, and retract your shoulder blades."
+                            description: "In this exercise, you hold your hands together, arms straight in front of you, and retract your shoulder blades.",
+                            function: () { SelectedOptions.startTimer = true; }
                           )
                         ),
                         2 =>
                           repetitionSelectViewModel.addTutorial(
                             TutorialStep(assetURI: "assets/images/exercises/chest_press/chest_press",
-                                heading: "Chest presses with stick",
-                                description: "In this exercise, you will do chest presses while seated or standing. You need some sort of stick for this exercise, for example a broom."
+                              heading: "Chest presses with stick",
+                              description: "In this exercise, you will do chest presses while seated or standing. You need some sort of stick for this exercise, for example a broom.",
+                              function: () { SelectedOptions.startTimer = true; }
                             ),
                           ),
                         3 =>
                           repetitionSelectViewModel.addTutorial(
                             TutorialStep(assetURI: "assets/images/exercises/bicep_curls/bicep_curls",
-                                heading: "Bicep curls with stick",
-                                description: "In this exercise, you will do bicep curls while seated or standing. You will need some sort of stick for this exercise, for example a broom."
+                              heading: "Bicep curls with stick",
+                              description: "In this exercise, you will do bicep curls while seated or standing. You will need some sort of stick for this exercise, for example a broom.",
+                              function: () { SelectedOptions.startTimer = true; }
                             ),
                           ),
                         4 =>
                           repetitionSelectViewModel.addTutorial(
                             TutorialStep(assetURI: "assets/images/exercises/drinking/drinking",
-                                heading: "Drinking from glass / bottle",
-                                description: "In this exercise, you will drink (imaginary) water. You will need a glass or a bottle. Or you can drink whatever you want. WARNING! Do not drink chemicals or other dangerous liquids!"
+                              heading: "Drinking from glass / bottle",
+                              description: "In this exercise, you will drink (imaginary) water. You will need a glass or a bottle. Or you can drink whatever you want. WARNING! Do not drink chemicals or other dangerous liquids!",
+                              function: () { SelectedOptions.startTimer = true; }
                             ),
                           ),
                         int() => // Out of range, this shouldn't happen
                           repetitionSelectViewModel.addTutorial(
                             TutorialStep(assetURI: "ErrorImage",
-                                heading: "Error",
-                                description: "Error"
+                              heading: "Error",
+                              description: "Error",
+                              function: () {  }
                             ),
                           ),
                       }

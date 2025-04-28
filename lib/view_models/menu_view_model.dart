@@ -20,7 +20,9 @@ class MenuViewModel extends ChangeNotifier {
         TutorialStep(
           assetURI: "assets/arm_rehab/images/armband.jpg",
           heading: "Armband required",
-          description: "For this arm rehabilitation, you need armband to mount your phone.")
+          description: "For this arm rehabilitation, you need armband to mount your phone.",
+          function: () {  }
+        ),
       ],
     ),
     ///
@@ -54,22 +56,26 @@ class MenuViewModel extends ChangeNotifier {
                        'Ak by bol text dlhší než určitý rozsah, automaticky sa stane "scrollovateľným" '
                        'tak aby bol čitateľný a nevyšiel preč z obrazovky, ani neovplyvnil umiestnenie '
                        'ostatných UI prvkov.',
+          function: () {  }
         ),
         TutorialStep(
           assetURI: 'assets/example/001_exercise.gif',
           heading: '2. Krok',
           description: 'Medzi krokmi tutoriálu sa dá voľne navigovať dopredu, dozadu.',
+          function: () {  }
         ),
         TutorialStep(
           assetURI: 'assets/example/FEI_logo.gif',
           heading: '3. Krok',
           description: 'Zobraziť sa dá čokoľvek (.gif, .jpg, .png) a aj v lepšej kvalite.',
+          function: () {  }
         ),
         TutorialStep(
           assetURI: 'assets/example/002_exercise.gif',
           heading: 'Potvrdenie',
           description: 'Posledný krok obsahuje tlačidlo potvrdenia, ktorým sa ukončí tutoriál a '
                        'zobrazí sa pôvodne otvorená stránka.',
+          function: () {  }
         ),
       ],
     ),
