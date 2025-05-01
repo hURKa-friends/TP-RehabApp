@@ -19,10 +19,6 @@ class KneeRehabView extends StatefulPage {
   void initPage(BuildContext context) {
     // Here you can call page initialization code or reference ViewModel initialization like this:
     var kneeRehabViewModel = Provider.of<KneeRehabViewModel>(context, listen: false); /// IMPORTANT listen must be false
-    var gyroViewModel = Provider.of<GyroViewModel>(context, listen: false);
-    var acclViewModel = Provider.of<AcclViewModel>(context, listen: false);
-    gyroViewModel.registerSensorService();
-    acclViewModel.registerSensorService();
     kneeRehabViewModel.onInit();
   }
 
@@ -30,10 +26,6 @@ class KneeRehabView extends StatefulPage {
   void closePage(BuildContext context) {
     // Here you can call page closing code or reference ViewModel disposal like this:
     var kneeRehabViewModel = Provider.of<KneeRehabViewModel>(context, listen: false); /// IMPORTANT listen must be false
-    var gyroViewModel = Provider.of<GyroViewModel>(context, listen: false);
-    var acclViewModel = Provider.of<AcclViewModel>(context, listen: false);
-    gyroViewModel.onClose();
-    acclViewModel.onClose();
     kneeRehabViewModel.onClose();
   }
 
@@ -42,40 +34,52 @@ class KneeRehabView extends StatefulPage {
 }
 
 class KneeRehabViewState extends StatefulPageState {
-  String _dropdownValue = "Pravá noha";
 
   @override
   Widget buildPage(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
-          child: Column(
-          children: [
-            Padding(padding: const EdgeInsets.symmetric(vertical: 8),
-              child: DropdownButton<String>(
-                  value: _dropdownValue,
-                  isExpanded: true,
-                  items: const [
-                    DropdownMenuItem(value: "Pravá noha", child: Text("Ľavá noha")),
-                    DropdownMenuItem(value: "Ľavá noha", child: Text("Pravá noha"))
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _dropdownValue = value!;
-                    });
-                  }
-              ),
-            ),
-            Padding(padding: const EdgeInsets.symmetric(vertical: 8),
-            child: GyroView()
-            ),
-            Padding(padding: const EdgeInsets.symmetric(vertical: 8),
-            child: AcclView(),
-            ),
-          ],
-      ),
-      ),
-    );
-  }
+    var viewModel = context.watch<KneeRehabViewModel>();
 
+    return SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+            child: Column(
+                children: [
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: DropdownButton<String>(
+                            value: viewModel.name,
+                            hint: const Text("Vyber nohu"),
+                            isExpanded: true,
+                            items: const [
+                                DropdownMenuItem(value: "Pravá noha", child: Text("Pravá noha")),
+                                DropdownMenuItem(value: "Ľavá noha", child: Text("Ľavá noha"))
+                            ],
+                            onChanged: (value) {setState(() {viewModel.name = value!;});}),
+                    ),
+                    Column(
+                        children: [
+                            Text("X-Axis (${viewModel.acclData.isNotEmpty ? viewModel.acclData.last.x.toStringAsFixed(2) : '0'})"),
+                            Text("Y-Axis (${viewModel.acclData.isNotEmpty ? viewModel.acclData.last.y.toStringAsFixed(2) : '0'})"),
+                            Text("Z-Axis (${viewModel.acclData.isNotEmpty ? viewModel.acclData.last.z.toStringAsFixed(2) : '0'})"),
+                        ],
+                    ),
+                    Column(
+                        children: [
+                            Text("X-Axis (${viewModel.gyroData.isNotEmpty ? viewModel.gyroData.last.x.toStringAsFixed(2) : '0'})"),
+                            Text("Y-Axis (${viewModel.gyroData.isNotEmpty ? viewModel.gyroData.last.y.toStringAsFixed(2) : '0'})"),
+                            Text("Z-Axis (${viewModel.gyroData.isNotEmpty ? viewModel.gyroData.last.z.toStringAsFixed(2) : '0'})"),
+                        ],
+                    ),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 18),
+                      child: Column(
+                        children: [
+                          if (viewModel.name != null)
+                            Text("blabla")
+                        ],
+                      ),
+                    )
+                ],
+            ),
+        ),
+    );
+    }
 }
