@@ -20,12 +20,15 @@ class KneeRehabViewModel extends ChangeNotifier {
 
   Future<void> onInit() async {
     // Here you can call ViewModel initialization code.
-    SensorService().startGyroDataStream(samplingPeriod: Duration(milliseconds: 50));
-    SensorService().registerGyroDataStream(callback: (ImuSensorData data) => onGyroDataChanged(data));
     SensorService().startAcclDataStream(samplingPeriod: Duration(milliseconds: 50));
     SensorService().registerAcclDataStream(callback: (ImuSensorData data) => onAcclDataChanged(data));
+    SensorService().startGyroDataStream(samplingPeriod: Duration(milliseconds: 50));
+    SensorService().registerGyroDataStream(callback: (ImuSensorData data) => onGyroDataChanged(data));
 
-    UOID = await LoggerService().openCsvLogChannel(access: ChannelAccess.private, fileName: 'knee_rehab', headerData: 'time, x, y, z');
+    UOID = await LoggerService().openCsvLogChannel(
+        access: ChannelAccess.private,
+        fileName: 'knee_rehab',
+        headerData: 'time, gyro_x, gyro_y, gyro_z, accl_x, accl_y, accl_z');
   }
 
   void onClose() {
@@ -38,25 +41,30 @@ class KneeRehabViewModel extends ChangeNotifier {
   }
 
   void onGyroDataChanged(ImuSensorData data) {
-     if (gyroData.length > 100) {
-       gyroData.removeAt(0);
-     }
-     gyroData.add(data);
+    if (gyroData.length > 100) {
+      gyroData.removeAt(0);
+    }
+    gyroData.add(data);
 
-     bool wasSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: UOID!,
-        data: "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}\n");
+    if (name != null) {
+      bool wasSuccessful = LoggerService().log(
+          channel: LogChannel.csv,
+          ownerId: UOID!,
+          data:
+              "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}, "
+                  "${acclData.last.x}, ${acclData.last.y}, ${acclData.last.z}\n");
+    }
 
-     gyroIndex++;
-     notifyListeners();
+    gyroIndex++;
+    notifyListeners();
   }
 
   void onAcclDataChanged(ImuSensorData data) {
-     if (acclData.length > 100) {
-       acclData.removeAt(0);
-     }
-     acclData.add(data);
-     acclIndex++;
-     notifyListeners();
+    if (acclData.length > 100) {
+      acclData.removeAt(0);
+    }
+    acclData.add(data);
+    acclIndex++;
+    notifyListeners();
   }
-
 }

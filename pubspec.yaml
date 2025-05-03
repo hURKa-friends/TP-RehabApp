@@ -27,13 +27,15 @@ dependencies:
     sdk: flutter
 
   # Add your dependencies here:
-  cupertino_icons:    ^1.0.8
-  intl:               ^0.20.2
-  light_sensor:       ^3.0.1
+  cupertino_icons: ^1.0.8
+  intl: ^0.20.2
+  light_sensor: ^3.0.1
   permission_handler: ^11.4.0
-  provider:           ^6.1.2
-  sensors_plus:       ^6.1.1
+  provider: ^6.1.2
+  sensors_plus: ^6.1.1
   syncfusion_flutter_charts: ^28.2.6
+  hyperlink: ^0.0.4
+  url_launcher: ^6.2.5
 
 # Developer dependencies are other packages that your package needs ONLY
 # during development like for testing, code generation, or linting.
@@ -41,7 +43,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints:      ^5.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -91,3 +93,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: fonts/CustomIcons.ttf

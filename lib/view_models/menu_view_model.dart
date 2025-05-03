@@ -3,8 +3,9 @@ import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
 import 'package:rehab_app/views/example_view.dart';
-import 'package:rehab_app/views/knee_rehab_view.dart';
+import 'package:rehab_app/views/knee_rehab_test_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
+import 'package:rehab_app/custom_icon.dart';
 ///
 /// import your MVVM views here
 ///
@@ -65,7 +66,7 @@ class MenuViewModel extends ChangeNotifier {
         ),
       ],
     ),
-    KneeRehabView(icon: Icons.health_and_safety_outlined, title: "Knee rehabilitation",
+    KneeRehabView(icon: CustomIcons.knee_pain_icon, title: "Knee rehabilitation",
     tutorialSteps: [
       TutorialStep(assetURI: "assets/knee_rehab/leg_extensions01.jpg",
           heading: "1. Krok",
