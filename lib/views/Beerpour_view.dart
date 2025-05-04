@@ -21,23 +21,17 @@ class BeerPourPageState extends StatefulPageState<BeerPourPage> {
       create: (_) => BeerPourViewModel(),
       child: Consumer<BeerPourViewModel>(builder: (_, vm, __) {
         return Scaffold(
-          appBar: AppBar(title: Text(widget.title)),
           body: Column(children: [
             if (vm.countdownActive)
               Expanded(child: Center(child: Text('Starting in ${vm.countdown}...', style: TextStyle(fontSize: 32))))
             else ...[
-              SizedBox(height: 16),
+              SizedBox(height: 4),
               ElevatedButton(
                 onPressed: vm.sensorsRunning ? vm.stopExercise : vm.startExercise,
                 child: Text(vm.sensorsRunning ? 'Stop' : 'Start'),
               ),
               SizedBox(height: 24),
               Expanded(child: BeerGlassWidget(beerLevel: vm.beerLevel, angle: vm.angle)),
-              if (vm.sensorsRunning)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(vm.isPouring ? 'Pouring...' : 'Tilt to pour', style: TextStyle(fontSize: 18)),
-                ),
               Divider(),
               ElevatedButton(onPressed: vm.resetExercise, child: Text('Reset')),
             ],
@@ -48,20 +42,34 @@ class BeerPourPageState extends StatefulPageState<BeerPourPage> {
   }
 }
 
-class BeerGlassWidget extends StatelessWidget {
+class BeerGlassWidget extends StatefulWidget {
   final double beerLevel;
   final double angle;
 
   const BeerGlassWidget({required this.beerLevel, required this.angle, Key? key}) : super(key: key);
 
   @override
+  State<BeerGlassWidget> createState() => _BeerGlassWidgetState();
+}
+
+class _BeerGlassWidgetState extends State<BeerGlassWidget> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final size = MediaQuery.of(context).size;
+    final glassWidth = size.width * 1;
+    final glassHeight = size.height * 0.725;
+    Provider.of<BeerPourViewModel>(context, listen: false).setGlassDimensions(glassWidth, glassHeight);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    // Define glass interior area
-    final glassWidth = size.width * 0.6;
-    final glassHeight = size.height * 0.8;
+    // Define glass interior area (these are used for positioning the painter)
+    final glassWidth = size.width * 1;
+    final glassHeight = size.height * 0.725;
     final dx = (size.width - glassWidth) / 2;
-    final dy = (size.height - glassHeight) / 2;
+    final dy = (size.height - (glassHeight * 1.375));
 
     return Stack(children: [
       Positioned(
@@ -71,8 +79,8 @@ class BeerGlassWidget extends StatelessWidget {
         height: glassHeight,
         child: CustomPaint(
           painter: GlassLiquidPainter(
-            beerLevel: beerLevel,
-            angle: angle,
+            beerLevel: widget.beerLevel,
+            angle: widget.angle,
           ),
         ),
       ),
@@ -96,34 +104,53 @@ class GlassLiquidPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.amber;
+    if (beerLevel <= 0) {
+      return; // Don't paint anything if beerLevel is zero or negative
+    }
+    final paint = Paint()..color = Colors.amber.withOpacity(0.85);
     final width = size.width;
     final height = size.height;
-    // Total area of liquid
-    final totalArea = width * height * beerLevel;
-    // Height difference between sides due to tilt
-    final deltaH = tan(angle) * width;
-    // Rectangle portion height
-    final hRect = (totalArea / width) - deltaH / 2;
-    // Clamp
-    final hClamped = hRect.clamp(0.0, height);
-    final dH = deltaH;
 
-    // Define polygon points (in local coords, origin top-left)
-    final yLeft = height - (hClamped + dH);
-    final yRight = height - hClamped;
+    final currentLiquidHeight = height * beerLevel;
+    final tiltOffset = tan(angle) * width / 2; // Offset from the center
+
+    // Calculate the y-coordinates of the liquid surface at the edges
+    final yLeft = height - (currentLiquidHeight + tiltOffset).clamp(0.0, height);
+    final yRight = height - (currentLiquidHeight - tiltOffset).clamp(0.0, height);
+
     final path = Path()
       ..moveTo(0, height)
       ..lineTo(width, height)
-      ..lineTo(width, yRight)
-      ..lineTo(0, yLeft)
-      ..close();
+      ..lineTo(width, yRight.clamp(0.0, height)); // Ensure within bounds
 
-    // Clip to glass interior
+    // Define the top edge of the liquid (trapezoid)
+    path.lineTo(0, yLeft.clamp(0.0, height)); // Ensure within bounds
+
+    path.close();
+
+    // Clip to the glass area
     canvas.clipRect(Rect.fromLTWH(0, 0, width, height));
-    // Draw liquid polygon
+
+    // Draw the liquid
     canvas.drawPath(path, paint);
+
+    // Optional drip effect - adjust dripX based on which side is lower
+    if (yLeft <= 0 || yRight <= 0) {
+      final dripPaint = Paint()..color = Colors.amber.withOpacity(0.6);
+      final dripRadius = width * 0.01;
+      double dripX;
+      if (yLeft <= 0 && yRight <= 0) {
+        dripX = width / 2; // Drip in the middle if both sides are over
+      } else if (yLeft <= 0) {
+        dripX = 0.0;
+      } else {
+        dripX = width.toDouble();
+      }
+      final dripY = 0.0;
+      canvas.drawCircle(Offset(dripX, dripY + 10), dripRadius, dripPaint);
+    }
   }
+
 
   @override
   bool shouldRepaint(covariant GlassLiquidPainter old) {

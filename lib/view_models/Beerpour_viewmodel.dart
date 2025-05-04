@@ -23,6 +23,8 @@ class BeerPourViewModel extends ChangeNotifier {
   double _beerLevel = 1.0;
   double _angle = 0.0;
   bool _isPouring = false;
+  double? _glassWidth;
+  double? _glassHeight;
 
   // Getters
   ImuSensorData get acclData => _acclData;
@@ -33,6 +35,13 @@ class BeerPourViewModel extends ChangeNotifier {
   double get beerLevel => _beerLevel;
   double get angle => _angle;
   bool get isPouring => _isPouring;
+  double? get glassWidth => _glassWidth;
+  double? get glassHeight => _glassHeight;
+
+  void setGlassDimensions(double width, double height) {
+    _glassWidth = width;
+    _glassHeight = height;
+  }
 
   void startExercise() {
     if (_sensorsRunning) return;
@@ -99,21 +108,45 @@ class BeerPourViewModel extends ChangeNotifier {
   }
 
   void _checkPourState() {
-    const double threshold = pi / 4;
-    if (!_isPouring && _angle.abs() > threshold && _beerLevel > 0) {
-      _isPouring = true;
+    if (_glassWidth == null || _glassHeight == null) {
+      return;
     }
+
+    final width = _glassWidth!;
+    final height = _glassHeight!;
+    final currentLiquidHeight = height * _beerLevel;
+    final tiltOffset = tan(_angle) * width / 2;
+
+    final yLeftRaw = (currentLiquidHeight + tiltOffset);
+    final yRightRaw = (currentLiquidHeight - tiltOffset);
+
+    final pouringLeft = yLeftRaw > height; // Top left above rim
+    final pouringRight = yRightRaw > height; // Top right above rim
+
+    _isPouring = (pouringLeft || pouringRight) && _beerLevel > 0;
+
     if (_isPouring) {
-      _beerLevel = max(0.0, _beerLevel - 0.005);
+      double pourRate = 0.0005; // Base rate
+
+      if (pouringLeft) {
+        pourRate += (yLeftRaw - height) * 0.0002; // Increase rate based on how much it's over
+      }
+      if (pouringRight) {
+        pourRate += (yRightRaw - height) * 0.002; // Increase rate based on how much it's over
+      }
+
+      _beerLevel = max(0.0, _beerLevel - pourRate);
       if (_beerLevel <= 0) {
         _beerLevel = 0.0;
         _isPouring = false;
       }
-    }
-    if (_angle.abs() < threshold) {
+    } else if (!pouringLeft && !pouringRight) {
       _isPouring = false;
     }
+    print("Beer Level: $_beerLevel"); // ADD THIS LINE
   }
+
+
 
   Future<void> _openLogChannel() async {
     if (_logOwnerId == null) {
