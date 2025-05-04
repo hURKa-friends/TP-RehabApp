@@ -37,8 +37,8 @@ class LoggerServiceInternal {
   }
   Future<bool> _managePermissions() async {
     final storagePermission = await Permission.storage.request().isGranted;
-    final externalPermission = await Permission.manageExternalStorage.request().isGranted;
-    return true;storagePermission && externalPermission;
+    //final externalPermission = await Permission.manageExternalStorage.request().isGranted;
+    return storagePermission;// && externalPermission;
   }
   Future<bool> _initializeStorage() async {
     try {

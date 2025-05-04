@@ -13,6 +13,24 @@ class SelectedOptions {
   SelectedOptions();
 }
 
+class NormalizeSensorValues {
+  late double gyroMaxX;
+  late double gyroMaxY;
+  late double gyroMaxZ;
+  late double acclMaxX;
+  late double acclMaxY;
+  late double acclMaxZ;
+
+  NormalizeSensorValues(
+      this.gyroMaxX,
+      this.gyroMaxY,
+      this.gyroMaxZ,
+      this.acclMaxX,
+      this.acclMaxY,
+      this.acclMaxZ,
+  );
+}
+
 class Setpoints {
   late final double shoulderBlades0X;
   late final double shoulderBlades0Y;

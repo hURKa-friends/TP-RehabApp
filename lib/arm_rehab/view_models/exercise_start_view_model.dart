@@ -19,12 +19,16 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late String? _ownerID;
   late bool _writeSuccessful;
   late ImuSensorData _acclData;
+  late ImuSensorData _userAcclData;
   late ImuSensorData _gyroData;
-  final _playerShort = AudioPlayer();
-  final _playerLong = AudioPlayer();
-  final toleranceX = 0.5;
-  final toleranceY = 0.5;
-  final toleranceZ = 0.5;
+  late AudioPlayer _playerShort;
+  late AudioPlayer _playerLong;
+  late double _currentX;
+  late double _currentY;
+  late double _currentZ;
+  final toleranceX = 0.2;
+  final toleranceY = 0.2;
+  final toleranceZ = 0.2;
   final setpoints = Setpoints();
 
   ExerciseStartViewModel() {
@@ -39,6 +43,8 @@ class ExerciseStartViewModel extends ChangeNotifier {
     _nextSetpoint = 1;
     _currentSetpoint = 0;
     _repetitionCount = 0;
+    _playerShort = AudioPlayer();
+    _playerLong = AudioPlayer();
     await _playerShort.setSource(AssetSource("arm_rehab/sounds/beeps/short_beep.m4a"));
     await _playerLong.setSource(AssetSource("arm_rehab/sounds/beeps/long_beep.m4a"));
     _ownerID = await LoggerService().openCsvLogChannel(
@@ -55,6 +61,8 @@ class ExerciseStartViewModel extends ChangeNotifier {
     );
     SensorService().startAcclDataStream(samplingPeriod: Duration(milliseconds: 50));
     SensorService().registerAcclDataStream(callback: (ImuSensorData data) => getAcclData(data));
+    SensorService().startUserAcclDataStream(samplingPeriod: Duration(milliseconds: 50));
+    SensorService().registerUserAcclDataStream(callback: (ImuSensorData data) => getUserAcclData(data));
     SensorService().startGyroDataStream(samplingPeriod: Duration(milliseconds: 50));
     SensorService().registerGyroDataStream(callback: (ImuSensorData data) => getGyroData(data));
   }
@@ -67,16 +75,26 @@ class ExerciseStartViewModel extends ChangeNotifier {
     _playerLong.dispose();
     LoggerService().closeLogChannelSafely(ownerId: _ownerID!, channel: LogChannel.csv);
     SensorService().stopAcclDataStream();
+    SensorService().stopUserAcclDataStream();
     SensorService().stopGyroDataStream();
   }
 
   void getAcclData(ImuSensorData data) {
     _acclData = data;
   }
+
+  void getUserAcclData(ImuSensorData data) {
+    _userAcclData = data;
+
+    _currentX = _acclData.x - _userAcclData.x;
+    _currentX = _acclData.x - _userAcclData.x;
+    _currentX = _acclData.x - _userAcclData.x;
+  }
   
   void getGyroData(ImuSensorData data) {
     _gyroData = data;
-    writeToCsv("${_gyroData.timeStamp}, ${_acclData.x}, ${_acclData.y}, ${_acclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData.z}\n");
+    print("ACCL G X: ${_acclData.x - _userAcclData.x} Y: ${_acclData.y - _userAcclData.y} Z: ${_acclData.z - _userAcclData.z}");
+    writeToCsv("${_gyroData.timeStamp}, ${_userAcclData.x}, ${_userAcclData.y}, ${_userAcclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData.z}\n");
   }
 
   void _timerFinish(Timer timer) {
@@ -191,9 +209,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
   }
 
   void checkSetpoint(double x, double y, double z) {
-    if (gyroData.x < x + toleranceX && gyroData.x > x - toleranceX &&
-    gyroData.y < y + toleranceY && gyroData.y > y - toleranceY &&
-    gyroData.z < z + toleranceZ && gyroData.z > z - toleranceZ) {
+    if (_currentX < x + toleranceX && _currentX > x - toleranceX &&
+    _currentY < y + toleranceY && _currentY > y - toleranceY &&
+    _currentZ < z + toleranceZ && _currentZ > z - toleranceZ) {
       _currentSetpoint++;
     }
 
@@ -221,6 +239,7 @@ class ExerciseStartViewModel extends ChangeNotifier {
   bool get isTimerActive => _isTimerActive;
   int get timerCount => _timerCount;
   ImuSensorData get acclData => _acclData;
+  ImuSensorData get userAcclData => _userAcclData;
   ImuSensorData get gyroData => _gyroData;
   int get nextSetpoint => _nextSetpoint;
   int get repetitionCount => _repetitionCount;
