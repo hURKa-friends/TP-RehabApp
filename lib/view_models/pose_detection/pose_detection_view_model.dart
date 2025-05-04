@@ -193,6 +193,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
         return angleRad;
       } else {
+
         return null;
       }
     }

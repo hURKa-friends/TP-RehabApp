@@ -85,6 +85,9 @@ flutter:
     - assets/example/FEI_logo.gif
     # pose detection
     - assets/pose_detection/WIP_image.png
+    - assets/pose_detection/shoulder_abduction_active.jpg
+    - assets/pose_detection/shoulder_external_rotation.jpg
+    - assets/pose_detection/shoulder_forward_elevation_active.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

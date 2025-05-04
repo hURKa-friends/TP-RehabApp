@@ -71,11 +71,21 @@ class MenuViewModel extends ChangeNotifier {
       subPages: [
         SubMenuPageWrapper(icon: Icons.menu, title: "Rehabilitácia ramena",
           subPages: [
-            PoseDetectionView(icon: Icons.accessibility_new, title: "Cvik 1",
+            PoseDetectionView(icon: Icons.accessibility_new, title: "Shoulder Abduction (active)",
               exerciseType: ExerciseType.shoulderAbductionActive,
               tutorialSteps: [
                 TutorialStep(
-                  assetURI: 'assets/pose_detection/WIP_image.png',
+                  assetURI: 'assets/pose_detection/shoulder_abduction_active.jpg',
+                  heading: 'This is fancy heading...',
+                  description: 'Amazing description...',
+                ),
+              ],
+            ),
+            PoseDetectionView(icon: Icons.accessibility_new, title: "Shoulder Forward Elevation (active)",
+              exerciseType: ExerciseType.shoulderForwardElevationActive,
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/pose_detection/shoulder_forward_elevation_active.jpg',
                   heading: 'This is fancy heading...',
                   description: 'Amazing description...',
                 ),
