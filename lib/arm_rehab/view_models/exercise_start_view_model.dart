@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:provider/provider.dart';
 import 'package:rehab_app/arm_rehab/models/arm_model.dart';
 import 'package:rehab_app/models/sensor_models.dart';
 import 'package:rehab_app/services/internal/logger_service_internal.dart';
 
 import '../../services/external/logger_service.dart';
 import '../../services/external/sensor_service.dart';
+import '../../services/page_management/models/stateless_page_model.dart';
+import '../../services/page_management/view_models/page_navigator_view_model.dart';
 
 class ExerciseStartViewModel extends ChangeNotifier {
   late Timer _countdownTimer;
@@ -18,6 +21,7 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late int _repetitionCount;
   late String? _ownerID;
   late bool _writeSuccessful;
+  late bool _exerciseFinished;
   late ImuSensorData _acclData;
   late ImuSensorData _userAcclData;
   late ImuSensorData _gyroData;
@@ -26,10 +30,11 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late double _currentX;
   late double _currentY;
   late double _currentZ;
-  final toleranceX = 0.2;
-  final toleranceY = 0.2;
-  final toleranceZ = 0.2;
+  final _toleranceX = 0.3;
+  final _toleranceY = 0.3;
+  final _toleranceZ = 0.3;
   final setpoints = Setpoints();
+  final double imageSize = 300;
 
   ExerciseStartViewModel() {
     // Default constructor
@@ -43,6 +48,7 @@ class ExerciseStartViewModel extends ChangeNotifier {
     _nextSetpoint = 1;
     _currentSetpoint = 0;
     _repetitionCount = 0;
+    _exerciseFinished = false;
     _playerShort = AudioPlayer();
     _playerLong = AudioPlayer();
     await _playerShort.setSource(AssetSource("arm_rehab/sounds/beeps/short_beep.m4a"));
@@ -69,14 +75,13 @@ class ExerciseStartViewModel extends ChangeNotifier {
 
   void onClose() {
     // Here you can call ViewModel disposal code.
-    //_timer.cancel();
-    //_isTimerActive = false;
     _playerShort.dispose();
     _playerLong.dispose();
     LoggerService().closeLogChannelSafely(ownerId: _ownerID!, channel: LogChannel.csv);
     SensorService().stopAcclDataStream();
     SensorService().stopUserAcclDataStream();
     SensorService().stopGyroDataStream();
+    _exerciseFinished = false;
   }
 
   void getAcclData(ImuSensorData data) {
@@ -87,13 +92,20 @@ class ExerciseStartViewModel extends ChangeNotifier {
     _userAcclData = data;
 
     _currentX = _acclData.x - _userAcclData.x;
-    _currentX = _acclData.x - _userAcclData.x;
-    _currentX = _acclData.x - _userAcclData.x;
+    _currentY = _acclData.y - _userAcclData.y;
+    _currentZ = _acclData.z - _userAcclData.z;
+
+    notifyListeners();
   }
   
   void getGyroData(ImuSensorData data) {
     _gyroData = data;
-    print("ACCL G X: ${_acclData.x - _userAcclData.x} Y: ${_acclData.y - _userAcclData.y} Z: ${_acclData.z - _userAcclData.z}");
+
+    if (!_exerciseFinished) {
+      ArmImuData.acclData.add(_acclData);
+      ArmImuData.gyroData.add(_gyroData);
+    }
+
     writeToCsv("${_gyroData.timeStamp}, ${_userAcclData.x}, ${_userAcclData.y}, ${_userAcclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData.z}\n");
   }
 
@@ -111,13 +123,13 @@ class ExerciseStartViewModel extends ChangeNotifier {
         playLongBeep();
         _isTimerActive = false;
         SelectedOptions.startTimer = false;
+        _exerciseFinished = false;
         _countdownTimer.cancel();
       }
     }
   }
 
   Future<void> playShortBeep() async {
-    //await _playerShort.stop();
     await _playerShort.seek(Duration(milliseconds: 10));
     await _playerShort.resume();
   }
@@ -128,7 +140,7 @@ class ExerciseStartViewModel extends ChangeNotifier {
   }
 
   void writeToCsv(String data) {
-    if (!_isTimerActive) {
+    if (!_isTimerActive && !exerciseFinished) {
       _writeSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: _ownerID!, data: data);
 
       switch (SelectedOptions.exercise) {
@@ -209,31 +221,37 @@ class ExerciseStartViewModel extends ChangeNotifier {
   }
 
   void checkSetpoint(double x, double y, double z) {
-    if (_currentX < x + toleranceX && _currentX > x - toleranceX &&
-    _currentY < y + toleranceY && _currentY > y - toleranceY &&
-    _currentZ < z + toleranceZ && _currentZ > z - toleranceZ) {
+    if (_currentX < x + _toleranceX && _currentX > x - _toleranceX &&
+    _currentY < y + _toleranceY && _currentY > y - _toleranceY &&
+    _currentZ < z + _toleranceZ && _currentZ > z - _toleranceZ) {
       _currentSetpoint++;
     }
 
-    if (_currentSetpoint == _nextSetpoint) {
-      _nextSetpoint++;
-      playShortBeep();
-    }
-
-    if (_nextSetpoint > 1) {
-      _nextSetpoint = 0;
-    }
     if (_currentSetpoint > 1) {
       _currentSetpoint = 0;
       _repetitionCount++;
     }
 
+    if (_currentSetpoint == _nextSetpoint) {
+      _nextSetpoint++;
+      playShortBeep();
+
+      if (_nextSetpoint > 1) {
+        _nextSetpoint = 0;
+      }
+    }
+
     if (_repetitionCount == SelectedOptions.repetitions) {
       playLongBeep();
-      // navigacia na dalsiu stranku//////////////////////////////////////////////////////////////////////////////
+      _exerciseFinished = true;
     }
 
     notifyListeners();
+  }
+
+  void selectPage(BuildContext context, StatelessPage page) {
+    var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
+    navigatorViewModel.selectPage(context, page);
   }
 
   bool get isTimerActive => _isTimerActive;
@@ -243,4 +261,8 @@ class ExerciseStartViewModel extends ChangeNotifier {
   ImuSensorData get gyroData => _gyroData;
   int get nextSetpoint => _nextSetpoint;
   int get repetitionCount => _repetitionCount;
+  bool get exerciseFinished => _exerciseFinished;
+  double get currentX => _currentX;
+  double get currentY => _currentY;
+  double get currentZ => _currentZ;
 }

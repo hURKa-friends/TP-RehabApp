@@ -1,6 +1,7 @@
 // System and External dependencies
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 // App core dependencies
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
@@ -40,6 +41,8 @@ class ChangeNotifierInjector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     ///
     /// Initialize all services here
     ///

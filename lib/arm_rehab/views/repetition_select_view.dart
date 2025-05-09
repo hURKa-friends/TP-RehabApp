@@ -60,7 +60,7 @@ class RepetitionSelectView extends StatelessPage {
                     style: BorderStyle.solid,
                   ),
                 ),
-                label: const Text("Input range: 1 - 50"),
+                label: const Text("Input range: 1 - 20"),
               ),
               textAlign: TextAlign.center,
               onSubmitted: (String input) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rehab_app/models/sensor_models.dart';
 
 enum SelectedArm {left, right}
 enum SelectedPos {shoulder, wrist}
@@ -11,6 +12,11 @@ class SelectedOptions {
   static bool startTimer = false;
 
   SelectedOptions();
+}
+
+class ArmImuData {
+  static List<ImuSensorData> acclData = List.empty(growable: true);
+  static List<ImuSensorData> gyroData = List.empty(growable: true);
 }
 
 class NormalizeSensorValues {
@@ -63,63 +69,79 @@ class Setpoints {
   Setpoints() {
     switch (SelectedOptions.pos) { // Switch aj podla arm?
       case SelectedPos.shoulder:
-        /*shoulderBlades0X = ;
-        shoulderBlades0Y = ;
-        shoulderBlades0Z = ;
-        shoulderBlades1X = ;
-        shoulderBlades1Y = ;
-        shoulderBlades1Z = ;
+        switch (SelectedOptions.arm) {
+          case SelectedArm.right:
+            /*shoulderBlades0X = ;
+            shoulderBlades0Y = ;
+            shoulderBlades0Z = ;
+            shoulderBlades1X = ;
+            shoulderBlades1Y = ;
+            shoulderBlades1Z = ;*/
 
-        chestPress0X = ;
-        chestPress0Y = ;
-        chestPress0Z = ;
-        chestPress1X = ;
-        chestPress1Y = ;
-        chestPress1Z = ;
+            chestPress0X = -5.3;
+            chestPress0Y = -7.1;
+            chestPress0Z = 4;
+            chestPress1X = -9.8;
+            chestPress1Y = -0.7;
+            chestPress1Z = 0.1;
 
-        bicepCurls0X = ;
-        bicepCurls0Y = ;
-        bicepCurls0Z = ;
-        bicepCurls1X = ;
-        bicepCurls1Y = ;
-        bicepCurls1Z = ;
+            bicepCurls0X = -1.9;
+            bicepCurls0Y = -9.6;
+            bicepCurls0Z = 0;
+            bicepCurls1X = -2.2;
+            bicepCurls1Y = -9.4;
+            bicepCurls1Z = 1.2;
 
-        drinking0X = ;
-        drinking0Y = ;
-        drinking0Z = ;
-        drinking1X = ;
-        drinking1Y = ;
-        drinking1Z = ;*/
+            drinking0X = -2.9;
+            drinking0Y = -9.3;
+            drinking0Z = -0.4;
+            drinking1X = -8.7;
+            drinking1Y = -4.5;
+            drinking1Z = -1;
+
+            break;
+          case SelectedArm.left:
+
+            break;
+        }
 
         break;
       case SelectedPos.wrist:
-        /*shoulderBlades0X = ;
-        shoulderBlades0Y = ;
-        shoulderBlades0Z = ;
-        shoulderBlades1X = ;
-        shoulderBlades1Y = ;
-        shoulderBlades1Z = ;
+        switch (SelectedOptions.arm) {
+          case SelectedArm.right:
+            /*shoulderBlades0X = ;
+            shoulderBlades0Y = ;
+            shoulderBlades0Z = ;
+            shoulderBlades1X = ;
+            shoulderBlades1Y = ;
+            shoulderBlades1Z = ;*/
 
-        chestPress0X = ;
-        chestPress0Y = ;
-        chestPress0Z = ;
-        chestPress1X = ;
-        chestPress1Y = ;
-        chestPress1Z = ;
+            chestPress0X = -9;
+            chestPress0Y = 3.3;
+            chestPress0Z = 2.1;
+            chestPress1X = -9.7;
+            chestPress1Y = -0.2;
+            chestPress1Z = 0.1;
 
-        bicepCurls0X = ;
-        bicepCurls0Y = ;
-        bicepCurls0Z = ;
-        bicepCurls1X = ;
-        bicepCurls1Y = ;
-        bicepCurls1Z = ;
+            bicepCurls0X = -3.8;
+            bicepCurls0Y = -9;
+            bicepCurls0Z = -1.2;
+            bicepCurls1X = -4.9;
+            bicepCurls1Y = 7.6;
+            bicepCurls1Z = -2.5;
 
-        drinking0X = ;
-        drinking0Y = ;
-        drinking0Z = ;
-        drinking1X = ;
-        drinking1Y = ;
-        drinking1Z = ;*/
+            drinking0X = -3.5;
+            drinking0Y = -9.1;
+            drinking0Z = 0.3;
+            drinking1X = -9.8;
+            drinking1Y = -0.1;
+            drinking1Z = -0.2;
+
+            break;
+          case SelectedArm.left:
+
+            break;
+        }
 
         break;
       };

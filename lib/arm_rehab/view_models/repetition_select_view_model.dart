@@ -28,7 +28,7 @@ class RepetitionSelectViewModel extends ChangeNotifier {
   void parseInput(String input) {
     int? reps = int.tryParse(input);
 
-    if (reps == null || reps < 1 || reps > 50) {
+    if (reps == null || reps < 1 || reps > 20) {
       _repetitions = 0;
       _validValue = false;
 
