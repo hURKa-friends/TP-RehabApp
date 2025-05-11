@@ -30,9 +30,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late double _currentX;
   late double _currentY;
   late double _currentZ;
-  final _toleranceX = 0.3;
-  final _toleranceY = 0.3;
-  final _toleranceZ = 0.3;
+  final _toleranceX = 1.5;
+  final _toleranceY = 1.5;
+  final _toleranceZ = 1.5;
   final setpoints = Setpoints();
   final double imageSize = 300;
 
@@ -53,6 +53,8 @@ class ExerciseStartViewModel extends ChangeNotifier {
     _playerLong = AudioPlayer();
     await _playerShort.setSource(AssetSource("arm_rehab/sounds/beeps/short_beep.m4a"));
     await _playerLong.setSource(AssetSource("arm_rehab/sounds/beeps/long_beep.m4a"));
+    await _playerShort.setReleaseMode(ReleaseMode.stop);
+    await _playerLong.setReleaseMode(ReleaseMode.stop);
     _ownerID = await LoggerService().openCsvLogChannel(
         access: ChannelAccess.private,
         fileName:
@@ -85,28 +87,34 @@ class ExerciseStartViewModel extends ChangeNotifier {
   }
 
   void getAcclData(ImuSensorData data) {
-    _acclData = data;
+    if (!exerciseFinished) {
+      _acclData = data;
+    }
   }
 
   void getUserAcclData(ImuSensorData data) {
-    _userAcclData = data;
+    if (!exerciseFinished) {
+      _userAcclData = data;
 
-    _currentX = _acclData.x - _userAcclData.x;
-    _currentY = _acclData.y - _userAcclData.y;
-    _currentZ = _acclData.z - _userAcclData.z;
+      _currentX = _acclData.x - _userAcclData.x;
+      _currentY = _acclData.y - _userAcclData.y;
+      _currentZ = _acclData.z - _userAcclData.z;
 
-    notifyListeners();
+      notifyListeners();
+    }
   }
   
   void getGyroData(ImuSensorData data) {
-    _gyroData = data;
+    if (!exerciseFinished) {
+      _gyroData = data;
 
-    if (!_exerciseFinished) {
       ArmImuData.acclData.add(_acclData);
       ArmImuData.gyroData.add(_gyroData);
-    }
 
-    writeToCsv("${_gyroData.timeStamp}, ${_userAcclData.x}, ${_userAcclData.y}, ${_userAcclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData.z}\n");
+      writeToCsv("${_gyroData.timeStamp}, ${_userAcclData.x}, ${_userAcclData
+          .y}, ${_userAcclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData
+          .z}\n");
+    }
   }
 
   void _timerFinish(Timer timer) {
@@ -130,12 +138,12 @@ class ExerciseStartViewModel extends ChangeNotifier {
   }
 
   Future<void> playShortBeep() async {
-    await _playerShort.seek(Duration(milliseconds: 10));
+    await _playerShort.seek(Duration(milliseconds: 0));
     await _playerShort.resume();
   }
 
   Future<void> playLongBeep() async {
-    await _playerLong.seek(Duration(milliseconds: 10));
+    await _playerLong.seek(Duration(milliseconds: 0));
     await _playerLong.resume();
   }
 
@@ -148,14 +156,14 @@ class ExerciseStartViewModel extends ChangeNotifier {
           switch (_nextSetpoint) {
             case 0:
               checkSetpoint(
-                  setpoints.shoulderBlades0X, setpoints.shoulderBlades0Y,
-                  setpoints.shoulderBlades0Z);
+                  setpoints.armLift0X, setpoints.armLift0Y,
+                  setpoints.armLift0Z);
 
               break;
             case 1:
               checkSetpoint(
-                  setpoints.shoulderBlades1X, setpoints.shoulderBlades1Y,
-                  setpoints.shoulderBlades1Z);
+                  setpoints.armLift1X, setpoints.armLift1Y,
+                  setpoints.armLift1Z);
 
               break;
             default:
@@ -214,6 +222,23 @@ class ExerciseStartViewModel extends ChangeNotifier {
           }
 
           break;
+        case 5:
+          switch (_nextSetpoint) {
+            case 0:
+              checkSetpoint(setpoints.glassTurning0X, setpoints.glassTurning0Y,
+                  setpoints.glassTurning0Z);
+
+              break;
+            case 1:
+              checkSetpoint(setpoints.glassTurning1X, setpoints.glassTurning1Y,
+                  setpoints.glassTurning1Z);
+
+              break;
+            default:
+              break;
+          }
+
+          break;
         default:
           break;
       }
@@ -233,8 +258,8 @@ class ExerciseStartViewModel extends ChangeNotifier {
     }
 
     if (_currentSetpoint == _nextSetpoint) {
-      _nextSetpoint++;
       playShortBeep();
+      _nextSetpoint++;
 
       if (_nextSetpoint > 1) {
         _nextSetpoint = 0;
@@ -244,6 +269,8 @@ class ExerciseStartViewModel extends ChangeNotifier {
     if (_repetitionCount == SelectedOptions.repetitions) {
       playLongBeep();
       _exerciseFinished = true;
+      _playerShort.release();
+      _playerLong.release();
     }
 
     notifyListeners();

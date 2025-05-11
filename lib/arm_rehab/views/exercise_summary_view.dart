@@ -38,104 +38,107 @@ class ExerciseSummaryView extends StatelessPage {
 
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Exercise finished!",
-              style: headerStyle(),
-            ),
-            SizedBox(
-              width: exerciseSummaryViewModel.imageSize,
-              height: exerciseSummaryViewModel.imageSize,
-              child: Image.asset("assets/images/flex"),
-            ),
-            Text("Accelerometer graph"),
-            SfCartesianChart(
-              key: ValueKey(0),
-              legend: Legend(isVisible: true),
-              primaryXAxis: DateTimeAxis(
-                minimum: ArmImuData.acclData.isNotEmpty
-                    ? ArmImuData.acclData.first.timeStamp
-                    : null,
-                maximum: ArmImuData.acclData.isNotEmpty
-                    ? ArmImuData.acclData.last.timeStamp
-                    : null,
-              ), // ✅ Ensures DateTime is handled correctly
-              primaryYAxis: NumericAxis(
-                title: AxisTitle(text: 'Accelerometer'),
-                minimum: -20,
-                maximum: 20,
-                interval: 1,
+        child: Expanded(
+          child: ListView(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            physics: AlwaysScrollableScrollPhysics(),
+            children: <Widget>[
+              Text(
+                "Exercise finished!",
+                style: headerStyle(),
               ),
-              series: <LineSeries<ImuSensorData, DateTime>>[
-                LineSeries<ImuSensorData, DateTime>(
-                    name:
-                    "X-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.x.toStringAsFixed(2) : '0'})",
-                    dataSource: ArmImuData.acclData,
-                    xValueMapper: (ImuSensorData data, _) => data.timeStamp,
-                    yValueMapper: (ImuSensorData data, _) => data.x,
-                    animationDuration: 0),
-                LineSeries<ImuSensorData, DateTime>(
-                    name:
-                    "Y-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.y.toStringAsFixed(2) : '0'})",
-                    dataSource: ArmImuData.acclData,
-                    xValueMapper: (ImuSensorData data, _) => data.timeStamp,
-                    yValueMapper: (ImuSensorData data, _) => data.y,
-                    animationDuration: 0),
-                LineSeries<ImuSensorData, DateTime>(
-                    name:
-                    "Z-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.z.toStringAsFixed(2) : '0'})",
-                    dataSource: ArmImuData.acclData,
-                    xValueMapper: (ImuSensorData data, _) => data.timeStamp,
-                    yValueMapper: (ImuSensorData data, _) => data.z,
-                    animationDuration: 0),
-              ],
-            ),
-            Text("Gyroscope graph"),
-            SfCartesianChart(
-              key: ValueKey(0),
-              legend: Legend(isVisible: true),
-              primaryXAxis: DateTimeAxis(
-                minimum: ArmImuData.gyroData.isNotEmpty
-                    ? ArmImuData.gyroData.first.timeStamp
-                    : null,
-                maximum: ArmImuData.gyroData.isNotEmpty
-                    ? ArmImuData.gyroData.last.timeStamp
-                    : null,
-              ), // ✅ Ensures DateTime is handled correctly
-              primaryYAxis: NumericAxis(
-                title: AxisTitle(text: 'Gyroscope'),
-                minimum: -20,
-                maximum: 20,
-                interval: 1,
+              SizedBox(
+                width: exerciseSummaryViewModel.imageSize,
+                height: exerciseSummaryViewModel.imageSize,
+                child: Image.asset("assets/images/flex"),
               ),
-              series: <LineSeries<ImuSensorData, DateTime>>[
-                LineSeries<ImuSensorData, DateTime>(
-                    name:
-                    "X-Axis (${ArmImuData.gyroData.isNotEmpty ? ArmImuData.gyroData.last.x.toStringAsFixed(2) : '0'})",
-                    dataSource: ArmImuData.gyroData,
-                    xValueMapper: (ImuSensorData data, _) => data.timeStamp,
-                    yValueMapper: (ImuSensorData data, _) => data.x,
-                    animationDuration: 0),
-                LineSeries<ImuSensorData, DateTime>(
-                    name:
-                    "Y-Axis (${ArmImuData.gyroData.isNotEmpty ? ArmImuData.gyroData.last.y.toStringAsFixed(2) : '0'})",
-                    dataSource: ArmImuData.gyroData,
-                    xValueMapper: (ImuSensorData data, _) => data.timeStamp,
-                    yValueMapper: (ImuSensorData data, _) => data.y,
-                    animationDuration: 0),
-                LineSeries<ImuSensorData, DateTime>(
-                    name:
-                    "Z-Axis (${ArmImuData.gyroData.isNotEmpty ? ArmImuData.gyroData.last.z.toStringAsFixed(2) : '0'})",
-                    dataSource: ArmImuData.gyroData,
-                    xValueMapper: (ImuSensorData data, _) => data.timeStamp,
-                    yValueMapper: (ImuSensorData data, _) => data.z,
-                    animationDuration: 0),
-              ],
-            ),
-          ],
+              Text("Accelerometer graph"),
+              SfCartesianChart(
+                key: ValueKey(0),
+                legend: Legend(isVisible: true),
+                primaryXAxis: DateTimeAxis(
+                  minimum: ArmImuData.acclData.isNotEmpty
+                      ? ArmImuData.acclData.first.timeStamp
+                      : null,
+                  maximum: ArmImuData.acclData.isNotEmpty
+                      ? ArmImuData.acclData.last.timeStamp
+                      : null,
+                ), // ✅ Ensures DateTime is handled correctly
+                primaryYAxis: NumericAxis(
+                  title: AxisTitle(text: 'Accelerometer'),
+                  minimum: -20,
+                  maximum: 20,
+                  interval: 1,
+                ),
+                series: <LineSeries<ImuSensorData, DateTime>>[
+                  LineSeries<ImuSensorData, DateTime>(
+                      name:
+                      "X-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.x.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.acclData,
+                      xValueMapper: (ImuSensorData data, _) => data.timeStamp,
+                      yValueMapper: (ImuSensorData data, _) => data.x,
+                      animationDuration: 0),
+                  LineSeries<ImuSensorData, DateTime>(
+                      name:
+                      "Y-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.y.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.acclData,
+                      xValueMapper: (ImuSensorData data, _) => data.timeStamp,
+                      yValueMapper: (ImuSensorData data, _) => data.y,
+                      animationDuration: 0),
+                  LineSeries<ImuSensorData, DateTime>(
+                      name:
+                      "Z-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.z.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.acclData,
+                      xValueMapper: (ImuSensorData data, _) => data.timeStamp,
+                      yValueMapper: (ImuSensorData data, _) => data.z,
+                      animationDuration: 0),
+                ],
+              ),
+              Text("Gyroscope graph"),
+              SfCartesianChart(
+                key: ValueKey(1),
+                legend: Legend(isVisible: true),
+                primaryXAxis: DateTimeAxis(
+                  minimum: ArmImuData.gyroData.isNotEmpty
+                      ? ArmImuData.gyroData.first.timeStamp
+                      : null,
+                  maximum: ArmImuData.gyroData.isNotEmpty
+                      ? ArmImuData.gyroData.last.timeStamp
+                      : null,
+                ), // ✅ Ensures DateTime is handled correctly
+                primaryYAxis: NumericAxis(
+                  title: AxisTitle(text: 'Gyroscope'),
+                  minimum: -20,
+                  maximum: 20,
+                  interval: 1,
+                ),
+                series: <LineSeries<ImuSensorData, DateTime>>[
+                  LineSeries<ImuSensorData, DateTime>(
+                      name:
+                      "X-Axis (${ArmImuData.gyroData.isNotEmpty ? ArmImuData.gyroData.last.x.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.gyroData,
+                      xValueMapper: (ImuSensorData data, _) => data.timeStamp,
+                      yValueMapper: (ImuSensorData data, _) => data.x,
+                      animationDuration: 0),
+                  LineSeries<ImuSensorData, DateTime>(
+                      name:
+                      "Y-Axis (${ArmImuData.gyroData.isNotEmpty ? ArmImuData.gyroData.last.y.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.gyroData,
+                      xValueMapper: (ImuSensorData data, _) => data.timeStamp,
+                      yValueMapper: (ImuSensorData data, _) => data.y,
+                      animationDuration: 0),
+                  LineSeries<ImuSensorData, DateTime>(
+                      name:
+                      "Z-Axis (${ArmImuData.gyroData.isNotEmpty ? ArmImuData.gyroData.last.z.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.gyroData,
+                      xValueMapper: (ImuSensorData data, _) => data.timeStamp,
+                      yValueMapper: (ImuSensorData data, _) => data.z,
+                      animationDuration: 0),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

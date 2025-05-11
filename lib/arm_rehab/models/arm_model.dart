@@ -38,12 +38,12 @@ class NormalizeSensorValues {
 }
 
 class Setpoints {
-  late final double shoulderBlades0X;
-  late final double shoulderBlades0Y;
-  late final double shoulderBlades0Z;
-  late final double shoulderBlades1X;
-  late final double shoulderBlades1Y;
-  late final double shoulderBlades1Z;
+  late final double armLift0X;
+  late final double armLift0Y;
+  late final double armLift0Z;
+  late final double armLift1X;
+  late final double armLift1Y;
+  late final double armLift1Z;
 
   late final double chestPress0X;
   late final double chestPress0Y;
@@ -66,17 +66,24 @@ class Setpoints {
   late final double drinking1Y;
   late final double drinking1Z;
 
+  late final double glassTurning0X;
+  late final double glassTurning0Y;
+  late final double glassTurning0Z;
+  late final double glassTurning1X;
+  late final double glassTurning1Y;
+  late final double glassTurning1Z;
+
   Setpoints() {
     switch (SelectedOptions.pos) { // Switch aj podla arm?
       case SelectedPos.shoulder:
         switch (SelectedOptions.arm) {
           case SelectedArm.right:
-            /*shoulderBlades0X = ;
-            shoulderBlades0Y = ;
-            shoulderBlades0Z = ;
-            shoulderBlades1X = ;
-            shoulderBlades1Y = ;
-            shoulderBlades1Z = ;*/
+            armLift0X = -3.5;
+            armLift0Y = -9.1;
+            armLift0Z = 0.3;
+            armLift1X = -9.8;
+            armLift1Y = -0.1;
+            armLift1Z = -0.2;
 
             chestPress0X = -5.3;
             chestPress0Y = -7.1;
@@ -99,6 +106,13 @@ class Setpoints {
             drinking1Y = -4.5;
             drinking1Z = -1;
 
+            glassTurning0X = -7;
+            glassTurning0Y = -6;
+            glassTurning0Z = 3.5;
+            glassTurning1X = -6.5;
+            glassTurning1Y = -7.3;
+            glassTurning1Z = 0.7;
+
             break;
           case SelectedArm.left:
 
@@ -109,12 +123,12 @@ class Setpoints {
       case SelectedPos.wrist:
         switch (SelectedOptions.arm) {
           case SelectedArm.right:
-            /*shoulderBlades0X = ;
-            shoulderBlades0Y = ;
-            shoulderBlades0Z = ;
-            shoulderBlades1X = ;
-            shoulderBlades1Y = ;
-            shoulderBlades1Z = ;*/
+            armLift0X = -4;
+            armLift0Y = -8.9;
+            armLift0Z = -0.1;
+            armLift1X = -1.7;
+            armLift1Y = 0.6;
+            armLift1Z = 4.6;
 
             chestPress0X = -9;
             chestPress0Y = 3.3;
@@ -136,6 +150,13 @@ class Setpoints {
             drinking1X = -9.8;
             drinking1Y = -0.1;
             drinking1Z = -0.2;
+
+            glassTurning0X = -3;
+            glassTurning0Y = -6.1;
+            glassTurning0Z = 6.7;
+            glassTurning1X = -8.1;
+            glassTurning1Y = -5.5;
+            glassTurning1Z = 1;
 
             break;
           case SelectedArm.left:

@@ -6,7 +6,7 @@ import 'package:rehab_app/services/page_management/models/stateless_page_model.d
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 
 class ExerciseSummaryViewModel extends ChangeNotifier {
-  final _imageSize = 150;
+  final double imageSize = 150;
 
   ExerciseSummaryViewModel() {
     // Default constructor
@@ -26,6 +26,4 @@ class ExerciseSummaryViewModel extends ChangeNotifier {
     var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
     navigatorViewModel.selectPage(context, page);
   }
-
-  get imageSize => _imageSize;
 }
