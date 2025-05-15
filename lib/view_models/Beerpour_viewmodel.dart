@@ -25,6 +25,10 @@ class BeerPourViewModel extends ChangeNotifier {
   bool _isPouring = false;
   double? _glassWidth;
   double? _glassHeight;
+  double _previousPourRate = 0.0;
+  bool _unevenPouring = false;
+  DateTime? _previousPourTime;
+  double prevJerk = 0.0;
 
   // Getters
   ImuSensorData get acclData => _acclData;
@@ -37,6 +41,7 @@ class BeerPourViewModel extends ChangeNotifier {
   bool get isPouring => _isPouring;
   double? get glassWidth => _glassWidth;
   double? get glassHeight => _glassHeight;
+  bool get unevenPouring => _unevenPouring;
 
   void setGlassDimensions(double width, double height) {
     _glassWidth = width;
@@ -132,8 +137,24 @@ class BeerPourViewModel extends ChangeNotifier {
         pourRate += (yLeftRaw - height) * 0.0002; // Increase rate based on how much it's over
       }
       if (pouringRight) {
-        pourRate += (yRightRaw - height) * 0.002; // Increase rate based on how much it's over
+        pourRate += (yRightRaw - height) * 0.0002; // Increase rate based on how much it's over
       }
+
+      final rateChange = pourRate - _previousPourRate;
+      final now = DateTime.now();
+      final prev = _previousPourTime;
+      if (prev != null) {
+        final dt = now.difference(prev).inMilliseconds / 1000.0;
+        if (dt > 0) {
+          final jerk = rateChange / dt;
+          print('jerk: ${(jerk - prevJerk).abs()}');
+          const jerkThreshold = 0.05;
+          _unevenPouring = (jerk - prevJerk).abs() > jerkThreshold;
+          prevJerk = jerk;
+        }
+        _previousPourRate = pourRate;
+      }
+      _previousPourTime = now;
 
       _beerLevel = max(0.0, _beerLevel - pourRate);
       if (_beerLevel <= 0) {
@@ -142,8 +163,8 @@ class BeerPourViewModel extends ChangeNotifier {
       }
     } else if (!pouringLeft && !pouringRight) {
       _isPouring = false;
+      _unevenPouring = false;
     }
-    print("Beer Level: $_beerLevel"); // ADD THIS LINE
   }
 
 

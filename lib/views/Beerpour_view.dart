@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../services/page_management/models/stateful_page_model.dart';
 import '../services/page_management/models/tutorial_step_model.dart';
@@ -16,25 +17,49 @@ class BeerPourPage extends StatefulPage {
 }
 
 class BeerPourPageState extends StatefulPageState<BeerPourPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Set preferred orientations to only portrait
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    // Reset preferred orientations to all when the page is disposed
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    super.dispose();
+  }
   @override Widget buildPage(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => BeerPourViewModel(),
       child: Consumer<BeerPourViewModel>(builder: (_, vm, __) {
         return Scaffold(
-          body: Column(children: [
-            if (vm.countdownActive)
-              Expanded(child: Center(child: Text('Starting in ${vm.countdown}...', style: TextStyle(fontSize: 32))))
-            else ...[
-              SizedBox(height: 4),
-              ElevatedButton(
-                onPressed: vm.sensorsRunning ? vm.stopExercise : vm.startExercise,
-                child: Text(vm.sensorsRunning ? 'Stop' : 'Start'),
+          body: Stack(children: [
+            if (vm.unevenPouring)
+              Positioned(
+                top: 24,
+                right: 24,
+                child: Icon(Icons.error, size: 32, color: Colors.red),
               ),
-              SizedBox(height: 24),
-              Expanded(child: BeerGlassWidget(beerLevel: vm.beerLevel, angle: vm.angle)),
-              Divider(),
-              ElevatedButton(onPressed: vm.resetExercise, child: Text('Reset')),
-            ],
+            Column(children: [
+              if (vm.countdownActive)
+                Expanded(child: Center(child: Text('Starting in ${vm.countdown}...', style: TextStyle(fontSize: 32))))
+              else ...[
+                SizedBox(height: 4),
+                ElevatedButton(
+                  onPressed: vm.sensorsRunning ? vm.stopExercise : vm.startExercise,
+                  child: Text(vm.sensorsRunning ? 'Stop' : 'Start'),
+                ),
+                SizedBox(height: 24),
+                Expanded(child: BeerGlassWidget(beerLevel: vm.beerLevel, angle: vm.angle)),
+                Divider(),
+                ElevatedButton(onPressed: vm.resetExercise, child: Text('Reset')),
+              ],
+            ]),
           ]),
         );
       }),
@@ -73,10 +98,10 @@ class _BeerGlassWidgetState extends State<BeerGlassWidget> {
 
     return Stack(children: [
       Positioned(
-        left: dx,
-        top: dy,
-        width: glassWidth,
-        height: glassHeight,
+        left: dx + 10,
+        top: dy + 25,
+        width: glassWidth * 0.95,
+        height: glassHeight * 0.925,
         child: CustomPaint(
           painter: GlassLiquidPainter(
             beerLevel: widget.beerLevel,
@@ -86,11 +111,11 @@ class _BeerGlassWidgetState extends State<BeerGlassWidget> {
       ),
       // Glass outline overlay
       Positioned(
-        left: dx,
-        top: dy,
-        width: glassWidth,
-        height: glassHeight,
-        child: Image.asset('assets/glass_outline.png', fit: BoxFit.fill),
+        left: dx - 160,
+        top: dy - 130,
+        width: glassWidth + 320,
+        height: glassHeight + 250,
+        child: Image.asset('assets/example/glass_outline.png', fit: BoxFit.fill),
       ),
     ]);
   }
@@ -108,23 +133,35 @@ class GlassLiquidPainter extends CustomPainter {
       return; // Don't paint anything if beerLevel is zero or negative
     }
     final paint = Paint()..color = Colors.amber.withOpacity(0.85);
-    final width = size.width;
+    double width = size.width;
+    double widthSecond = 0;
     final height = size.height;
 
     final currentLiquidHeight = height * beerLevel;
     final tiltOffset = tan(angle) * width / 2; // Offset from the center
 
     // Calculate the y-coordinates of the liquid surface at the edges
-    final yLeft = height - (currentLiquidHeight + tiltOffset).clamp(0.0, height);
-    final yRight = height - (currentLiquidHeight - tiltOffset).clamp(0.0, height);
+    double yLeft = height - (currentLiquidHeight + tiltOffset).clamp(0.0, height);
+    double yRight = height - (currentLiquidHeight - tiltOffset).clamp(0.0, height);
+
+    if((((size.width * height)/2) > currentLiquidHeight * size.width) && (height/tan(angle.abs()) < size.width)) {
+      if(angle >= 0) {
+        width = height/tan(angle).clamp(0.0, size.width);
+        widthSecond = 0.0;
+        yRight = height;
+      } else {
+        widthSecond = (size.width - height/tan(-angle)).clamp(0.0, size.width);
+        yLeft = height;
+      }
+    }
 
     final path = Path()
-      ..moveTo(0, height)
+      ..moveTo(widthSecond, height)
       ..lineTo(width, height)
       ..lineTo(width, yRight.clamp(0.0, height)); // Ensure within bounds
 
     // Define the top edge of the liquid (trapezoid)
-    path.lineTo(0, yLeft.clamp(0.0, height)); // Ensure within bounds
+    path.lineTo(widthSecond, yLeft.clamp(0.0, height)); // Ensure within bounds
 
     path.close();
 
@@ -140,7 +177,7 @@ class GlassLiquidPainter extends CustomPainter {
       final dripRadius = width * 0.01;
       double dripX;
       if (yLeft <= 0 && yRight <= 0) {
-        dripX = width / 2; // Drip in the middle if both sides are over
+        dripX = width / 2;
       } else if (yLeft <= 0) {
         dripX = 0.0;
       } else {
