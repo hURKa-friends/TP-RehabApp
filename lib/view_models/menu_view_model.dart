@@ -6,7 +6,7 @@ import 'package:rehab_app/views/displayTracking_view.dart';
 import 'package:rehab_app/views/example_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
 ///
-import 'package:rehab_app/views/fingersTrackingExercises_view.dart';
+import 'package:rehab_app/views/fingersTrackingExercise_1_view.dart';
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
@@ -88,7 +88,7 @@ class MenuViewModel extends ChangeNotifier {
             TutorialStep(
               assetURI: 'assets/images/YourPilotIsSpoking.png',
               heading: 'Enjoy the ride',
-              description: 'Enjoy the exercise and improve.',
+              description: '',
             ),
           ],
         ),

@@ -1,12 +1,15 @@
 import 'package:rehab_app/models/finger_model.dart';
 import 'package:rehab_app/models/displayTracking_model.dart';
 import 'package:flutter/material.dart';
+import 'package:rehab_app/view_models/exercise_ball_viewmodel.dart';
 
 class DisplayTrackingViewModel extends ChangeNotifier {
   String msgDisplayTrackingViewModel = "";
   List<FingerModel> fingers = [];
 
   var displayTrackingModel;
+
+  late ExerciseBallViewModel exerciseBallViewModel;
 
   ///Constructor
   DisplayTrackingViewModel({
@@ -16,6 +19,15 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     required fingersBackAssignment,
     required offsetOfFinger,
     required displayOffset,
+    //Parameters for the exercise ball
+    required exerciseDone,
+    required typeOfObject,
+    required wightAndHeight,
+    required initialPosition,
+    required holeForTheBallPosition,
+    required hardness,
+    required showObject,
+    required screenSizeData,
   }) {
     displayTrackingModel = DisplayTrackingModel(
       numberOfFingers: numberOfFingers,
@@ -24,6 +36,16 @@ class DisplayTrackingViewModel extends ChangeNotifier {
       fingersBackAssignment: fingersBackAssignment,
       offsetOfFinger: offsetOfFinger,
       displayOffset: displayOffset,
+    );
+    exerciseBallViewModel = ExerciseBallViewModel(
+      exerciseDone: exerciseDone,
+      typeOfObject: typeOfObject, // Example: Ball type
+      wightAndHeight: wightAndHeight, // Example: Ball size
+      initialPosition: initialPosition,
+      holeForTheBallPosition :holeForTheBallPosition,
+      hardness :hardness,// Example: Initial position
+      showObject: showObject,
+      screenSize: screenSizeData, // Example: Screen size
     );
 
     // Initialize fingers
@@ -37,10 +59,12 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     });
   }
 
+
+  /*
   List<Offset> getTrajectory(String name) {
     return fingers.firstWhere((f) => f.fingerName == name).pointerFingerTrajectory;
   }
-
+  */
   void onPointerDown(PointerEvent event) {
     ///Back assignment of the fingers
     if(displayTrackingModel.fingersBackAssignment){
@@ -138,6 +162,11 @@ class DisplayTrackingViewModel extends ChangeNotifier {
       if(fingers[i].pointerFinger.containsKey(event.pointer)){
         fingers[i].pointerFingerTrajectory.add(event.position);
       }
+    }
+
+    //Update the position of the exercise ball
+    if(displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers){
+      exerciseBallViewModel.setPosition(fingers[0].pointerFingerTrajectory.last, fingers[1].pointerFingerTrajectory.last);
     }
 
     notifyListeners();

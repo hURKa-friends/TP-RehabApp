@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 
+import '../models/displayTracking_model.dart';
 import '../view_models/displayTracking_viewmodel.dart';
+import '../view_models/exercise_ball_viewmodel.dart';
+import '../views/exercise_ball_view.dart';
 
 import 'package:rehab_app/views/fingerTrackingExerciseNo1_view.dart';
 
@@ -66,7 +69,7 @@ class _DynamicTrajectoryPainter extends CustomPainter {
 
 class FingersTrackingExercisesViewState extends StatefulPageState {
   DisplayTrackingViewModel? viewModel;
-  //DisplayTrackingViewModel? viewModelExerciseNo1;
+
   String data = "";
   double dataTextSize = 23;
   ///Stylized parameters
@@ -84,12 +87,22 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
   void initializeViewModel(int numberOfFingers, String hand, bool identification, bool fingersBackAssignment) {
     setState(() {
       viewModel = DisplayTrackingViewModel(
+        exerciseDone: false,
         numberOfFingers: numberOfFingers,
         hand: hand,
         identification: identification,
         fingersBackAssignment: fingersBackAssignment,
         offsetOfFinger: const Offset(50, 50),
         displayOffset: const Offset(0, 50), //The app bar takes 50 pixels
+
+        //Parameters for the exercise ball
+        typeOfObject: '1', // Example: Ball type
+        wightAndHeight: [150.0, 150.0], // Example: Ball size
+        initialPosition: const Offset(500, 500), // Example: Initial position
+        holeForTheBallPosition: const Offset(500, 500), // Example: Hole position
+        hardness: hardness, // Example: Hardness
+        showObject: true,
+        screenSizeData: MediaQuery.of(context).size,
       );
     });
   }
@@ -115,6 +128,48 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
       decoration: const BoxDecoration(
         color: Colors.red,
         shape: BoxShape.circle,
+      ),
+    );
+  }
+
+  Widget _buildExerciseBallMarker(ExerciseBallViewModel exerciseBallViewModel,DisplayTrackingModel displayTrackingModel, {String? label}) {
+    final width = exerciseBallViewModel.size[0] ?? 50.0;
+    final height = exerciseBallViewModel.size[1] ?? 50.0;
+    final position = exerciseBallViewModel.currentPosition - displayTrackingModel.displayOffset;
+
+    return Positioned(
+      left: position.dx - width / 2,
+      top: position.dy - height / 2,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: exerciseBallViewModel.currentColor.withOpacity(0.8),
+          shape: exerciseBallViewModel.exerciseBallModel.objectType == '1' ? BoxShape.circle : BoxShape.rectangle,
+        ),
+        child: label != null
+            ? Center(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 24, color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        )
+            : null,
+      ),
+    );
+  }
+  Widget _buildExerciseBallGoalMarker(ExerciseBallViewModel exerciseBallViewModel){
+    return Positioned(
+      left: exerciseBallViewModel.goalPosition.dx - 25,
+      top: exerciseBallViewModel.goalPosition.dy - 25 -50,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          shape: BoxShape.circle,
+        ),
       ),
     );
   }
@@ -179,7 +234,6 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
     );
   }
 
-
   @override
   Widget buildPage(BuildContext context) {
     if (viewModel == null) {
@@ -240,7 +294,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                       height: 100,
                       child: ElevatedButton(
                         onPressed: () {
-                          initializeViewModel(1, hand, false, false);
+                          initializeViewModel(2, hand, false, false); //Starting the exercise -----------------------------------------------------------------------
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent, // your color
@@ -267,14 +321,14 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
         ),
       );
     }
-
+    
     //Show when you have something to show - aka changes to the exercise
     return ChangeNotifierProvider.value(
       value: viewModel!,
       child: Consumer<DisplayTrackingViewModel>(
         builder: (context, viewmodel, child) {
           return Scaffold(
-            body: Listener(
+            body: Listener( //Listener for the fingers
               onPointerDown: viewmodel.onPointerDown,
               onPointerMove: viewmodel.onPointerMove,
               onPointerUp: viewmodel.onPointerUp,
@@ -307,7 +361,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                     ),
                   ),
 
-                  //Fingers pointies
+                  //Fingers pointer - display where is the finger pointing on the screen
                   ...viewmodel.fingers.map((finger) {
                     if (finger.pointerFingerTrajectory.isEmpty) return const SizedBox.shrink();
 
@@ -332,17 +386,20 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                     );
                   }),
 
-                  // trajectory painter
+                  //Exercise objects/ball
+                  _buildExerciseBallMarker(viewmodel.exerciseBallViewModel, viewmodel.displayTrackingModel, label: "-"),
+                  _buildExerciseBallGoalMarker(viewmodel.exerciseBallViewModel),
+                  //Trajectory painter - displaying the trajectory of the finger
                   Opacity(
                     opacity: 0.3,
                     child: CustomPaint(
                       painter: _DynamicTrajectoryPainter(viewmodel),
                     ),
                   ),
+
                 ],
               ),
-            ),
-          );
+            ),          );
         },
       ),
     );
