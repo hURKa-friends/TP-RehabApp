@@ -63,12 +63,6 @@ class DisplayTrackingViewModel extends ChangeNotifier {
   }
 
 
-  /*
-  List<Offset> getTrajectory(String name) {
-    return fingers.firstWhere((f) => f.fingerName == name).pointerFingerTrajectory;
-  }
-  */
-
   void processDataStep(){
     //fingers[i].pointerFinger - key is and id of the pointer - value is starting position of the finger on new id
     //fingers[i].pointerFingerTrajectory - trajectory of the finger
@@ -100,10 +94,12 @@ class DisplayTrackingViewModel extends ChangeNotifier {
       }
     }
 
+    /*
     print("\n---Log---------------------------------------------------------------------------");
     for(int i=0; i<fingersLog.length; i++){
       print("Logged data: ${i} : ${fingersLog.elementAt(i)}");
     }
+    */
 
     //Deleting processed data
     for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
