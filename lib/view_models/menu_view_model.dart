@@ -22,56 +22,59 @@ class MenuViewModel extends ChangeNotifier {
       icon: Icons.fastfood,
       title: "Eating rehab",
       subPages: [
-        SubMenuPageWrapper(
-          icon: Icons.menu,
-          title: "Spoon",
-          subPages: [
-            AcqView(icon: Icons.timer_outlined, title: 'Measurement'),
-            ExampleView(icon: Icons.extension_outlined, title: "Left"),
-            ExampleView(icon: Icons.looks_two_outlined, title: "Right"),
-          ],
-        ),
-        SubMenuPageWrapper(
-          icon: Icons.menu,
-          title: "Fork",
-          subPages: [
-            ExampleView(icon: Icons.extension_outlined, title: "Left"),
-            ExampleView(icon: Icons.looks_two_outlined, title: "Right"),
-          ],
-        ),
+        // SubMenuPageWrapper(
+        //   icon: Icons.menu,
+        //   title: "Spoon",
+        //   subPages: [
+        //     AcqView(icon: Icons.timer_outlined, title: 'Measurement'),
+        //     ExampleView(icon: Icons.extension_outlined, title: "Left"),
+        //     ExampleView(icon: Icons.looks_two_outlined, title: "Right"),
+        //   ],
+        // ),
+        // SubMenuPageWrapper(
+        //   icon: Icons.menu,
+        //   title: "Fork",
+        //   subPages: [
+        //     ExampleView(icon: Icons.extension_outlined, title: "Left"),
+        //     ExampleView(icon: Icons.looks_two_outlined, title: "Right"),
+        //   ],
+        // ),
         AcqView(
           icon: Icons.checklist_rtl_outlined,
-          title: "Tutorial",
+          title: "Meranie aktivity",
           tutorialSteps: [
             TutorialStep(
               assetURI: 'assets/eating_rehab/eating.png',
               heading: 'Info',
-              description: 'Opis Bla Bla Bla Jedlo - mobil - meranie',
+              description: 'Táto aplikácia slúži na detekciu otrasov,'
+                          ' nárazov a meranie aktivity počas jedenia.',
             ),
             TutorialStep(
               assetURI: 'assets/eating_rehab/secure_phone.png',
               heading: '1. Krok',
-              description: 'Pripevni si smrtphone na packu',
+              description: 'Pripevnite si Váš smartphone na zápästie '
+                          'ruky, ktorou budete jesť. ',
             ),
             TutorialStep(
               assetURI: 'assets/eating_rehab/start.png',
               heading: '2. Krok',
-              description: 'Stlac start',
+              description: 'Stlačte Štart a položte ruku na stôl '
+                          'meranie sa spustí po 3 sekundách.',
             ),
             TutorialStep(
               assetURI: 'assets/eating_rehab/eat_spoon.png',
               heading: '3. Krok',
-              description: 'Zacni papat',
+              description: 'Začnite jesť.',
             ),
             TutorialStep(
               assetURI: 'assets/eating_rehab/stop.png',
               heading: '4. Krok',
-              description: 'Stlac stop ',
+              description: 'Stlačte tlačidlo Stop na zastavenie merania.',
             ),
             TutorialStep(
               assetURI: 'assets/eating_rehab/ok.png',
               heading: 'Potvrdenie',
-              description: 'Pochopil si? ',
+              description: 'Potvrďte porozumenie. ',
             ),
           ],
         )
