@@ -7,6 +7,7 @@ enum ExerciseType {
   shoulderForwardElevationActive,
   shoulderExternalRotation,
 }
+enum ArmSelection { none, left, right }
 
 // part of AngleLimitsDeg (enum cannot be declared in class)
 enum LimitType{
@@ -20,6 +21,8 @@ abstract class ShoulderExercise {
   final List<List<PoseLandmarkType>> jointAngleLocations;
   final List<AngleLimitsDeg> jointLimits;
   final int targetRepetitions;
+  final ArmSelection arm;
+
   bool correctRepetition = false;
   bool outOfLimits = true;
 
@@ -28,7 +31,8 @@ abstract class ShoulderExercise {
     required this.jointAngleLocations,
     required this.jointLimits,
     required this.targetRepetitions,
-    });
+    required this.arm,
+  });
 }
 
 
@@ -51,14 +55,15 @@ class AngleLimitsDeg {
 
 
 class ExerciseFactory {
-  static ShoulderExercise create(ExerciseType type, int numberOfRepetitions) {
+  static ShoulderExercise create(ExerciseType type, int numberOfRepetitions, ArmSelection arm) {
     switch (type) {
       case ExerciseType.shoulderAbductionActive:
-        return ShoulderAbductionActive(reps: numberOfRepetitions);
+        return ShoulderAbductionActive(reps: numberOfRepetitions, arm: arm);
       case ExerciseType.shoulderForwardElevationActive:
-        return ShoulderForwardElevationActive(reps: numberOfRepetitions);
+        return ShoulderForwardElevationActive(reps: numberOfRepetitions, arm: arm);
       case ExerciseType.shoulderExternalRotation:
-      // return ShoulderExternalRotation(reps: numberOfRepetitions);
+      // return ShoulderExternalRotation(reps: numberOfRepetitions, arm: arm);
+        throw Exception('ShoulderExternalRotation not implemented'); // for now...
       default:
         throw Exception('Unsupported exercise type: $type');
     }
@@ -67,64 +72,69 @@ class ExerciseFactory {
 
 
 class ShoulderAbductionActive extends ShoulderExercise {
+  static List<PoseLandmarkType> _getShoulderPoints(ArmSelection arm) {
+    return arm == ArmSelection.left
+        ? [PoseLandmarkType.leftHip, PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow]
+        : [PoseLandmarkType.rightHip, PoseLandmarkType.rightShoulder, PoseLandmarkType.rightElbow];
+  }
 
-  static List<PoseLandmarkType> rightShoulderPoints = [
-    PoseLandmarkType.rightHip,
-    PoseLandmarkType.rightShoulder,
-    PoseLandmarkType.rightElbow,
-  ];
-  static List<PoseLandmarkType> rightElbowPoints = [
-    PoseLandmarkType.rightShoulder,
-    PoseLandmarkType.rightElbow,
-    PoseLandmarkType.rightWrist,
-  ];
+  static List<PoseLandmarkType> _getElbowPoints(ArmSelection arm) {
+    return arm == ArmSelection.left
+        ? [PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow, PoseLandmarkType.leftWrist]
+        : [PoseLandmarkType.rightShoulder, PoseLandmarkType.rightElbow, PoseLandmarkType.rightWrist];
+  }
 
-  static List<List<PoseLandmarkType>> anglePoints = [
-    rightShoulderPoints,
-    rightElbowPoints,
-  ];
+  static List<List<PoseLandmarkType>> _getAnglePoints(ArmSelection arm) {
+    return [
+      _getShoulderPoints(arm),
+      _getElbowPoints(arm),
+    ];
+  }
 
   static List<AngleLimitsDeg> limits = [
     AngleLimitsDeg(
-        limitType: LimitType.reachLimits,
-        upper: 90,
-        lower: 20,
-        tolerance: 5,
-        ),
+      limitType: LimitType.reachLimits,
+      upper: 90,
+      lower: 20,
+      tolerance: 5,
+    ),
     AngleLimitsDeg(
-        limitType: LimitType.inLimits,
-        upper: 180,
-        lower: 180,
-        tolerance: 15,
-        ),
+      limitType: LimitType.inLimits,
+      upper: 180,
+      lower: 180,
+      tolerance: 15,
+    ),
   ];
 
-  ShoulderAbductionActive({required int reps})
-    : super(type: ExerciseType.shoulderAbductionActive,
-            jointAngleLocations: anglePoints,
-            jointLimits: limits,
-            targetRepetitions: reps,
-    ); //super
+  ShoulderAbductionActive({required int reps, required super.arm})
+      : super(
+    type: ExerciseType.shoulderAbductionActive,
+    jointAngleLocations: _getAnglePoints(arm),
+    jointLimits: limits,
+    targetRepetitions: reps,
+  );
 }
 
 
 class ShoulderForwardElevationActive extends ShoulderExercise {
+  static List<PoseLandmarkType> _getShoulderPoints(ArmSelection arm) {
+    return arm == ArmSelection.left
+        ? [PoseLandmarkType.leftHip, PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow]
+        : [PoseLandmarkType.rightHip, PoseLandmarkType.rightShoulder, PoseLandmarkType.rightElbow];
+  }
 
-  static List<PoseLandmarkType> rightShoulderPoints = [
-    PoseLandmarkType.rightHip,
-    PoseLandmarkType.rightShoulder,
-    PoseLandmarkType.rightElbow,
-  ];
-  static List<PoseLandmarkType> rightElbowPoints = [
-    PoseLandmarkType.rightShoulder,
-    PoseLandmarkType.rightElbow,
-    PoseLandmarkType.rightWrist,
-  ];
+  static List<PoseLandmarkType> _getElbowPoints(ArmSelection arm) {
+    return arm == ArmSelection.left
+        ? [PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow, PoseLandmarkType.leftWrist]
+        : [PoseLandmarkType.rightShoulder, PoseLandmarkType.rightElbow, PoseLandmarkType.rightWrist];
+  }
 
-  static List<List<PoseLandmarkType>> anglePoints = [
-    rightShoulderPoints,
-    rightElbowPoints,
-  ];
+  static List<List<PoseLandmarkType>> _getAnglePoints(ArmSelection arm) {
+    return [
+      _getShoulderPoints(arm),
+      _getElbowPoints(arm),
+    ];
+  }
 
   static List<AngleLimitsDeg> limits = [
     AngleLimitsDeg(
@@ -141,10 +151,11 @@ class ShoulderForwardElevationActive extends ShoulderExercise {
     ),
   ];
 
-  ShoulderForwardElevationActive({required int reps})
-      : super(type: ExerciseType.shoulderForwardElevationActive,
-    jointAngleLocations: anglePoints,
+  ShoulderForwardElevationActive({required int reps, required super.arm})
+      : super(
+    type: ExerciseType.shoulderForwardElevationActive,
+    jointAngleLocations: _getAnglePoints(arm),
     jointLimits: limits,
     targetRepetitions: reps,
-  ); //super
+  );
 }

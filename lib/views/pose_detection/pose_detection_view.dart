@@ -246,17 +246,56 @@ class PoseDetectionViewState extends StatefulPageState {
     );
   }
 
+  Widget _buildExerciseSuccessUI(BuildContext context, PoseDetectionViewModel viewModel) {
+    final ThemeData theme = Theme.of(context);
 
+    return Scaffold(
+      backgroundColor: theme.colorScheme.background,
+      appBar: AppBar(
+        title: Text('Exercise Complete', style: TextStyle(color: theme.colorScheme.onPrimary)),
+        backgroundColor: theme.colorScheme.primary,
+        automaticallyImplyLeading: false, // No back button needed here usually
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.check_circle_outline_rounded,
+                color: theme.colorScheme.primary, // Or Colors.green
+                size: 80.0,
+              ),
+              const SizedBox(height: 24.0),
+              Text(
+                'Exercise Finished Successfully! Click back in upper left corner to return to the main menu ',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: theme.colorScheme.onBackground,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 40.0),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget buildPage(BuildContext context) {
     var poseDetectionViewModel = context.watch<PoseDetectionViewModel>();
 
-    // If setup is NOT complete, show the arm and repetition selection UI.
-    if (!poseDetectionViewModel.isSetupComplete) {
+    if (poseDetectionViewModel.allRepetitionsCompleted) {
+      return _buildExerciseSuccessUI(context, poseDetectionViewModel);
+    }
+    else if (!poseDetectionViewModel.isSetupComplete) {
       return _buildArmSelectionUI(context, poseDetectionViewModel);
-    } else {
-      // If setup IS complete (meaning "Start Exercise" was pressed and successful), show the camera.
+    }
+    else {
       return _buildCameraPreviewUI(context, poseDetectionViewModel);
     }
   }

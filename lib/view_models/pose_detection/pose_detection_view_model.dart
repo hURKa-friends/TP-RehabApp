@@ -10,7 +10,7 @@ import '../../services/external/logger_service.dart';
 
 // enum LogChannel { csv, error, event, plain }
 // enum ChannelAccess { public, protected, private }
-enum ArmSelection { none, left, right }
+// enum ArmSelection { none, left, right }
 
 class PoseDetectionViewModel extends ChangeNotifier{
   // Fields
@@ -25,7 +25,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
   bool _isBusy = false;
   late bool mounted = false;
-  bool _canProcess = true;
 
   int repetitions = 0;
   double currentAngleShoulder = 0;
@@ -36,16 +35,21 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
   bool get isArmSelected => _selectedArm != ArmSelection.none;
 
-  int _targetRepetitions = 1; // Default value, e.g., 10 reps
+  int _targetRepetitions = 1; // Default value
   int get targetRepetitions => _targetRepetitions;
 
   bool _isSetupComplete = false;
   bool get isSetupComplete => _isSetupComplete;
 
+  bool _RepetitionsCompleted = false;
+  bool get allRepetitionsCompleted => _RepetitionsCompleted;
+
+
   void selectArm(ArmSelection arm) {
     _selectedArm = arm;
     notifyListeners();
   }
+
 
   void setTargetRepetitions(int reps) {
     if (reps > 0 && reps <= 20) { // Basic validation
@@ -54,23 +58,42 @@ class PoseDetectionViewModel extends ChangeNotifier{
     }
   }
 
+
   Future<void> initializeCameraAndDetection() async {
     if (!isArmSelected || _targetRepetitions <= 0) {
-      print("ViewModel: Arm or target repetitions not set for starting exercise.");
-      _isSetupComplete = false; // Ensure it's false if conditions aren't met
-      notifyListeners(); // Notify if state might have incorrectly been true
+      print("Arm or target repetitions not set correctly");
+      _isSetupComplete = false;
+      notifyListeners();
       return;
     }
-    print("ViewModel: Setup complete. Initializing camera for ${_selectedArm.name} arm, target reps: $_targetRepetitions");
 
-    // --- Your existing camera initialization logic ---
-    // e.g., await cameraController.initialize();
-    // cameraController.startImageStream(...);
-    // --- End of camera initialization logic ---
+    setExercise(_exerciseType);
 
-    _isSetupComplete = true; // <--- SET THE FLAG HERE
-    repetitions = 0; // Reset current rep count for the new session
+    _isSetupComplete = true;
+    repetitions = 0;
+    _RepetitionsCompleted = false;
+    currentAngleShoulder = 0;
+    outOfLimits = false;
+
+    for (var limit in exercise.jointLimits) {
+      limit.reachedLow = false;
+      limit.reachedHigh = false;
+    }
+    exercise.outOfLimits = true;
+    exercise.correctRepetition = false;
     notifyListeners();
+  }
+
+
+  void setExercise(ExerciseType type) {
+    _exerciseType = type;
+    print("ViewModel: setExercise is creating Exercise. Type: $_exerciseType, Arm: ${_selectedArm.name}, Reps: $_targetRepetitions");
+
+    exercise = ExerciseFactory.create(
+        _exerciseType,
+        _targetRepetitions,
+        _selectedArm
+    );
   }
 
   // Constructor
@@ -83,13 +106,12 @@ class PoseDetectionViewModel extends ChangeNotifier{
     _initPoseDetector();
     ChannelAccess channelAccess = ChannelAccess.private;
     UOID = await LoggerService().openCsvLogChannel(access: channelAccess, fileName: 'testFile', headerData: 'HeaderData1, HeaderData2, HeaderData3');
-    notifyListeners(); // Ensure UI rebuilds when camera is initialized
+    notifyListeners();
   }
 
   @override // Deconstructor
   void dispose() {
     print('Disposing PoseDetectionViewModel...');
-    _canProcess = false;
     _poseDetector.close();
     if (cameraController.value.isInitialized) {
       cameraController.stopImageStream();
@@ -107,9 +129,9 @@ class PoseDetectionViewModel extends ChangeNotifier{
     LoggerService().closeLogChannelSafely(ownerId: UOID!, channel: LogChannel.csv);
   }
 
-  // void onDataChanged() {
-  //   bool wasSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: 'Dataaaaa');
-  // }
+  void onDataChanged() {
+    // bool wasSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: 'Dataaaaa');
+  }
 
   void _initPoseDetector() {
     _poseDetector = PoseDetector(options: PoseDetectorOptions());
@@ -117,7 +139,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
   Future<void> _asyncInitCamera() async {
     _cameras = await availableCameras();
-    /// setup front camera only
+    // setup front camera only
     _frontCamera = _cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front);
     cameraController = CameraController(_frontCamera,
         ResolutionPreset.high,
@@ -134,11 +156,6 @@ class PoseDetectionViewModel extends ChangeNotifier{
     }
   }
 
-  void setExercise(ExerciseType type){
-    _exerciseType = type;
-    exercise = ExerciseFactory.create(_exerciseType, _targetRepetitions);
-    // print("Exercise set to $_exerciseType \n");
-  }
 
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
     if (_isBusy) return; // Skip if already processing a frame
@@ -167,6 +184,13 @@ class PoseDetectionViewModel extends ChangeNotifier{
     outOfLimits = exercise.outOfLimits;
 
     repetitions += checkCorrectRepetition(exercise, poses);
+
+    if (repetitions >= _targetRepetitions && _targetRepetitions > 0) {
+      if (!_RepetitionsCompleted) {
+        _RepetitionsCompleted = true;
+        print("ViewModel: All target repetitions completed!");
+      }
+    }
 
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
