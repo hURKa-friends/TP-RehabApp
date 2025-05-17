@@ -94,10 +94,11 @@ class ExerciseBallViewModel extends ChangeNotifier {
       ///Logger implementation
 
       ///
+      print("Exercise done");
       exerciseBallModel.trajectoryOfObject.clear();
     }
     //Reset the ball positions
-    if(!exerciseDone)initializePositions(screenSize: screenSizeData ?? const Size(300, 600), marginFromEdges: marginFromEdges);
+    if(!exerciseDone && numberOfRepetitions > 0)initializePositions(screenSize: screenSizeData ?? const Size(300, 600), marginFromEdges: marginFromEdges);
   }
 
   void changeColor(Color newColor) {

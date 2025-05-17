@@ -6,7 +6,10 @@ import 'package:rehab_app/view_models/exercise_ball_viewmodel.dart';
 class DisplayTrackingViewModel extends ChangeNotifier {
   String msgDisplayTrackingViewModel = "";
   List<FingerModel> fingers = [];
-
+  bool printMsgs = false;
+  List<dynamic> fingersLog = [];
+  List<dynamic> fingersLogRow = [];
+  
   var displayTrackingModel;
 
   late ExerciseBallViewModel exerciseBallViewModel;
@@ -65,34 +68,88 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     return fingers.firstWhere((f) => f.fingerName == name).pointerFingerTrajectory;
   }
   */
+
+  void processDataStep(){
+    //fingers[i].pointerFinger - key is and id of the pointer - value is starting position of the finger on new id
+    //fingers[i].pointerFingerTrajectory - trajectory of the finger
+
+    //Storing data
+    //Row - name of finger - id - trajectory x,y,
+    for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
+      //print("Finger ${fingers[i].fingerName}");
+      for(int n=0; n<fingers[i].pointerFinger.keys.length; n++){
+        fingersLogRow.add(fingers[i].fingerName);
+        fingersLogRow.add(fingers[i].pointerFinger.keys.elementAt(n).toString());
+
+        //Adding trajectory to row data
+        //print("Logged data pointerFingerTrajectoryList: ${fingers[i].pointerFingerTrajectoryList.last}");
+        for(int j=0; j<fingers[i].pointerFingerTrajectoryList.length; j++){
+          for(int k=0; k<fingers[i].pointerFingerTrajectoryList[j].length; k++){
+            if(fingers[i].pointerFingerTrajectoryList[j][k] != null){
+              fingersLogRow.add(fingers[i].pointerFingerTrajectoryList[j][k].dx.toStringAsFixed(2));
+              fingersLogRow.add(fingers[i].pointerFingerTrajectoryList[j][k].dy.toStringAsFixed(2));
+              fingersLogRow.add(';');
+            }
+          }
+        }
+
+        fingersLog.add(fingersLogRow.toString());
+
+        //print("\n\nLogged data Row: ${fingersLogRow}\n\n");
+        fingersLogRow.clear();
+      }
+    }
+
+    print("\n---Log---------------------------------------------------------------------------");
+    for(int i=0; i<fingersLog.length; i++){
+      print("Logged data: ${i} : ${fingersLog.elementAt(i)}");
+    }
+
+    //Deleting processed data
+    for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
+      fingers[i].pointerFinger.clear();
+      fingers[i].pointerFingerTrajectory.clear();
+      fingers[i].pointerFingerTrajectoryList.clear();
+    }
+  }
+
+  void processDataOfExercise(){
+    //Fingers and they trajectories
+
+
+    //Exercise ball
+
+
+  }
+
   void onPointerDown(PointerEvent event) {
     ///Back assignment of the fingers
     if(displayTrackingModel.fingersBackAssignment){
       if(displayTrackingModel.fingersDetected){
-        print("-----------------------------------------------");
-        print("Back assignment of the fingers - start");
+        if(printMsgs)print("-----------------------------------------------");
+        if(printMsgs)print("Back assignment of the fingers - start");
         for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
-          print("Finger ${fingers[i].fingerName} - ${fingers[i].pointerFingerActive}");
+          if(printMsgs)print("Finger ${fingers[i].fingerName} - ${fingers[i].pointerFingerActive}");
           if(fingers[i].pointerFingerActive == false && (event.position < fingers[i].pointerFingerTrajectory.last + displayTrackingModel.offsetOfFinger && event.position > fingers[i].pointerFingerTrajectory.last - displayTrackingModel.offsetOfFinger)){
             fingers[i].pointerFingerActive = true;
             fingers[i].pointerFinger[event.pointer] = event.position;
             fingers[i].pointerFingerTrajectory.add(event.position);
-            print("Back assigned finger ${fingers[i].fingerName} to pointer ${event.pointer}");
+            if(printMsgs)print("Back assigned finger ${fingers[i].fingerName} to pointer ${event.pointer}");
             break;
           }
         }
       }
     }else{
       if(displayTrackingModel.fingersDetected){
-        print("-----------------------------------------------");
-        print("No back assignment of the fingers - start");
+        if(printMsgs)print("-----------------------------------------------");
+        if(printMsgs)print("No back assignment of the fingers - start");
         for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
-          print("Finger ${fingers[i].fingerName} - ${fingers[i].pointerFingerActive}");
+          if(printMsgs)print("Finger ${fingers[i].fingerName} - ${fingers[i].pointerFingerActive}");
           if(fingers[i].pointerFingerActive == false){
             fingers[i].pointerFingerActive = true;
             fingers[i].pointerFinger[event.pointer] = event.position;
             fingers[i].pointerFingerTrajectory.add(event.position);
-            print("Back assigned finger ${fingers[i].fingerName} to pointer ${event.pointer}");
+            if(printMsgs)print("Back assigned finger ${fingers[i].fingerName} to pointer ${event.pointer}");
             break;
           }
         }
@@ -100,14 +157,14 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     }
 
     displayTrackingModel.activeFingers[event.pointer] = event.position;
-    print(displayTrackingModel.activeFingers);
+    if(printMsgs)print(displayTrackingModel.activeFingers);
 
     ///Initial assignment of the fingers
     if(displayTrackingModel.identification){
-      print("Identification of the fingers - start");
+      if(printMsgs)print("Identification of the fingers - start");
       ///Identification of the fingers with recognition
       if (displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers && !displayTrackingModel.fingersDetected) {
-        print("All fingers are active");
+        if(printMsgs)print("All fingers are active");
         var sortedEntries = displayTrackingModel.activeFingers.entries.toList()..sort((MapEntry<int, Offset> a, MapEntry<int, Offset> b) => a.value.dy.compareTo(b.value.dy));
 
         if (displayTrackingModel.hand == "Right") {
@@ -121,7 +178,7 @@ class DisplayTrackingViewModel extends ChangeNotifier {
                 sortedEntries[displayTrackingModel.numberOfFingers - i - 1]
                     .value);
           }
-          print("Right hand detected");
+          if(printMsgs)print("Right hand detected");
         } else if (displayTrackingModel.hand == "Left") {
           for (int i = 0; i < displayTrackingModel.numberOfFingers; i++) {
             fingers[i].pointerFingerActive = true;
@@ -129,12 +186,12 @@ class DisplayTrackingViewModel extends ChangeNotifier {
                 sortedEntries[i].value;
             fingers[i].pointerFingerTrajectory.add(sortedEntries[i].value);
           }
-          print("Left hand detected");
+          if(printMsgs)print("Left hand detected");
         } else {
-          print("ERROR in hand detection");
+          if(printMsgs)print("ERROR in hand detection");
         }
         displayTrackingModel.fingersDetected = true;
-        print("Fingers detected with identification");
+        if(printMsgs)print("Fingers detected with identification");
       }//Detection of the fingers
     }else{
       ///Without identification of the fingers
@@ -150,9 +207,10 @@ class DisplayTrackingViewModel extends ChangeNotifier {
           }
         }
         displayTrackingModel.fingersDetected = true;
-        print("Fingers detected without identification");
+        if(printMsgs)print("Fingers detected without identification");
       }
     }
+
 
     notifyListeners();
   }//onPointerDown END
@@ -177,8 +235,17 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
       if(fingers[i].pointerFinger.containsKey(event.pointer)){
         fingers[i].pointerFingerActive = false;
-        fingers[i].pointerFingerTrajectory.add(event.position);
-        print("Unassigned finger ${fingers[i].fingerName} of pointer ${event.pointer}");
+
+        ///Delete a trajectory and save it
+        fingers[i].pointerFingerTrajectory.removeAt(0); //Delete a fist point
+        fingers[i].pointerFingerTrajectoryList.add(fingers[i].pointerFingerTrajectory.toList());
+        fingers[i].pointerFingerTrajectory.clear();
+        //print("When unassigned Added trajectory ${fingers[i].pointerFingerTrajectoryList.last}");
+        ///
+
+        fingers[i].pointerFingerTrajectory.add(event.position); //Last position of the finger
+
+        if(printMsgs)print("Unassigned finger ${fingers[i].fingerName} of pointer ${event.pointer}");
       }
     }
 
@@ -198,6 +265,9 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     if(displayTrackingModel.fingersDetected){
       displayTrackingModel.activeFingers.remove(event.pointer);
     }
+
+    ///Testing
+    processDataStep();
 
     notifyListeners();
   }//onPointerUp END

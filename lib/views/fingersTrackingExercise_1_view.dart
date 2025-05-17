@@ -167,7 +167,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: Colors.black12,
           shape: BoxShape.circle,
         ),
       ),

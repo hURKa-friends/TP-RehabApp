@@ -6,6 +6,7 @@ class FingerModel{
   bool pointerFingerActive = false;
   Map<int, Offset> pointerFinger = {};
   List<Offset> pointerFingerTrajectory = [];
+  List<List<Offset>> pointerFingerTrajectoryList = [];
 
   FingerModel({
     required this.fingerName,
