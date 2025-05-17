@@ -327,6 +327,105 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
       value: viewModel!,
       child: Consumer<DisplayTrackingViewModel>(
         builder: (context, viewmodel, child) {
+          if (viewmodel.exerciseDone) {
+            // Show something else if the exercise is done
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Exercise Completed!",
+                      style: TextStyle(fontSize: 32, color: Colors.green[700]),
+                    ),
+                    SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          viewModel = null; // Return to parameter selection
+                          hand = '';
+                          hardness = -1;
+                        });
+                      },
+                      child: Text("Back to Setup", style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          // Otherwise, show the finger tracking exercise UI
+          return Scaffold(
+            body: Listener(
+              onPointerDown: viewmodel.onPointerDown,
+              onPointerMove: viewmodel.onPointerMove,
+              onPointerUp: viewmodel.onPointerUp,
+              behavior: HitTestBehavior.translucent,
+              child: Stack(
+                children: [
+                  // Background
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: 0.05,
+                      child: Image.asset(
+                        'assets/images/CopperBusines.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: () => setState(() => data = "Tapped!"),
+                    onDoubleTap: () => setState(() => data = "Double Tapped!"),
+                    onHorizontalDragEnd: (details) {
+                      setState(() => data =
+                      details.primaryVelocity! < 0 ? "Swiped Left!" : "Swiped Right!");
+                    },
+                    child: Center(
+                      child: Text(
+                        data,
+                        style: TextStyle(fontSize: dataTextSize, color: Colors.black12),
+                      ),
+                    ),
+                  ),
+
+                  // Finger positions
+                  ...viewmodel.fingers.map((finger) {
+                    if (finger.pointerFingerTrajectory.isEmpty) return const SizedBox.shrink();
+                    final lastPoint = finger.pointerFingerTrajectory.last;
+                    final displayOffset = viewmodel.displayTrackingModel.displayOffset;
+
+                    return Positioned(
+                      left: lastPoint.dx - fingerMarkerSize.dx / 2,
+                      top: lastPoint.dy - displayOffset.dy - fingerMarkerSize.dy / 2,
+                      child: _buildFingerMarkerNameTag(finger.fingerName),
+                    );
+                  }),
+
+                  // Exercise Ball and Goal
+                  _buildExerciseBallMarker(viewmodel.exerciseBallViewModel, viewmodel.displayTrackingModel, label: "-"),
+                  _buildExerciseBallGoalMarker(viewmodel.exerciseBallViewModel),
+
+                  // Trajectory Paint
+                  Opacity(
+                    opacity: 0.3,
+                    child: CustomPaint(
+                      painter: _DynamicTrajectoryPainter(viewmodel),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+    /*
+    return ChangeNotifierProvider.value(
+      value: viewModel!,
+      child: Consumer<DisplayTrackingViewModel>(
+        builder: (context, viewmodel, child) {
           return Scaffold(
             body: Listener( //Listener for the fingers
               onPointerDown: viewmodel.onPointerDown,
@@ -385,7 +484,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                       ],
                     );
                   }),
-
+                  
                   //Exercise objects/ball
                   _buildExerciseBallMarker(viewmodel.exerciseBallViewModel, viewmodel.displayTrackingModel, label: "-"),
                   _buildExerciseBallGoalMarker(viewmodel.exerciseBallViewModel),
@@ -403,5 +502,6 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
         },
       ),
     );
+    */
   }
 }

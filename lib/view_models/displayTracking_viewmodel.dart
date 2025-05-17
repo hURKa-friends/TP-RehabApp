@@ -9,10 +9,23 @@ class DisplayTrackingViewModel extends ChangeNotifier {
   bool printMsgs = false;
   List<dynamic> fingersLog = [];
   List<dynamic> fingersLogRow = [];
-  
+
+  /*
+  bool _exerciseDone = false;
+
+  bool get exerciseDone => _exerciseDone;
+
+  void changeExerciseDone() {
+    _exerciseDone = true;
+    notifyListeners();
+  }
+
+   */
+
   var displayTrackingModel;
 
   late ExerciseBallViewModel exerciseBallViewModel;
+  bool get exerciseDone => exerciseBallViewModel.exerciseDone;
 
   ///Constructor
   DisplayTrackingViewModel({

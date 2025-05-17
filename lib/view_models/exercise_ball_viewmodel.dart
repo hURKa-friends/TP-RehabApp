@@ -74,7 +74,7 @@ class ExerciseBallViewModel extends ChangeNotifier {
   void checkExerciseProgress() {
     //Hardness of the exercise 1 - soft 2 - medium 3 - hard
     if(difficulty == 1) {
-      if(numberOfRepetitions >= 3) {
+      if(numberOfRepetitions >= 1) {
         exerciseDone = true;
       }
       distanceFromGoal = 20;
