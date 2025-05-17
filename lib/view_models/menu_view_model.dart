@@ -76,8 +76,8 @@ class MenuViewModel extends ChangeNotifier {
               tutorialSteps: [
                 TutorialStep(
                   assetURI: 'assets/pose_detection/shoulder_abduction_active.jpg',
-                  heading: 'This is fancy heading...',
-                  description: 'Amazing description...',
+                  heading: 'Raise your arm out to the side',
+                  description: 'Raise your arm out to the side, with your elbow straight and your palm downward. Do not shrug your shoulder or tilt your trunk. Repeat 3 times per session. Do 3 sessions a day',
                 ),
               ],
             ),
@@ -86,8 +86,8 @@ class MenuViewModel extends ChangeNotifier {
               tutorialSteps: [
                 TutorialStep(
                   assetURI: 'assets/pose_detection/shoulder_forward_elevation_active.jpg',
-                  heading: 'This is fancy heading...',
-                  description: 'Amazing description...',
+                  heading: 'Raise your arm upward to point to the ceiling',
+                  description: 'Raise your arm upward to point to the ceiling, keeping your elbows straight and leading with your thumb, as shown. Hold for 10 seconds. Repeat 5 to 10 times per session. Do 3 sessions a day.',
                 ),
               ],
             ),
