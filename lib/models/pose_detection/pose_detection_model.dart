@@ -8,7 +8,6 @@ enum ExerciseType {
   shoulderExternalRotation,
 }
 
-
 // part of AngleLimitsDeg (enum cannot be declared in class)
 enum LimitType{
   inLimits,   // must be in limits to return true
@@ -20,7 +19,7 @@ abstract class ShoulderExercise {
   final ExerciseType type;
   final List<List<PoseLandmarkType>> jointAngleLocations;
   final List<AngleLimitsDeg> jointLimits;
-  final double repetitions;
+  final int targetRepetitions;
   bool correctRepetition = false;
   bool outOfLimits = true;
 
@@ -28,7 +27,7 @@ abstract class ShoulderExercise {
     required this.type,
     required this.jointAngleLocations,
     required this.jointLimits,
-    required this.repetitions,
+    required this.targetRepetitions,
     });
 }
 
@@ -52,12 +51,14 @@ class AngleLimitsDeg {
 
 
 class ExerciseFactory {
-  static ShoulderExercise create(ExerciseType type) {
+  static ShoulderExercise create(ExerciseType type, int numberOfRepetitions) {
     switch (type) {
       case ExerciseType.shoulderAbductionActive:
-        return ShoulderAbductionActive();
+        return ShoulderAbductionActive(reps: numberOfRepetitions);
       case ExerciseType.shoulderForwardElevationActive:
-        return ShoulderForwardElevationActive();
+        return ShoulderForwardElevationActive(reps: numberOfRepetitions);
+      case ExerciseType.shoulderExternalRotation:
+      // return ShoulderExternalRotation(reps: numberOfRepetitions);
       default:
         throw Exception('Unsupported exercise type: $type');
     }
@@ -86,7 +87,7 @@ class ShoulderAbductionActive extends ShoulderExercise {
   static List<AngleLimitsDeg> limits = [
     AngleLimitsDeg(
         limitType: LimitType.reachLimits,
-        upper: 180,
+        upper: 90,
         lower: 20,
         tolerance: 5,
         ),
@@ -98,11 +99,11 @@ class ShoulderAbductionActive extends ShoulderExercise {
         ),
   ];
 
-  ShoulderAbductionActive()
+  ShoulderAbductionActive({required int reps})
     : super(type: ExerciseType.shoulderAbductionActive,
             jointAngleLocations: anglePoints,
             jointLimits: limits,
-            repetitions: 3,
+            targetRepetitions: reps,
     ); //super
 }
 
@@ -140,10 +141,10 @@ class ShoulderForwardElevationActive extends ShoulderExercise {
     ),
   ];
 
-  ShoulderForwardElevationActive()
+  ShoulderForwardElevationActive({required int reps})
       : super(type: ExerciseType.shoulderForwardElevationActive,
     jointAngleLocations: anglePoints,
     jointLimits: limits,
-    repetitions: 5,
+    targetRepetitions: reps,
   ); //super
 }

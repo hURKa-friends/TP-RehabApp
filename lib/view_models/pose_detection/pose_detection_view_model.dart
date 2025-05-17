@@ -10,6 +10,7 @@ import '../../services/external/logger_service.dart';
 
 // enum LogChannel { csv, error, event, plain }
 // enum ChannelAccess { public, protected, private }
+enum ArmSelection { none, left, right }
 
 class PoseDetectionViewModel extends ChangeNotifier{
   // Fields
@@ -29,6 +30,48 @@ class PoseDetectionViewModel extends ChangeNotifier{
   int repetitions = 0;
   double currentAngleShoulder = 0;
   bool outOfLimits = false;
+
+  ArmSelection _selectedArm = ArmSelection.none;
+  ArmSelection get selectedArm => _selectedArm;
+
+  bool get isArmSelected => _selectedArm != ArmSelection.none;
+
+  int _targetRepetitions = 1; // Default value, e.g., 10 reps
+  int get targetRepetitions => _targetRepetitions;
+
+  bool _isSetupComplete = false;
+  bool get isSetupComplete => _isSetupComplete;
+
+  void selectArm(ArmSelection arm) {
+    _selectedArm = arm;
+    notifyListeners();
+  }
+
+  void setTargetRepetitions(int reps) {
+    if (reps > 0 && reps <= 20) { // Basic validation
+      _targetRepetitions = reps;
+      notifyListeners();
+    }
+  }
+
+  Future<void> initializeCameraAndDetection() async {
+    if (!isArmSelected || _targetRepetitions <= 0) {
+      print("ViewModel: Arm or target repetitions not set for starting exercise.");
+      _isSetupComplete = false; // Ensure it's false if conditions aren't met
+      notifyListeners(); // Notify if state might have incorrectly been true
+      return;
+    }
+    print("ViewModel: Setup complete. Initializing camera for ${_selectedArm.name} arm, target reps: $_targetRepetitions");
+
+    // --- Your existing camera initialization logic ---
+    // e.g., await cameraController.initialize();
+    // cameraController.startImageStream(...);
+    // --- End of camera initialization logic ---
+
+    _isSetupComplete = true; // <--- SET THE FLAG HERE
+    repetitions = 0; // Reset current rep count for the new session
+    notifyListeners();
+  }
 
   // Constructor
   PoseDetectionViewModel() {
@@ -93,7 +136,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
   void setExercise(ExerciseType type){
     _exerciseType = type;
-    exercise = ExerciseFactory.create(type);
+    exercise = ExerciseFactory.create(_exerciseType, _targetRepetitions);
     // print("Exercise set to $_exerciseType \n");
   }
 
@@ -117,7 +160,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
     double? angleRad = calculateAngleRad(
                                   poses,
-                                  exercise.jointAngleLocations[1]);
+                                  exercise.jointAngleLocations[0]);
     if (angleRad != null){
       currentAngleShoulder = angleRad * (180 / pi);
     }
@@ -159,7 +202,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
       bytes: plane.bytes,
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: InputImageRotation.rotation90deg,
+        rotation: InputImageRotation.rotation270deg,
         format: format,
         bytesPerRow: plane.bytesPerRow,
       ),
@@ -367,17 +410,12 @@ class PosePainter extends CustomPainter {
       InputImageRotation rotation,
       CameraLensDirection cameraLensDirection,
       ) {
-    if (cameraLensDirection == CameraLensDirection.front){
-      x = canvasSize.height - x;
-    }
     switch (rotation) {
       case InputImageRotation.rotation90deg:
         return x *
             canvasSize.width / imageSize.height;
       case InputImageRotation.rotation270deg:
-        return canvasSize.width -
-            x *
-                canvasSize.width / imageSize.height;
+        return canvasSize.width - x * canvasSize.width / imageSize.height;
       case InputImageRotation.rotation0deg:
       case InputImageRotation.rotation180deg:
         switch (cameraLensDirection) {
