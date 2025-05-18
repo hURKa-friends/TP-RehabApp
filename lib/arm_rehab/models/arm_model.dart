@@ -38,12 +38,12 @@ class NormalizeSensorValues {
 }
 
 class Setpoints {
-  late final double armLift0X;
-  late final double armLift0Y;
-  late final double armLift0Z;
-  late final double armLift1X;
-  late final double armLift1Y;
-  late final double armLift1Z;
+  late final double frontRaises0X;
+  late final double frontRaises0Y;
+  late final double frontRaises0Z;
+  late final double frontRaises1X;
+  late final double frontRaises1Y;
+  late final double frontRaises1Z;
 
   late final double chestPress0X;
   late final double chestPress0Y;
@@ -74,16 +74,16 @@ class Setpoints {
   late final double glassTurning1Z;
 
   Setpoints() {
-    switch (SelectedOptions.pos) { // Switch aj podla arm?
+    switch (SelectedOptions.pos) {
       case SelectedPos.shoulder:
         switch (SelectedOptions.arm) {
           case SelectedArm.right:
-            armLift0X = -3.5;
-            armLift0Y = -9.1;
-            armLift0Z = 0.3;
-            armLift1X = -9.8;
-            armLift1Y = -0.1;
-            armLift1Z = -0.2;
+            frontRaises0X = -3.5;
+            frontRaises0Y = -9.1;
+            frontRaises0Z = 0.3;
+            frontRaises1X = -9.8;
+            frontRaises1Y = -0.1;
+            frontRaises1Z = -0.2;
 
             chestPress0X = -5.3;
             chestPress0Y = -7.1;
@@ -115,6 +115,40 @@ class Setpoints {
 
             break;
           case SelectedArm.left:
+            frontRaises0X = 4;
+            frontRaises0Y = -8.8;
+            frontRaises0Z = 0.5;
+            frontRaises1X = 9.8;
+            frontRaises1Y = 0.3;
+            frontRaises1Z = 0.1;
+
+            chestPress0X = 4.5;
+            chestPress0Y = -7.5;
+            chestPress0Z = 4.7;
+            chestPress1X = 9.7;
+            chestPress1Y = 0.5;
+            chestPress1Z = 0.6;
+
+            bicepCurls0X = 2.5;
+            bicepCurls0Y = -9.4;
+            bicepCurls0Z = -1;
+            bicepCurls1X = 2.5;
+            bicepCurls1Y = -9.4;
+            bicepCurls1Z = 0.8;
+
+            drinking0X = 0.8;
+            drinking0Y = -9.5;
+            drinking0Z = 1.7;
+            drinking1X = 9.8;
+            drinking1Y = 0.3;
+            drinking1Z = 0.5;
+
+            glassTurning0X = 5.3;
+            glassTurning0Y = -7.7;
+            glassTurning0Z = 3;
+            glassTurning1X = 4.3;
+            glassTurning1Y = -8.7;
+            glassTurning1Z = -1.1;
 
             break;
         }
@@ -123,12 +157,12 @@ class Setpoints {
       case SelectedPos.wrist:
         switch (SelectedOptions.arm) {
           case SelectedArm.right:
-            armLift0X = -4;
-            armLift0Y = -8.9;
-            armLift0Z = -0.1;
-            armLift1X = -1.7;
-            armLift1Y = 0.6;
-            armLift1Z = 4.6;
+            frontRaises0X = -4;
+            frontRaises0Y = -8.9;
+            frontRaises0Z = -0.1;
+            frontRaises1X = -8.7;
+            frontRaises1Y = 0.6;
+            frontRaises1Z = 4.6;
 
             chestPress0X = -9;
             chestPress0Y = 3.3;
@@ -144,12 +178,12 @@ class Setpoints {
             bicepCurls1Y = 7.6;
             bicepCurls1Z = -2.5;
 
-            drinking0X = -3.5;
-            drinking0Y = -9.1;
-            drinking0Z = 0.3;
-            drinking1X = -9.8;
-            drinking1Y = -0.1;
-            drinking1Z = -0.2;
+            drinking0X = -8.9;
+            drinking0Y = 2.3;
+            drinking0Z = -3.3;
+            drinking1X = -1.7;
+            drinking1Y = 7.5;
+            drinking1Z = 5.6;
 
             glassTurning0X = -3;
             glassTurning0Y = -6.1;
@@ -160,6 +194,40 @@ class Setpoints {
 
             break;
           case SelectedArm.left:
+            frontRaises0X = 3.5;
+            frontRaises0Y = -8.9;
+            frontRaises0Z = 2.2;
+            frontRaises1X = 6.3;
+            frontRaises1Y = 0.3;
+            frontRaises1Z = 7;
+
+            chestPress0X = 7.9;
+            chestPress0Y = 3.5;
+            chestPress0Z = 4.5;
+            chestPress1X = 6.5;
+            chestPress1Y = 0.5;
+            chestPress1Z = 7.3;
+
+            bicepCurls0X = 4.7;
+            bicepCurls0Y = -8;
+            bicepCurls0Z = -3;
+            bicepCurls1X = 4;
+            bicepCurls1Y = 8.5;
+            bicepCurls1Z = -2.6;
+
+            drinking0X = 9.4;
+            drinking0Y = 2.1;
+            drinking0Z = -2;
+            drinking1X = -1.1;
+            drinking1Y = 7.7;
+            drinking1Z = 6.5;
+
+            glassTurning0X = 2.8;
+            glassTurning0Y = -8.2;
+            glassTurning0Z = 4.2;
+            glassTurning1X = 6.7;
+            glassTurning1Y = -7.1;
+            glassTurning1Z = -1.1;
 
             break;
         }

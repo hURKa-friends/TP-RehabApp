@@ -30,9 +30,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late double _currentX;
   late double _currentY;
   late double _currentZ;
-  final _toleranceX = 1.5;
-  final _toleranceY = 1.5;
-  final _toleranceZ = 1.5;
+  final _toleranceX = 2;
+  final _toleranceY = 2;
+  final _toleranceZ = 2;
   final setpoints = Setpoints();
   final double imageSize = 300;
 
@@ -138,12 +138,12 @@ class ExerciseStartViewModel extends ChangeNotifier {
   }
 
   Future<void> playShortBeep() async {
-    await _playerShort.seek(Duration(milliseconds: 0));
+    await _playerShort.seek(Duration(milliseconds: 10));
     await _playerShort.resume();
   }
 
   Future<void> playLongBeep() async {
-    await _playerLong.seek(Duration(milliseconds: 0));
+    await _playerLong.seek(Duration(milliseconds: 10));
     await _playerLong.resume();
   }
 
@@ -156,14 +156,14 @@ class ExerciseStartViewModel extends ChangeNotifier {
           switch (_nextSetpoint) {
             case 0:
               checkSetpoint(
-                  setpoints.armLift0X, setpoints.armLift0Y,
-                  setpoints.armLift0Z);
+                  setpoints.frontRaises0X, setpoints.frontRaises0Y,
+                  setpoints.frontRaises0Z);
 
               break;
             case 1:
               checkSetpoint(
-                  setpoints.armLift1X, setpoints.armLift1Y,
-                  setpoints.armLift1Z);
+                  setpoints.frontRaises1X, setpoints.frontRaises1Y,
+                  setpoints.frontRaises1Z);
 
               break;
             default:
@@ -245,7 +245,7 @@ class ExerciseStartViewModel extends ChangeNotifier {
     }
   }
 
-  void checkSetpoint(double x, double y, double z) {
+  void checkSetpoint(double x, double y, double z) async {
     if (_currentX < x + _toleranceX && _currentX > x - _toleranceX &&
     _currentY < y + _toleranceY && _currentY > y - _toleranceY &&
     _currentZ < z + _toleranceZ && _currentZ > z - _toleranceZ) {
@@ -258,7 +258,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
     }
 
     if (_currentSetpoint == _nextSetpoint) {
-      playShortBeep();
+      if (_repetitionCount != SelectedOptions.repetitions) {
+        playShortBeep();
+      }
       _nextSetpoint++;
 
       if (_nextSetpoint > 1) {
@@ -269,8 +271,6 @@ class ExerciseStartViewModel extends ChangeNotifier {
     if (_repetitionCount == SelectedOptions.repetitions) {
       playLongBeep();
       _exerciseFinished = true;
-      _playerShort.release();
-      _playerLong.release();
     }
 
     notifyListeners();

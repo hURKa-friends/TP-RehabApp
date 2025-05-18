@@ -70,21 +70,22 @@ flutter:
     - assets/arm_rehab/images/settings/pos_select/wrist.png
     - assets/arm_rehab/sounds/beeps/short_beep.m4a
     - assets/arm_rehab/sounds/beeps/long_beep.m4a
-    - assets/arm_rehab/images/exercises/arm_lift/arm_lift.gif
-    - assets/arm_rehab/images/exercises/arm_lift/arm_lift0.
-    - assets/arm_rehab/images/exercises/arm_lift/arm_lift1.
+    - assets/arm_rehab/images/exercises/front_raises/front_raises.gif
+    - assets/arm_rehab/images/exercises/front_raises/front_raises0.png
+    - assets/arm_rehab/images/exercises/front_raises/front_raises1.png
     - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls.gif
-    - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls0.
-    - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls1.
+    - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls0.png
+    - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls1.png
     - assets/arm_rehab/images/exercises/chest_press/chest_press.gif
-    - assets/arm_rehab/images/exercises/chest_press/chest_press0.
-    - assets/arm_rehab/images/exercises/chest_press/chest_press1.
+    - assets/arm_rehab/images/exercises/chest_press/chest_press0.png
+    - assets/arm_rehab/images/exercises/chest_press/chest_press1.png
     - assets/arm_rehab/images/exercises/drinking/drinking.gif
-    - assets/arm_rehab/images/exercises/drinking/drinking0.
-    - assets/arm_rehab/images/exercises/drinking/drinking1.
-    - assets/arm_rehab/images/exercises/turning_glass/turning_glass.gif
-    - assets/arm_rehab/images/exercises/turning_glass/turning_glass0.
-    - assets/arm_rehab/images/exercises/turning_glass/turning_glass1.
+    - assets/arm_rehab/images/exercises/drinking/drinking0.png
+    - assets/arm_rehab/images/exercises/drinking/drinking1.png
+    #- assets/arm_rehab/images/exercises/turning_glass/turning_glass.gif
+    #- assets/arm_rehab/images/exercises/turning_glass/turning_glass0.png
+    #- assets/arm_rehab/images/exercises/turning_glass/turning_glass1.png
+    - assets/arm_rehab/images/flex.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

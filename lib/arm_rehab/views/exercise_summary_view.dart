@@ -7,6 +7,7 @@ import 'package:rehab_app/arm_rehab/view_models/exercise_summary_view_model.dart
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../models/sensor_models.dart';
+import '../../services/page_management/view_models/page_navigator_view_model.dart';
 import '../../views/menu_view.dart';
 
 class ExerciseSummaryView extends StatelessPage {
@@ -46,12 +47,13 @@ class ExerciseSummaryView extends StatelessPage {
             children: <Widget>[
               Text(
                 "Exercise finished!",
+                textAlign: TextAlign.center,
                 style: headerStyle(),
               ),
               SizedBox(
                 width: exerciseSummaryViewModel.imageSize,
                 height: exerciseSummaryViewModel.imageSize,
-                child: Image.asset("assets/images/flex"),
+                child: Image.asset("assets/images/flex.webp"),
               ),
               Text("Accelerometer graph"),
               SfCartesianChart(
@@ -144,12 +146,8 @@ class ExerciseSummaryView extends StatelessPage {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightGreen,
         onPressed: () {
-          exerciseSummaryViewModel.selectPage(context,
-            MenuView(
-              icon: Icons.accessibility_new,
-              title: "Arm rehabilitation",
-            ),
-            );
+          var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
+          navigatorViewModel.backToRoot(context);
         },
 
         child: Icon(Icons.exit_to_app),

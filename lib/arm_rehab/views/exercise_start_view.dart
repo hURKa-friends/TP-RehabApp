@@ -50,7 +50,7 @@ class ExerciseStartView extends StatelessPage {
               Text(
               switch (SelectedOptions.exercise) {
                 1 => "Lifting arms in front of you",
-                2 => "Chest presses with stick",
+                2 => "Standing chest presses with stick",
                 3 => "Bicep curls with stick",
                 4 => "Drinking from glass / bottle",
                 5 => "Turning glass upside down",
@@ -69,32 +69,32 @@ class ExerciseStartView extends StatelessPage {
                   switch (SelectedOptions.exercise) {
                   1 =>
                     switch (exerciseStartViewModel.nextSetpoint) {
-                    0 => "assets/arm_rehab/images/exercises/arm_lift/arm_lift0.",
-                    1 => "assets/arm_rehab/images/exercises/arm_lift/arm_lift1.",
+                    0 => "assets/arm_rehab/images/exercises/front_raises/front_raises0.png",
+                    1 => "assets/arm_rehab/images/exercises/front_raises/front_raises1.png",
                     int() => "ErrorImage", // Out of range, this shouldn't happen
                     },
                   2 =>
                     switch (exerciseStartViewModel.nextSetpoint) {
-                      0 => "assets/arm_rehab/images/exercises/chest_press/chest_press0.",
-                      1 => "assets/arm_rehab/images/exercises/chest_press/chest_press1.",
+                      0 => "assets/arm_rehab/images/exercises/chest_press/chest_press0.png",
+                      1 => "assets/arm_rehab/images/exercises/chest_press/chest_press1.png",
                       int() => "ErrorImage", // Out of range, this shouldn't happen
                     },
                   3 =>
                     switch (exerciseStartViewModel.nextSetpoint) {
-                      0 => "assets/arm_rehab/images/exercises/bicep_curls/bicep_curls0.",
-                      1 => "assets/arm_rehab/images/exercises/bicep_curls/bicep_curls1.",
+                      0 => "assets/arm_rehab/images/exercises/bicep_curls/bicep_curls0.png",
+                      1 => "assets/arm_rehab/images/exercises/bicep_curls/bicep_curls1.png",
                       int() => "ErrorImage", // Out of range, this shouldn't happen
                     },
                   4 =>
                     switch (exerciseStartViewModel.nextSetpoint) {
-                      0 => "assets/arm_rehab/images/exercises/drinking/drinking0.",
-                      1 => "assets/arm_rehab/images/exercises/drinking/drinking1.",
+                      0 => "assets/arm_rehab/images/exercises/drinking/drinking0.png",
+                      1 => "assets/arm_rehab/images/exercises/drinking/drinking1.png",
                       int() => "ErrorImage", // Out of range, this shouldn't happen
                     },
                   5 =>
                     switch (exerciseStartViewModel.nextSetpoint) {
-                      0 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass0.",
-                      1 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.",
+                      0 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass0.png",
+                      1 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.png",
                       int() => "ErrorImage", // Out of range, this shouldn't happen
                     },
                   int() => "ErrorImage", // Out of range, this shouldn't happen

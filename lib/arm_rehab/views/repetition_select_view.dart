@@ -85,23 +85,23 @@ class RepetitionSelectView extends StatelessPage {
                         1 =>
                         repetitionSelectViewModel.addTutorial(
                           TutorialStep(
-                            assetURI: "assets/images/exercises/arm_lift/arm_lift.gif",
-                            heading: "Lifting arms in front of you",
-                            description: "In this exercise, you will lift your arms in front of you, and drop them back down. Hold your arms straight during the whole exercise.",
+                            assetURI: "assets/arm_rehab/images/exercises/front_raises/front_raises.gif",
+                            heading: "Raising arms in front of you",
+                            description: "In this exercise, you will raise your arms in front of you, and drop them back down. You can hold some sort of stick if you want. Hold your arms straight during the whole exercise.",
                             function: () { SelectedOptions.startTimer = true; }
                           )
                         ),
                         2 =>
                           repetitionSelectViewModel.addTutorial(
-                            TutorialStep(assetURI: "assets/images/exercises/chest_press/chest_press.gif",
-                              heading: "Chest presses with stick",
+                            TutorialStep(assetURI: "assets/arm_rehab/images/exercises/chest_press/chest_press.gif",
+                              heading: "Standing chest presses with stick",
                               description: "In this exercise, you will do chest presses while seated or standing. You will need some sort of stick for this exercise, for example a broom.",
                               function: () { SelectedOptions.startTimer = true; }
                             ),
                           ),
                         3 =>
                           repetitionSelectViewModel.addTutorial(
-                            TutorialStep(assetURI: "assets/images/exercises/bicep_curls/bicep_curls.gif",
+                            TutorialStep(assetURI: "assets/arm_rehab/images/exercises/bicep_curls/bicep_curls.gif",
                               heading: "Bicep curls with stick",
                               description: "In this exercise, you will do bicep curls while seated or standing. You will need some sort of stick for this exercise, for example a broom.",
                               function: () { SelectedOptions.startTimer = true; }
@@ -109,7 +109,7 @@ class RepetitionSelectView extends StatelessPage {
                           ),
                         4 =>
                           repetitionSelectViewModel.addTutorial(
-                            TutorialStep(assetURI: "assets/images/exercises/drinking/drinking.gif",
+                            TutorialStep(assetURI: "assets/arm_rehab/images/exercises/drinking/drinking.gif",
                               heading: "Drinking from glass / bottle",
                               description: "In this exercise, you will drink (imaginary) water. You will need a glass or a bottle. Or you can drink whatever you want. WARNING! Do not drink chemicals or other dangerous liquids!",
                               function: () { SelectedOptions.startTimer = true; }
@@ -117,7 +117,7 @@ class RepetitionSelectView extends StatelessPage {
                           ),
                         5 =>
                           repetitionSelectViewModel.addTutorial(
-                            TutorialStep(assetURI: "assets/images/exercises/turning_glass/turning_glass.gif",
+                            TutorialStep(assetURI: "assets/arm_rehab/images/exercises/turning_glass/turning_glass.gif",
                                 heading: "Turning glass upside down",
                                 description: "In this exercise, you will need a glass. You will be turning the glass upside down, starting with your thumb aiming down.",
                                 function: () { SelectedOptions.startTimer = true; }

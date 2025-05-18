@@ -68,7 +68,7 @@ class ExerciseSelectView extends StatelessPage {
                 physics: AlwaysScrollableScrollPhysics(),
                 children: <Widget>[
                   exercise(
-                    "Lifting arms in front of you",
+                    "Raising arms in front of you",
                     1,
                     () {
                       exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
@@ -76,7 +76,7 @@ class ExerciseSelectView extends StatelessPage {
                   ),
                   space(25),
                   exercise(
-                      "Chest presses with stick",
+                      "Standing chest presses with stick",
                       2,
                       () {
                         exerciseSelectViewModel.selectPage(context, ArmSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation"));
