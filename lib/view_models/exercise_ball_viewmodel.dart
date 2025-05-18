@@ -6,6 +6,7 @@ import 'dart:math';
 class ExerciseBallViewModel extends ChangeNotifier {
   ExerciseBallModel exerciseBallModel;
   Color _currentColor = Colors.blue; // Default color
+  Offset startPosition = Offset.zero;
   Offset currentPosition = Offset.zero;
   Offset goalPosition = Offset.zero;
   int numberOfRepetitions = 0;
@@ -14,6 +15,10 @@ class ExerciseBallViewModel extends ChangeNotifier {
   static const double marginFromEdges = 100.0;
   bool exerciseDone = false;
   int distanceFromGoal = 5;
+
+  double exerciseResultError = 0.0;
+  List<double> exerciseResultErrorList = [];
+  String exerciseResultMark = "/";
 
   ExerciseBallViewModel({
     required bool exerciseDone,
@@ -58,6 +63,7 @@ class ExerciseBallViewModel extends ChangeNotifier {
     double goalY = marginFromEdges + random.nextDouble() * usableHeight;
 
     currentPosition = Offset(currentX, currentY);
+    startPosition = Offset(currentX, currentY);
     goalPosition = Offset(goalX, goalY);
 
     ///Testing [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
@@ -72,6 +78,7 @@ class ExerciseBallViewModel extends ChangeNotifier {
   }
 
   void checkExerciseProgress() {
+    if (exerciseDone) return;
     //Hardness of the exercise 1 - soft 2 - medium 3 - hard
     if(difficulty == 1) {
       if(numberOfRepetitions >= 1) {
@@ -93,12 +100,76 @@ class ExerciseBallViewModel extends ChangeNotifier {
     if(exerciseDone) {
       ///Logger implementation
 
+      ///Processing data
+      exerciseProcessData();
       ///
       print("Exercise done");
       exerciseBallModel.trajectoryOfObject.clear();
     }
     //Reset the ball positions
     if(!exerciseDone && numberOfRepetitions > 0)initializePositions(screenSize: screenSizeData ?? const Size(300, 600), marginFromEdges: marginFromEdges);
+
+    notifyListeners();
+  }
+
+  void exerciseProcessData(){
+    ///Optimal trajectory
+    ///from start to finish
+    ///startPosition - goalPosition
+    ///exerciseBallModel.trajectoryOfObject compare
+
+    calculateTrajectoryError();
+    notifyListeners();
+  }
+
+  void calculateTrajectoryError() {
+    if (exerciseBallModel.trajectoryOfObject.isEmpty) {
+      exerciseResultError = 0.0;
+      exerciseResultErrorList.clear(); // Clear the list if no trajectory exists
+      return;
+    }
+
+    // Extract start and goal positions
+    final Offset start = startPosition;
+    final Offset goal = goalPosition;
+
+    // Line equation coefficients: Ax + By + C = 0
+    final double A = goal.dy - start.dy; // y2 - y1
+    final double B = start.dx - goal.dx; // x1 - x2
+    final double C = goal.dx * start.dy - start.dx * goal.dy; // x2*y1 - x1*y2
+
+    // Clear the error list before recalculating
+    exerciseResultErrorList.clear();
+
+    // Calculate squared errors
+    double totalSquaredError = 0.0;
+    for (final point in exerciseBallModel.trajectoryOfObject) {
+      // Perpendicular distance formula: |Ax + By + C| / sqrt(A^2 + B^2)
+      final double distance = (A * point.dx + B * point.dy + C).abs() / sqrt(A * A + B * B);
+      final double squaredError = distance * distance;
+
+      // Save individual squared error to the list
+      exerciseResultErrorList.add(squaredError);
+
+      totalSquaredError += squaredError;
+    }
+
+    // Print all error points
+    print("Error Points: $exerciseResultErrorList");
+
+    // Mean Squared Error
+    exerciseResultError = totalSquaredError / exerciseBallModel.trajectoryOfObject.length;
+
+    // Optionally, assign a grade or mark based on the error
+    if (exerciseResultError < 5.0) {
+      exerciseResultMark = "Excellent";
+    } else if (exerciseResultError < 10.0) {
+      exerciseResultMark = "Good";
+    } else {
+      exerciseResultMark = "Needs Improvement";
+    }
+
+    notifyListeners();
   }
 
   void changeColor(Color newColor) {

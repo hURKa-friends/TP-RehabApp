@@ -10,17 +10,6 @@ class DisplayTrackingViewModel extends ChangeNotifier {
   List<dynamic> fingersLog = [];
   List<dynamic> fingersLogRow = [];
 
-  /*
-  bool _exerciseDone = false;
-
-  bool get exerciseDone => _exerciseDone;
-
-  void changeExerciseDone() {
-    _exerciseDone = true;
-    notifyListeners();
-  }
-
-   */
 
   var displayTrackingModel;
 
@@ -83,13 +72,10 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     //Storing data
     //Row - name of finger - id - trajectory x,y,
     for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
-      //print("Finger ${fingers[i].fingerName}");
       for(int n=0; n<fingers[i].pointerFinger.keys.length; n++){
         fingersLogRow.add(fingers[i].fingerName);
         fingersLogRow.add(fingers[i].pointerFinger.keys.elementAt(n).toString());
 
-        //Adding trajectory to row data
-        //print("Logged data pointerFingerTrajectoryList: ${fingers[i].pointerFingerTrajectoryList.last}");
         for(int j=0; j<fingers[i].pointerFingerTrajectoryList.length; j++){
           for(int k=0; k<fingers[i].pointerFingerTrajectoryList[j].length; k++){
             if(fingers[i].pointerFingerTrajectoryList[j][k] != null){
@@ -99,20 +85,11 @@ class DisplayTrackingViewModel extends ChangeNotifier {
             }
           }
         }
-
         fingersLog.add(fingersLogRow.toString());
-
-        //print("\n\nLogged data Row: ${fingersLogRow}\n\n");
         fingersLogRow.clear();
       }
     }
 
-    /*
-    print("\n---Log---------------------------------------------------------------------------");
-    for(int i=0; i<fingersLog.length; i++){
-      print("Logged data: ${i} : ${fingersLog.elementAt(i)}");
-    }
-    */
 
     //Deleting processed data
     for(int i=0; i<displayTrackingModel.numberOfFingers; i++){
@@ -276,7 +253,12 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     }
 
     ///Testing
-    processDataStep();
+    ///Call process data only when all fingers are lifted
+    if(displayTrackingModel.activeFingers.length == 0){
+      if(printMsgs)print("All fingers are lifted");
+      if(printMsgs)print("Processing data");
+      processDataStep();
+    }
 
     notifyListeners();
   }//onPointerUp END

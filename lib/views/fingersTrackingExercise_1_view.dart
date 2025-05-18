@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 
 import '../models/displayTracking_model.dart';
@@ -339,6 +340,69 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                       style: TextStyle(fontSize: 32, color: Colors.green[700]),
                     ),
                     SizedBox(height: 30),
+                    Text(
+                      "Mean Squared Error: ${viewmodel.exerciseBallViewModel.exerciseResultError}",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(height: 20),
+                    /*
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: viewmodel.exerciseBallViewModel.exerciseResultErrorList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+                            child: Text(
+                              "Error ${index + 1}: ${viewmodel.exerciseBallViewModel.exerciseResultErrorList[index].toStringAsFixed(2)}",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    */
+                    ///Experimental graph [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+                    Expanded(
+                      child: SfCartesianChart(
+                        legend: Legend(isVisible: true),
+                        primaryXAxis: NumericAxis(
+                          title: AxisTitle(text: 'Point (Index)'),
+                          interval: 1, // Ensures all indices are displayed
+                          edgeLabelPlacement: EdgeLabelPlacement.shift, // Prevents label overlap
+                        ),
+                        primaryYAxis: NumericAxis(
+                          title: AxisTitle(text: 'Error Value'),
+                          minimum: viewmodel.exerciseBallViewModel.exerciseResultErrorList.isNotEmpty
+                              ? viewmodel.exerciseBallViewModel.exerciseResultErrorList.reduce((a, b) => a < b ? a : b) - 1
+                              : 0,
+                          maximum: viewmodel.exerciseBallViewModel.exerciseResultErrorList.isNotEmpty
+                              ? viewmodel.exerciseBallViewModel.exerciseResultErrorList.reduce((a, b) => a > b ? a : b) + 1
+                              : 1,
+                        ),
+                        series: <LineSeries<_ErrorData, int>>[
+                          LineSeries<_ErrorData, int>(
+                            name: 'Error Values',
+                            dataSource: viewmodel.exerciseBallViewModel.exerciseResultErrorList
+                                .asMap()
+                                .entries
+                                .map((entry) => _ErrorData(index: entry.key, error: entry.value))
+                                .toList(),
+                            xValueMapper: (_ErrorData data, _) => data.index, // X-axis: Point (Index)
+                            yValueMapper: (_ErrorData data, _) => data.error, // Y-axis: Error Value
+                            animationDuration: 0,
+                            markerSettings: MarkerSettings(
+                              isVisible: true, // Show markers for all points
+                              shape: DataMarkerType.circle,
+                              width: 8,
+                              height: 8,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ///Experimental graph [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+                    SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
@@ -504,4 +568,11 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
     );
     */
   }
+}
+
+class _ErrorData {
+  final int index;
+  final double error;
+
+  _ErrorData({required this.index, required this.error});
 }
