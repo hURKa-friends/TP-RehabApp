@@ -4,6 +4,9 @@ import 'dart:math';
 
 
 class ExerciseBallViewModel extends ChangeNotifier {
+
+  bool debuggingMode = true;
+
   ExerciseBallModel exerciseBallModel;
   Color _currentColor = Colors.blue; // Default color
   Offset startPosition = Offset.zero;
@@ -16,9 +19,22 @@ class ExerciseBallViewModel extends ChangeNotifier {
   bool exerciseDone = false;
   int distanceFromGoal = 5;
 
+  ///Optimal trajectory [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+  int numberOfPointsInTrajectory = 5;
+  List<Offset> optimalTrajectory = [];
+
+  ///Trajectory memory
+  List<List<Offset>> allTrajectoriesMeasurements = [];
+
+  ///Results [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
   double exerciseResultError = 0.0;
-  List<double> exerciseResultErrorList = [];
+  List<double> exerciseResultErrorList = []; //Error for each point in trajectory
+  List<List<double>> allMeasurements = []; //Each tries
   String exerciseResultMark = "/";
+
+  ///Flags [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+  bool initializeFlagDone = false;
+  bool goalReachedFlag = false;
 
   ExerciseBallViewModel({
     required bool exerciseDone,
@@ -45,6 +61,7 @@ class ExerciseBallViewModel extends ChangeNotifier {
   bool get isVisible => exerciseBallModel.showObject;
   List<double?> get size => exerciseBallModel.wightAndHeight;
 
+  /*
   void initializePositions({
     required Size screenSize,
     required double marginFromEdges,
@@ -67,108 +84,225 @@ class ExerciseBallViewModel extends ChangeNotifier {
     goalPosition = Offset(goalX, goalY);
 
     ///Testing [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
-    goalPosition = Offset(screenSize.width/2, screenSize.height/2);
+    if(debuggingMode)goalPosition = Offset(screenSize.width/2, screenSize.height/2);
     ///[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 
     exerciseBallModel.currentPosition = currentPosition;
 
-    checkExerciseProgress();
+    initializeFlagDone= true;
+    goalReachedFlag= false;
+
+    notifyListeners();
+  }
+
+   */
+
+  void initializePositions({required Size screenSize, required double marginFromEdges,  }) {
+    final double usableWidth = screenSize.width - 2 * marginFromEdges;
+    final double usableHeight = screenSize.height - 2 * marginFromEdges;
+    final Random random = Random();
+
+    // Clear the optimalTrajectory list
+    optimalTrajectory.clear();
+
+    // Generate points with random x positions and evenly spaced y positions
+    for (int i = 0; i < numberOfPointsInTrajectory; i++) {
+      double xPosition = marginFromEdges + random.nextDouble() * usableWidth;
+      double yPosition = marginFromEdges + (i * (usableHeight / (numberOfPointsInTrajectory - 1)));
+      optimalTrajectory.add(Offset(xPosition, yPosition));
+    }
+
+    print("Optimal Trajectory: $optimalTrajectory");
+
+    // Set the first point as the start and current position
+    currentPosition = optimalTrajectory.first;
+    startPosition = optimalTrajectory.first;
+
+    // Set the last point as the goal position
+    goalPosition = optimalTrajectory.last;
+
+    // Update the exercise ball's current position
+    exerciseBallModel.currentPosition = currentPosition;
+
+    initializeFlagDone = true;
+    goalReachedFlag = false;
 
     notifyListeners();
   }
 
   void checkExerciseProgress() {
     if (exerciseDone) return;
+    
+    if(debuggingMode)print("Exercise progress check");
+
+    //Reset the ball positions
+    if (!exerciseDone && numberOfRepetitions > 0 && initializeFlagDone && goalReachedFlag) {
+      //Save the trajectory error
+      allTrajectoriesMeasurements.add(exerciseBallModel.trajectoryOfObject.toList());
+      exerciseBallModel.trajectoryOfObject.clear();
+      //
+
+      initializeFlagDone= false;
+      initializePositions(screenSize: screenSizeData ?? const Size(300, 600), marginFromEdges: marginFromEdges);
+    }
+
     //Hardness of the exercise 1 - soft 2 - medium 3 - hard
-    if(difficulty == 1) {
-      if(numberOfRepetitions >= 1) {
-        exerciseDone = true;
-      }
+    if (difficulty == 1) {
+      if (numberOfRepetitions >= 1)exerciseDone = true;
       distanceFromGoal = 20;
-    } else if(difficulty == 2) {
-      if(numberOfRepetitions >= 6) {
-        exerciseDone = true;
-      }
+
+    } else if (difficulty == 2) {
+      if (numberOfRepetitions >= 3)exerciseDone = true;
       distanceFromGoal = 10;
-    } else if(difficulty == 3) {
-      if(numberOfRepetitions >= 10) {
-        exerciseDone = true;
-      }
+
+    } else if (difficulty == 3) {
+      if (numberOfRepetitions >= 6)exerciseDone = true;
       distanceFromGoal = 5;
     }
 
-    if(exerciseDone) {
-      ///Logger implementation
-
-      ///Processing data
-      exerciseProcessData();
-      ///
-      print("Exercise done");
-      exerciseBallModel.trajectoryOfObject.clear();
-    }
-    //Reset the ball positions
-    if(!exerciseDone && numberOfRepetitions > 0)initializePositions(screenSize: screenSizeData ?? const Size(300, 600), marginFromEdges: marginFromEdges);
+    if(exerciseDone)endingExercise();
 
     notifyListeners();
   }
 
-  void exerciseProcessData(){
-    ///Optimal trajectory
-    ///from start to finish
-    ///startPosition - goalPosition
-    ///exerciseBallModel.trajectoryOfObject compare
+  void endingExercise() {
+    initializeFlagDone = false;
 
-    calculateTrajectoryError();
+    //calculateTrajectoryError();
+
+    calculateTrajectoryXError();
+
+    print("Exercise ending turn on");
+    
     notifyListeners();
+  }
+
+  double _squaredDistanceToSegment(Offset p, Offset a, Offset b) {
+    final dx = b.dx - a.dx;
+    final dy = b.dy - a.dy;
+
+    if (dx == 0 && dy == 0) {
+      // a == b, segment is a point
+      return (p - a).distanceSquared;
+    }
+
+    // Project point p onto the line segment ab, and clamp to [0,1]
+    final t = ((p.dx - a.dx) * dx + (p.dy - a.dy) * dy) / (dx * dx + dy * dy);
+    final clampedT = t.clamp(0.0, 1.0);
+    final projection = Offset(
+      a.dx + clampedT * dx,
+      a.dy + clampedT * dy,
+    );
+
+    return (p - projection).distanceSquared;
   }
 
   void calculateTrajectoryError() {
-    if (exerciseBallModel.trajectoryOfObject.isEmpty) {
-      exerciseResultError = 0.0;
-      exerciseResultErrorList.clear(); // Clear the list if no trajectory exists
+    print("Calculation");
+
+    if (optimalTrajectory.length < 2) {
+      print("Optimal trajectory must have at least two points.");
       return;
     }
 
-    // Extract start and goal positions
-    final Offset start = startPosition;
-    final Offset goal = goalPosition;
+    allMeasurements.clear(); // Clear previous results
 
-    // Line equation coefficients: Ax + By + C = 0
-    final double A = goal.dy - start.dy; // y2 - y1
-    final double B = start.dx - goal.dx; // x1 - x2
-    final double C = goal.dx * start.dy - start.dx * goal.dy; // x2*y1 - x1*y2
+    for (final measurement in allTrajectoriesMeasurements) {
+      List<double> squaredErrors = [];
+      double totalSquaredError = 0.0;
 
-    // Clear the error list before recalculating
-    exerciseResultErrorList.clear();
+      for (final point in measurement) {
+        double minSquaredDistance = double.infinity;
 
-    // Calculate squared errors
-    double totalSquaredError = 0.0;
-    for (final point in exerciseBallModel.trajectoryOfObject) {
-      // Perpendicular distance formula: |Ax + By + C| / sqrt(A^2 + B^2)
-      final double distance = (A * point.dx + B * point.dy + C).abs() / sqrt(A * A + B * B);
-      final double squaredError = distance * distance;
+        // Compare against each segment in optimalTrajectory
+        for (int i = 0; i < optimalTrajectory.length - 1; i++) {
+          Offset a = optimalTrajectory[i];
+          Offset b = optimalTrajectory[i + 1];
 
-      // Save individual squared error to the list
-      exerciseResultErrorList.add(squaredError);
+          double distSq = _squaredDistanceToSegment(point, a, b);
+          if (distSq < minSquaredDistance) {
+            minSquaredDistance = distSq;
+          }
+        }
 
-      totalSquaredError += squaredError;
+        squaredErrors.add(minSquaredDistance);
+        totalSquaredError += minSquaredDistance;
+      }
+
+      allMeasurements.add(squaredErrors);
+
+      double meanSquaredError = totalSquaredError / measurement.length;
+      print("Mean Squared Error: $meanSquaredError");
     }
 
-    // Print all error points
-    print("Error Points: $exerciseResultErrorList");
+    print("All Measurements: $allMeasurements");
+    print("Calculation Done");
+    notifyListeners();
+  }
 
-    // Mean Squared Error
-    exerciseResultError = totalSquaredError / exerciseBallModel.trajectoryOfObject.length;
-
-    // Optionally, assign a grade or mark based on the error
-    if (exerciseResultError < 5.0) {
-      exerciseResultMark = "Excellent";
-    } else if (exerciseResultError < 10.0) {
-      exerciseResultMark = "Good";
-    } else {
-      exerciseResultMark = "Needs Improvement";
+  double _squaredXErrorAtY(Offset p, Offset a, Offset b) {
+    if ((b.dy - a.dy).abs() < 1e-6) {
+      // Avoid division by zero if segment is flat in time
+      return (p.dx - a.dx) * (p.dx - a.dx);
     }
 
+    // Linear interpolation: x = x0 + (y - y0) * (x1 - x0) / (y1 - y0)
+    double t = ((p.dy - a.dy) / (b.dy - a.dy)).clamp(0.0, 1.0);
+    double idealX = a.dx + t * (b.dx - a.dx);
+
+    double error = p.dx - idealX;
+    return error * error;
+  }
+
+  void calculateTrajectoryXError(){
+    print("Calculation");
+
+    if (optimalTrajectory.length < 2) {
+      print("Optimal trajectory must have at least two points.");
+      return;
+    }
+
+    allMeasurements.clear(); // Clear previous results
+
+    for (final measurement in allTrajectoriesMeasurements) {
+      List<double> squaredErrors = [];
+      double totalSquaredError = 0.0;
+
+      for (final point in measurement) {
+        double minSquaredError = double.infinity;
+
+        for (int i = 0; i < optimalTrajectory.length - 1; i++) {
+          final Offset a = optimalTrajectory[i];
+          final Offset b = optimalTrajectory[i + 1];
+
+          // Check if point.y is in the y-range of the segment
+          if ((point.dy >= a.dy && point.dy <= b.dy) ||
+              (point.dy <= a.dy && point.dy >= b.dy)) {
+            double errSq = _squaredXErrorAtY(point, a, b);
+            if (errSq < minSquaredError) {
+              minSquaredError = errSq;
+            }
+          }
+        }
+
+        // Fallback in case no segment matches — you can also skip or interpolate
+        if (minSquaredError == double.infinity) {
+          minSquaredError = 0.0;
+        }
+
+        squaredErrors.add(minSquaredError);
+        totalSquaredError += minSquaredError;
+      }
+
+
+      allMeasurements.add(squaredErrors);
+
+      double meanSquaredError = totalSquaredError / measurement.length;
+      print("Mean Squared Error: $meanSquaredError");
+    }
+
+    print("All Measurements: $allMeasurements");
+    print("Calculation Done");
     notifyListeners();
   }
 
@@ -183,6 +317,7 @@ class ExerciseBallViewModel extends ChangeNotifier {
   }
 
   void setPosition(Offset finger1, Offset finger2) {
+    if(!initializeFlagDone) return;
 
     double tootooCloseDistance = 80;
     double tooCloseDistance = 90;
@@ -212,8 +347,8 @@ class ExerciseBallViewModel extends ChangeNotifier {
     if(finger2Distance < tooFarDistance && finger2Distance > tootooCloseDistance) finger2InRange = true;
 
     ///For testing [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
-    finger1InRange= true;
-    finger2InRange= true;
+    if(debuggingMode)finger1InRange= true;
+    if(debuggingMode)finger2InRange= true;
     ///[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 
     if(finger1InRange && finger2InRange) {
@@ -236,20 +371,21 @@ class ExerciseBallViewModel extends ChangeNotifier {
       freeBall = true;
     }
 
-
-
     //Change color based on pressure of holding
     if(slightlyHoldingBall) changeColor(Colors.indigoAccent);
     if(holdingBall) changeColor(Colors.green);
     if(squeezingBall) changeColor(Colors.red[400]!);
     if(freeBall) changeColor(Colors.blue[400]!);
 
+    if(debuggingMode && ((finger1 - currentPosition).distance)<20)currentPosition=finger1;
 
     //Save the trajectory of the object
     exerciseBallModel.trajectoryOfObject.add(currentPosition);
 
     //Checking if the object is in the goal
-    if((currentPosition - goalPosition).distance < distanceFromGoal) {
+    if((currentPosition - goalPosition).distance < distanceFromGoal && !goalReachedFlag) {
+      goalReachedFlag = true;
+      if(debuggingMode)print("Goal Reached");
       numberOfRepetitions++;
       checkExerciseProgress();
     }

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:rehab_app/view_models/exercise_ball_viewmodel.dart';
 
 class DisplayTrackingViewModel extends ChangeNotifier {
+
+  bool debuggingMode = true;
+
   String msgDisplayTrackingViewModel = "";
   List<FingerModel> fingers = [];
   bool printMsgs = false;
@@ -209,8 +212,11 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     }
 
     //Update the position of the exercise ball
-    if(displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers){
+    if(displayTrackingModel.activeFingers.length == displayTrackingModel.numberOfFingers && !debuggingMode){
       exerciseBallViewModel.setPosition(fingers[0].pointerFingerTrajectory.last, fingers[1].pointerFingerTrajectory.last);
+    }
+    if(displayTrackingModel.activeFingers.length == 1 && debuggingMode){
+      exerciseBallViewModel.setPosition(fingers[0].pointerFingerTrajectory.last, Offset(0, 0));
     }
 
     notifyListeners();

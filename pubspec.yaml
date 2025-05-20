@@ -26,6 +26,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   # Add your dependencies here:
   cupertino_icons:    ^1.0.8
   intl:               ^0.20.2

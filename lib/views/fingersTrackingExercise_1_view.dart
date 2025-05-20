@@ -68,6 +68,47 @@ class _DynamicTrajectoryPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
+class _OptimalTrajectoryPainter extends CustomPainter {
+  final List<Offset> optimalTrajectory;
+  static const double displayShiftY = 50;
+
+  _OptimalTrajectoryPainter(this.optimalTrajectory);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (optimalTrajectory.isEmpty) return;
+
+    final linePaint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 4.0
+      ..style = PaintingStyle.stroke;
+
+    final startPointPaint = Paint()
+      ..color = Colors.deepPurple
+      ..style = PaintingStyle.fill;
+
+    final endPointPaint = Paint()
+      ..color = Colors.red
+      ..style = PaintingStyle.fill;
+
+    // Draw trajectory lines with shifted points
+    for (int i = 1; i < optimalTrajectory.length; i++) {
+      final Offset start = optimalTrajectory[i - 1] - Offset(0, displayShiftY);
+      final Offset end = optimalTrajectory[i] - Offset(0, displayShiftY);
+      canvas.drawLine(start, end, linePaint);
+    }
+
+    // Draw start point (green dot) with shift
+    canvas.drawCircle(optimalTrajectory.first - Offset(0, displayShiftY), 10.0, startPointPaint);
+
+    // Draw end point (red dot) with shift
+    canvas.drawCircle(optimalTrajectory.last - Offset(0, displayShiftY), 10.0, endPointPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
 class FingersTrackingExercisesViewState extends StatefulPageState {
   DisplayTrackingViewModel? viewModel;
 
@@ -168,7 +209,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          color: Colors.black12,
+          color: Colors.cyanAccent,
           shape: BoxShape.circle,
         ),
       ),
@@ -345,24 +386,9 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                       style: TextStyle(fontSize: 20),
                     ),
                     SizedBox(height: 20),
-                    /*
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: viewmodel.exerciseBallViewModel.exerciseResultErrorList.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-                            child: Text(
-                              "Error ${index + 1}: ${viewmodel.exerciseBallViewModel.exerciseResultErrorList[index].toStringAsFixed(2)}",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    */
+
                     ///Experimental graph [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+                    /*
                     Expanded(
                       child: SfCartesianChart(
                         legend: Legend(isVisible: true),
@@ -399,6 +425,55 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    */
+                    Expanded(
+                      child: SfCartesianChart(
+                        legend: Legend(isVisible: true),
+                        primaryXAxis: NumericAxis(
+                          title: AxisTitle(text: 'Point'),
+                          interval: 1, // Ensures all indices are displayed
+                          edgeLabelPlacement: EdgeLabelPlacement.shift, // Prevents label overlap
+                        ),
+                        primaryYAxis: NumericAxis(
+                          title: AxisTitle(text: 'Error Value'),
+                          minimum: viewmodel.exerciseBallViewModel.allMeasurements.isNotEmpty
+                              ? viewmodel.exerciseBallViewModel.allMeasurements
+                              .expand((list) => list)
+                              .reduce((a, b) => a < b ? a : b) - 1
+                              : 0,
+                          maximum: viewmodel.exerciseBallViewModel.allMeasurements.isNotEmpty
+                              ? viewmodel.exerciseBallViewModel.allMeasurements
+                              .expand((list) => list)
+                              .reduce((a, b) => a > b ? a : b) + 1
+                              : 1,
+                        ),
+                        series: viewmodel.exerciseBallViewModel.allMeasurements
+                            .asMap()
+                            .entries
+                            .map((entry) {
+                          final measurementIndex = entry.key;
+                          final measurement = entry.value;
+                          return LineSeries<_ErrorData, int>(
+                            name: 'Exercise ${measurementIndex + 1}',
+                            dataSource: measurement
+                                .asMap()
+                                .entries
+                                .map((e) => _ErrorData(index: e.key, error: e.value))
+                                .toList(),
+                            xValueMapper: (_ErrorData data, _) => data.index, // X-axis: Point (Index)
+                            yValueMapper: (_ErrorData data, _) => data.error, // Y-axis: Error Value
+                            animationDuration: 0,
+                            markerSettings: MarkerSettings(
+                              isVisible: true, // Show markers for all points
+                              shape: DataMarkerType.circle,
+                              width: 8,
+                              height: 8,
+                            ),
+                          );
+                        })
+                            .toList(),
                       ),
                     ),
                     ///Experimental graph [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
@@ -471,11 +546,20 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                   _buildExerciseBallMarker(viewmodel.exerciseBallViewModel, viewmodel.displayTrackingModel, label: "-"),
                   _buildExerciseBallGoalMarker(viewmodel.exerciseBallViewModel),
 
-                  // Trajectory Paint
+                  //Finger Trajectory Paint
                   Opacity(
                     opacity: 0.3,
                     child: CustomPaint(
                       painter: _DynamicTrajectoryPainter(viewmodel),
+                    ),
+                  ),
+
+                  // Optimal Trajectory Paint
+                  Opacity(
+                    opacity: 0.8,
+                    child: CustomPaint(
+                      painter: _OptimalTrajectoryPainter(viewmodel.exerciseBallViewModel.optimalTrajectory),
+                      child: Container(), // Acts as a canvas
                     ),
                   ),
                 ],
