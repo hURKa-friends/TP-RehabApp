@@ -5,14 +5,14 @@ import '../services/external/logger_service.dart';
 import '../services/internal/logger_service_internal.dart';
 
 
-class KneeRehabViewModel extends ChangeNotifier {
+class KneeRehabNewViewModel extends ChangeNotifier {
   late List<ImuSensorData> gyroData;
   late List<ImuSensorData> acclData;
   int gyroIndex = 0, acclIndex = 0;
-  String? name = "prava";
+  String? name;
 
   late String? UOID;
-  KneeRehabViewModel() {
+  KneeRehabNewViewModel() {
     // Default constructor
     gyroData = List.empty(growable: true);
     acclData = List.empty(growable: true);
@@ -27,8 +27,8 @@ class KneeRehabViewModel extends ChangeNotifier {
 
     UOID = await LoggerService().openCsvLogChannel(
         access: ChannelAccess.private,
-        fileName: 'knee_rehab-${name!}',
-        headerData: 'time, gyro_x, gyro_y, gyro_z, accl_x, accl_y, accl_z');
+        fileName: 'knee_rehab',
+        headerData: 'time, gyro_x, gyro_y, gyro_z, accl_x, accl_y, accl_z, side');
   }
 
   void onClose() {
@@ -51,8 +51,8 @@ class KneeRehabViewModel extends ChangeNotifier {
           channel: LogChannel.csv,
           ownerId: UOID!,
           data:
-              "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}, "
-                  "${acclData.last.x}, ${acclData.last.y}, ${acclData.last.z}\n");
+          "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}, "
+              "${acclData.last.x}, ${acclData.last.y}, ${acclData.last.z}, $name\n");
     }
 
     gyroIndex++;

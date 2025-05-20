@@ -5,14 +5,15 @@ import '../services/external/logger_service.dart';
 import '../services/internal/logger_service_internal.dart';
 
 
-class KneeRehabViewModel extends ChangeNotifier {
+class KneeRehabMainViewModel extends ChangeNotifier {
   late List<ImuSensorData> gyroData;
   late List<ImuSensorData> acclData;
+  int? start = 0;
   int gyroIndex = 0, acclIndex = 0;
-  String? name = "prava";
+  String? name;
 
   late String? UOID;
-  KneeRehabViewModel() {
+  KneeRehabMainViewModel() {
     // Default constructor
     gyroData = List.empty(growable: true);
     acclData = List.empty(growable: true);
@@ -27,12 +28,14 @@ class KneeRehabViewModel extends ChangeNotifier {
 
     UOID = await LoggerService().openCsvLogChannel(
         access: ChannelAccess.private,
-        fileName: 'knee_rehab-${name!}',
-        headerData: 'time, gyro_x, gyro_y, gyro_z, accl_x, accl_y, accl_z');
+        fileName: 'knee_rehab',
+        headerData: 'time, gyro_x, gyro_y, gyro_z, accl_x, accl_y, accl_z, side');
   }
 
   void onClose() {
     // Here you can call ViewModel disposal code.
+    start = 0;
+    name = null;
     SensorService().stopGyroDataStream();
     SensorService().stopAcclDataStream();
     gyroData = List.empty(growable: true);
@@ -46,13 +49,13 @@ class KneeRehabViewModel extends ChangeNotifier {
     }
     gyroData.add(data);
 
-    if (name != null) {
+    if (start != 0) {
       bool wasSuccessful = LoggerService().log(
           channel: LogChannel.csv,
           ownerId: UOID!,
           data:
-              "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}, "
-                  "${acclData.last.x}, ${acclData.last.y}, ${acclData.last.z}\n");
+          "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}, "
+              "${acclData.last.x}, ${acclData.last.y}, ${acclData.last.z}, $name\n");
     }
 
     gyroIndex++;

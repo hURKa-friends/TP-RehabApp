@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../view_models/knee_rehab_view_model.dart';
+import '../view_models/knee_rehab_new_view_model.dart';
 
-class KneeRehabView extends StatefulPage {
-  const KneeRehabView({super.key, required super.icon, required super.title, super.tutorialSteps // Optional
-      });
+class KneeRehabIntroView extends StatefulPage {
+  const KneeRehabIntroView({super.key, required super.icon, required super.title, super.tutorialSteps // Optional
+  });
 
   @override
   void initPage(BuildContext context) {
     // Here you can call page initialization code or reference ViewModel initialization like this:
-    var kneeRehabViewModel = Provider.of<KneeRehabViewModel>(context, listen: false);
+    var kneeRehabViewModel = Provider.of<KneeRehabNewViewModel>(context, listen: false);
 
     /// IMPORTANT listen must be false
     kneeRehabViewModel.onInit();
@@ -23,7 +23,7 @@ class KneeRehabView extends StatefulPage {
   @override
   void closePage(BuildContext context) {
     // Here you can call page closing code or reference ViewModel disposal like this:
-    var kneeRehabViewModel = Provider.of<KneeRehabViewModel>(context, listen: false);
+    var kneeRehabViewModel = Provider.of<KneeRehabNewViewModel>(context, listen: false);
 
     /// IMPORTANT listen must be false
     kneeRehabViewModel.onClose();
@@ -36,7 +36,7 @@ class KneeRehabView extends StatefulPage {
 class KneeRehabViewState extends StatefulPageState {
   @override
   Widget buildPage(BuildContext context) {
-    var viewModel = context.watch<KneeRehabViewModel>();
+    var viewModel = context.watch<KneeRehabNewViewModel>();
 
     return SingleChildScrollView(
       child: Padding(
