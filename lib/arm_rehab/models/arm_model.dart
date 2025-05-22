@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:rehab_app/models/sensor_models.dart';
 
@@ -14,8 +16,27 @@ class SelectedOptions {
   SelectedOptions();
 }
 
+class Setpoint {
+  static late double setpoint0X;
+  static late double setpoint0Y;
+  static late double setpoint0Z;
+  static late double setpoint1X;
+  static late double setpoint1Y;
+  static late double setpoint1Z;
+
+  Setpoint();
+}
+
+class Angles {
+  static late double currentAngleX;
+  static late double currentAngleY;
+  static late double currentAngleZ;
+
+  Angles();
+}
+
 class ArmImuData {
-  static List<ImuSensorData> acclData = List.empty(growable: true);
+  static List<ImuSensorData> userAcclData = List.empty(growable: true);
   static List<ImuSensorData> gyroData = List.empty(growable: true);
 }
 
@@ -35,6 +56,22 @@ class NormalizeSensorValues {
       this.acclMaxY,
       this.acclMaxZ,
   );
+}
+
+double complementaryFilter(double previousAngle, double gyro, double acclAngle, double alpha, DateTime currentTime, DateTime lastTime) {
+  return (1 - alpha) * (previousAngle + gyro * currentTime.difference(lastTime).inMilliseconds / 1000) + alpha * acclAngle;
+}
+
+double getAcclRoll(double acclX, double acclY, double acclZ) {
+  return atan(acclY / sqrt(pow(acclX, 2) + pow(acclZ, 2)));
+}
+
+double getAcclPitch(double acclX, double acclY, double acclZ) {
+  return atan(acclX / sqrt(pow(acclY, 2) + pow(acclZ, 2)));
+}
+
+double getAcclYaw(double acclX, double acclY, double acclZ) {
+  return atan(sqrt(pow(acclX, 2) + pow(acclY, 2)) / acclZ);
 }
 
 class Setpoints {

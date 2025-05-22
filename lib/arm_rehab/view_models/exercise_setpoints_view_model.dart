@@ -12,16 +12,12 @@ import '../../services/external/sensor_service.dart';
 import '../../services/page_management/models/stateless_page_model.dart';
 import '../../services/page_management/view_models/page_navigator_view_model.dart';
 
-class ExerciseStartViewModel extends ChangeNotifier {
+class ExerciseSetpointsViewModel extends ChangeNotifier {
   late Timer _countdownTimer;
+  late Timer _setpointTimer;
   late bool _isTimerActive;
   late int _timerCount;
   late int _nextSetpoint;
-  late int _currentSetpoint;
-  late int _repetitionCount;
-  late String? _ownerID;
-  late bool _writeSuccessful;
-  late bool _exerciseFinished;
   late ImuSensorData _acclData;
   late ImuSensorData _userAcclData;
   late ImuSensorData _gyroData;
@@ -35,20 +31,19 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late double _currentAcclAngleX;
   late double _currentAcclAngleY;
   late double _currentAcclAngleZ;
-  late double setpoint0X;
-  late double setpoint0Y;
-  late double setpoint0Z;
-  late double setpoint1X;
-  late double setpoint1Y;
-  late double setpoint1Z;
-  final _toleranceX = 0.3;
-  final _toleranceY = 0.3;
-  final _toleranceZ = 0.3;
-  final setpoints = Setpoints();
+  late bool _setpointsSet;
   final double imageSize = 300;
   final double _alpha = 0.95;
 
-  ExerciseStartViewModel() {
+  ///
+  /// TODO (novy view?)
+  /// znova 5s timer
+  /// setpoint pre 0
+  /// setpoint pre 1
+  /// potvrdit dalej
+  /// uz cviky ako doteraz
+
+  ExerciseSetpointsViewModel() {
     // Default constructor
   }
 
@@ -56,11 +51,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
     // Here you can call ViewModel initialization code.
     _countdownTimer = Timer.periodic(Duration(seconds: 1), _timerFinish);
     _isTimerActive = true;
+    _setpointsSet = false;
     _timerCount = 5;
-    _nextSetpoint = 1;
-    _currentSetpoint = 0;
-    _repetitionCount = 0;
-    _exerciseFinished = false;
+    _nextSetpoint = 0;
 
     _playerShort = AudioPlayer();
     _playerLong = AudioPlayer();
@@ -69,21 +62,12 @@ class ExerciseStartViewModel extends ChangeNotifier {
     await _playerShort.setReleaseMode(ReleaseMode.stop);
     await _playerLong.setReleaseMode(ReleaseMode.stop);
 
-    _ownerID = await LoggerService().openCsvLogChannel(
-        access: ChannelAccess.private,
-        fileName:
-        switch (SelectedOptions.exercise) {
-        1 => "arm_rehab_shoulder_blades",
-        2 => "arm_rehab_chest_press",
-        3 => "arm_rehab_bicep_curls",
-        4 => "arm_rehab_drinking",
-        int() => "ErrorFile", // Out of range, this shouldn't happen
-        },
-        headerData: "Timestamp, AcclX, AcclY, AcclZ, GyroX, GyroY, GyroZ"
-    );
-
     _currentTimestamp = DateTime.now();
     _lastTimestamp = _currentTimestamp;
+
+    Angles.currentAngleX = 0;
+    Angles.currentAngleY = 0;
+    Angles.currentAngleZ = 0;
 
     SensorService().startAcclDataStream(samplingPeriod: Duration(milliseconds: 50));
     SensorService().registerAcclDataStream(callback: (ImuSensorData data) => getAcclData(data));
@@ -97,51 +81,37 @@ class ExerciseStartViewModel extends ChangeNotifier {
     // Here you can call ViewModel disposal code.
     _playerShort.dispose();
     _playerLong.dispose();
-    LoggerService().closeLogChannelSafely(ownerId: _ownerID!, channel: LogChannel.csv);
+    _setpointTimer.cancel();
     SensorService().stopAcclDataStream();
     SensorService().stopUserAcclDataStream();
     SensorService().stopGyroDataStream();
-    _exerciseFinished = false;
   }
 
   void getAcclData(ImuSensorData data) {
-    if (!exerciseFinished) {
-      _acclData = data;
-    }
+    _acclData = data;
   }
 
   void getUserAcclData(ImuSensorData data) {
-    if (!exerciseFinished) {
-      _userAcclData = data;
+    _userAcclData = data;
 
-      _currentGravityX = _acclData.x - _userAcclData.x;
-      _currentGravityY = _acclData.y - _userAcclData.y;
-      _currentGravityZ = _acclData.z - _userAcclData.z;
-
-      notifyListeners();
-    }
+    _currentGravityX = _acclData.x - _userAcclData.x;
+    _currentGravityY = _acclData.y - _userAcclData.y;
+    _currentGravityZ = _acclData.z - _userAcclData.z;
   }
   
   void getGyroData(ImuSensorData data) {
-    if (!exerciseFinished) {
-      _gyroData = data;
-      _lastTimestamp = _currentTimestamp;
-      _currentTimestamp = _gyroData.timeStamp;
+    _gyroData = data;
+    _lastTimestamp = _currentTimestamp;
+    _currentTimestamp = _gyroData.timeStamp;
 
-      _currentAcclAngleX = getAcclRoll(_currentGravityX, _currentGravityY, _currentGravityZ);
-      _currentAcclAngleY = getAcclPitch(_currentGravityX, _currentGravityY, _currentGravityZ);
+    _currentAcclAngleX = getAcclRoll(_currentGravityX, _currentGravityY, _currentGravityZ);
+    _currentAcclAngleY = getAcclPitch(_currentGravityX, _currentGravityY, _currentGravityZ);
 
-      Angles.currentAngleX = complementaryFilter(Angles.currentAngleX, _gyroData.x, _currentAcclAngleX, _alpha, _currentTimestamp, _lastTimestamp);
-      Angles.currentAngleY = complementaryFilter(Angles.currentAngleY, _gyroData.y, _currentAcclAngleY, _alpha, _currentTimestamp, _lastTimestamp);
-      Angles.currentAngleZ += _gyroData.z * _currentTimestamp.difference(_lastTimestamp).inMilliseconds / 1000;
+    Angles.currentAngleX = complementaryFilter(Angles.currentAngleX, _gyroData.x, _currentAcclAngleX, _alpha, _currentTimestamp, _lastTimestamp);
+    Angles.currentAngleY = complementaryFilter(Angles.currentAngleY, _gyroData.y, _currentAcclAngleY, _alpha, _currentTimestamp, _lastTimestamp);
+    Angles.currentAngleZ += _gyroData.z * _currentTimestamp.difference(_lastTimestamp).inMilliseconds / 1000;
 
-      ArmImuData.userAcclData.add(_userAcclData);
-      ArmImuData.gyroData.add(_gyroData);
-
-      writeToCsv("${_gyroData.timeStamp}, ${_userAcclData.x}, ${_userAcclData
-          .y}, ${_userAcclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData
-          .z}\n");
-    }
+    notifyListeners();
   }
 
   void _timerFinish(Timer timer) {
@@ -158,10 +128,29 @@ class ExerciseStartViewModel extends ChangeNotifier {
         playLongBeep();
         _isTimerActive = false;
         SelectedOptions.startTimer = false;
-        _exerciseFinished = false;
+        _setpointTimer = Timer(Duration(seconds: 3), _saveSetpoints);
         _countdownTimer.cancel();
       }
     }
+  }
+
+  void _saveSetpoints() {
+    if (_nextSetpoint == 0) {
+      Setpoint.setpoint0X = Angles.currentAngleX;
+      Setpoint.setpoint0Y = Angles.currentAngleY;
+      Setpoint.setpoint0Z = Angles.currentAngleZ;
+      playShortBeep();
+      _setpointTimer.cancel();
+      _setpointTimer = Timer(Duration(seconds: 3), _saveSetpoints);
+    }
+    if (_nextSetpoint == 1) {
+      Setpoint.setpoint1X = Angles.currentAngleX;
+      Setpoint.setpoint1Y = Angles.currentAngleY;
+      Setpoint.setpoint1Z = Angles.currentAngleZ;
+      playLongBeep();
+      _setpointsSet = true;
+    }
+    _nextSetpoint++;
   }
 
   Future<void> playShortBeep() async {
@@ -174,62 +163,13 @@ class ExerciseStartViewModel extends ChangeNotifier {
     await _playerLong.resume();
   }
 
-  void writeToCsv(String data) {
-    if (!_isTimerActive && !exerciseFinished) {
-      _writeSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: _ownerID!, data: data);
-
-      switch (_nextSetpoint) {
-        case 0:
-          checkSetpoint(Setpoint.setpoint0X, Setpoint.setpoint0Y, Setpoint.setpoint0Z);
-
-          break;
-        case 1:
-          checkSetpoint(Setpoint.setpoint1X, Setpoint.setpoint1Y, Setpoint.setpoint1Z);
-
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  void checkSetpoint(double x, double y, double z) {
-    if (Angles.currentAngleX < x + _toleranceX && Angles.currentAngleX > x - _toleranceX &&
-        Angles.currentAngleY < y + _toleranceY && Angles.currentAngleY > y - _toleranceY &&
-        Angles.currentAngleZ < z + _toleranceZ && Angles.currentAngleZ > z - _toleranceZ) {
-      _currentSetpoint++;
-    }
-
-    if (_currentSetpoint > 1) {
-      _currentSetpoint = 0;
-      _repetitionCount++;
-    }
-
-    if (_currentSetpoint == _nextSetpoint) {
-      if (_repetitionCount != SelectedOptions.repetitions) {
-        playShortBeep();
-      }
-      _nextSetpoint++;
-
-      if (_nextSetpoint > 1) {
-        _nextSetpoint = 0;
-      }
-    }
-
-    if (_repetitionCount == SelectedOptions.repetitions) {
-      playLongBeep();
-      _exerciseFinished = true;
-    }
-
-    notifyListeners();
-  }
-
   void selectPage(BuildContext context, StatelessPage page) {
     var navigatorViewModel = Provider.of<PageNavigatorViewModel>(context, listen: false);
     navigatorViewModel.selectPage(context, page);
   }
 
   bool get isTimerActive => _isTimerActive;
+  bool get setpointsSet => _setpointsSet;
   int get timerCount => _timerCount;
   ImuSensorData get acclData => _acclData;
   ImuSensorData get userAcclData => _userAcclData;
@@ -237,8 +177,6 @@ class ExerciseStartViewModel extends ChangeNotifier {
   DateTime get currentTimestamp => _currentTimestamp;
   DateTime get lastTimestamp => _lastTimestamp;
   int get nextSetpoint => _nextSetpoint;
-  int get repetitionCount => _repetitionCount;
-  bool get exerciseFinished => _exerciseFinished;
   double get currentGravityX => _currentGravityX;
   double get currentGravityY => _currentGravityY;
   double get currentGravityZ => _currentGravityZ;

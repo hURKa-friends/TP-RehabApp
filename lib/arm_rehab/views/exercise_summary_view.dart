@@ -53,18 +53,18 @@ class ExerciseSummaryView extends StatelessPage {
               SizedBox(
                 width: exerciseSummaryViewModel.imageSize,
                 height: exerciseSummaryViewModel.imageSize,
-                child: Image.asset("assets/images/flex.webp"),
+                child: Image.asset("assets/arm_rehab/images/flex.webp"),
               ),
               Text("Accelerometer graph"),
               SfCartesianChart(
                 key: ValueKey(0),
                 legend: Legend(isVisible: true),
                 primaryXAxis: DateTimeAxis(
-                  minimum: ArmImuData.acclData.isNotEmpty
-                      ? ArmImuData.acclData.first.timeStamp
+                  minimum: ArmImuData.userAcclData.isNotEmpty
+                      ? ArmImuData.userAcclData.first.timeStamp
                       : null,
-                  maximum: ArmImuData.acclData.isNotEmpty
-                      ? ArmImuData.acclData.last.timeStamp
+                  maximum: ArmImuData.userAcclData.isNotEmpty
+                      ? ArmImuData.userAcclData.last.timeStamp
                       : null,
                 ), // ✅ Ensures DateTime is handled correctly
                 primaryYAxis: NumericAxis(
@@ -76,22 +76,22 @@ class ExerciseSummaryView extends StatelessPage {
                 series: <LineSeries<ImuSensorData, DateTime>>[
                   LineSeries<ImuSensorData, DateTime>(
                       name:
-                      "X-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.x.toStringAsFixed(2) : '0'})",
-                      dataSource: ArmImuData.acclData,
+                      "X-Axis (${ArmImuData.userAcclData.isNotEmpty ? ArmImuData.userAcclData.last.x.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.userAcclData,
                       xValueMapper: (ImuSensorData data, _) => data.timeStamp,
                       yValueMapper: (ImuSensorData data, _) => data.x,
                       animationDuration: 0),
                   LineSeries<ImuSensorData, DateTime>(
                       name:
-                      "Y-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.y.toStringAsFixed(2) : '0'})",
-                      dataSource: ArmImuData.acclData,
+                      "Y-Axis (${ArmImuData.userAcclData.isNotEmpty ? ArmImuData.userAcclData.last.y.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.userAcclData,
                       xValueMapper: (ImuSensorData data, _) => data.timeStamp,
                       yValueMapper: (ImuSensorData data, _) => data.y,
                       animationDuration: 0),
                   LineSeries<ImuSensorData, DateTime>(
                       name:
-                      "Z-Axis (${ArmImuData.acclData.isNotEmpty ? ArmImuData.acclData.last.z.toStringAsFixed(2) : '0'})",
-                      dataSource: ArmImuData.acclData,
+                      "Z-Axis (${ArmImuData.userAcclData.isNotEmpty ? ArmImuData.userAcclData.last.z.toStringAsFixed(2) : '0'})",
+                      dataSource: ArmImuData.userAcclData,
                       xValueMapper: (ImuSensorData data, _) => data.timeStamp,
                       yValueMapper: (ImuSensorData data, _) => data.z,
                       animationDuration: 0),
@@ -139,6 +139,7 @@ class ExerciseSummaryView extends StatelessPage {
                       animationDuration: 0),
                 ],
               ),
+              Text("DAV (Difference Acceleration Vector): ${exerciseSummaryViewModel.calculateDAV(ArmImuData.userAcclData).toStringAsFixed(4)}"),
             ],
           ),
         ),

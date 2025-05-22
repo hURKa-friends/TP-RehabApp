@@ -48,8 +48,8 @@ class RepetitionSelectViewModel extends ChangeNotifier {
     navigatorViewModel.selectPage(context, page);
   }
 
-  List<TutorialStep> addTutorial(TutorialStep tutorial) {
-    List<TutorialStep> tutorialList = [tutorial];
+  TutorialStep addTutorial(TutorialStep tutorial) {
+    TutorialStep tutorialList = tutorial;
 
     return tutorialList;
   }
