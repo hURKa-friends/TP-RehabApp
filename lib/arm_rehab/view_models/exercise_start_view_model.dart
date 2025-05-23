@@ -137,6 +137,7 @@ class ExerciseStartViewModel extends ChangeNotifier {
 
       ArmImuData.userAcclData.add(_userAcclData);
       ArmImuData.gyroData.add(_gyroData);
+      Angles.angles.add(AngleGraph(angleX: Angles.currentAngleX, angleY: Angles.currentAngleY, angleZ: Angles.currentAngleZ, timestamp: _currentTimestamp));
 
       writeToCsv("${_gyroData.timeStamp}, ${_userAcclData.x}, ${_userAcclData
           .y}, ${_userAcclData.z}, ${_gyroData.x}, ${_gyroData.y}, ${_gyroData

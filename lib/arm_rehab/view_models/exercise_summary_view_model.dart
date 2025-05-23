@@ -23,6 +23,7 @@ class ExerciseSummaryViewModel extends ChangeNotifier {
     // Here you can call ViewModel disposal code.
     ArmImuData.userAcclData = List.empty(growable: true);
     ArmImuData.gyroData = List.empty(growable: true);
+    Angles.angles = List.empty(growable: true);
   }
 
   double calculateDAV(List<ImuSensorData> userAcclData) { // Difference Acceleration Vector

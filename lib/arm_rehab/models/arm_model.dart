@@ -27,10 +27,26 @@ class Setpoint {
   Setpoint();
 }
 
+class AngleGraph {
+  final double angleX;
+  final double angleY;
+  final double angleZ;
+  final DateTime timestamp;
+
+  AngleGraph({
+    required this.angleX,
+    required this.angleY,
+    required this.angleZ,
+    required this.timestamp,
+  });
+}
+
 class Angles {
   static late double currentAngleX;
   static late double currentAngleY;
   static late double currentAngleZ;
+
+  static List<AngleGraph> angles = List.empty(growable: true);
 
   Angles();
 }
