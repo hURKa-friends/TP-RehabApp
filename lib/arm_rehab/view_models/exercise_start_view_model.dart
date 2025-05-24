@@ -131,10 +131,14 @@ class ExerciseStartViewModel extends ChangeNotifier {
       _currentAcclAngleX = getAcclRoll(_currentGravityX, _currentGravityY, _currentGravityZ);
       _currentAcclAngleY = getAcclPitch(_currentGravityX, _currentGravityY, _currentGravityZ);
 
+      //print("Accl angle: $_currentAcclAngleX");
+      //print("Gyro angle: ${Angles.currentAngleX + _gyroData.x * _currentTimestamp.difference(_lastTimestamp).inMilliseconds / 1000}");
+
       Angles.currentAngleX = complementaryFilter(Angles.currentAngleX, _gyroData.x, _currentAcclAngleX, _alpha, _currentTimestamp, _lastTimestamp);
       Angles.currentAngleY = complementaryFilter(Angles.currentAngleY, _gyroData.y, _currentAcclAngleY, _alpha, _currentTimestamp, _lastTimestamp);
       Angles.currentAngleZ += _gyroData.z * _currentTimestamp.difference(_lastTimestamp).inMilliseconds / 1000;
 
+      ArmImuData.acclData.add(_acclData);
       ArmImuData.userAcclData.add(_userAcclData);
       ArmImuData.gyroData.add(_gyroData);
       Angles.angles.add(AngleGraph(angleX: Angles.currentAngleX, angleY: Angles.currentAngleY, angleZ: Angles.currentAngleZ, timestamp: _currentTimestamp));

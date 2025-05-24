@@ -52,6 +52,7 @@ class Angles {
 }
 
 class ArmImuData {
+  static List<ImuSensorData> acclData = List.empty(growable: true);
   static List<ImuSensorData> userAcclData = List.empty(growable: true);
   static List<ImuSensorData> gyroData = List.empty(growable: true);
 }

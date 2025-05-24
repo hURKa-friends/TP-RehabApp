@@ -21,6 +21,7 @@ class ExerciseSummaryViewModel extends ChangeNotifier {
 
   void onClose() {
     // Here you can call ViewModel disposal code.
+    ArmImuData.acclData = List.empty(growable: true);
     ArmImuData.userAcclData = List.empty(growable: true);
     ArmImuData.gyroData = List.empty(growable: true);
     Angles.angles = List.empty(growable: true);
@@ -36,6 +37,101 @@ class ExerciseSummaryViewModel extends ChangeNotifier {
     dav /= userAcclData.length;
 
     return dav;
+  }
+
+  double calculateAverage(List<double> values) {
+    double average = 0;
+
+    for (double value in values) {
+      average += value;
+    }
+
+    average /= values.length;
+
+    return average;
+  }
+
+  double calculateVariance(List<double> values, double average) {
+    double variance = 0;
+
+    for (double value in values) {
+      variance += pow((value - average), 2);
+    }
+
+    variance /= values.length;
+
+    return variance;
+  }
+
+  double calculateSD(List<AngleGraph> angles) {
+    double sd = (calculateVariance(angles.map((angle) => angle.angleX).toList(), calculateAverage(angles.map((angle) => angle.angleX).toList()))
+        + calculateVariance(angles.map((angle) => angle.angleY).toList(), calculateAverage(angles.map((angle) => angle.angleY).toList()))
+        + calculateVariance(angles.map((angle) => angle.angleZ).toList(), calculateAverage(angles.map((angle) => angle.angleZ).toList()))) / 3;
+
+    return sd;
+  }
+
+  double calculateAC(List<ImuSensorData> acclData) {
+    double ac = 0;
+
+    for (ImuSensorData data in acclData) {
+      ac += sqrt(pow(data.x, 2) + pow(data.y, 2) + pow(data.z, 2));
+    }
+
+    ac /= acclData.length;
+
+    return ac;
+  }
+
+  double calculateWAC() {
+    return calculateSD(Angles.angles) * calculateAC(ArmImuData.acclData);
+  }
+
+  double differentiate(double lastValue, double currentValue, DateTime lastTimestamp, DateTime currentTimestamp) {
+    double diff = (currentValue - lastValue) * currentTimestamp.difference(lastTimestamp).inMilliseconds / 1000;
+
+    return diff;
+  }
+
+  double calculateLDLJ(List<ImuSensorData> acclData) {
+    double ldlj = 0;
+    double timeDiff = acclData.last.timeStamp.difference(acclData.first.timeStamp).inMilliseconds / 1000;
+    double x, y, z;
+
+    x = acclData.map((data) => data.x.abs()).toList().reduce(max);
+    y = acclData.map((data) => data.y.abs()).toList().reduce(max);
+    z = acclData.map((data) => data.z.abs()).toList().reduce(max);
+
+    double aPeak = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) - sqrt(pow(calculateAverage(acclData.map((data) => data.x).toList()), 2) + pow(calculateAverage(acclData.map((data) => data.y).toList()), 2) + pow(calculateAverage(acclData.map((data) => data.z).toList()), 2));
+
+
+    for (int i = 1; i < acclData.length; i++) {
+      ldlj += pow(differentiate(acclData[i - 1].x, acclData[i].x, acclData[i - 1].timeStamp, acclData[i].timeStamp), 2)
+            + pow(differentiate(acclData[i - 1].y, acclData[i].y, acclData[i - 1].timeStamp, acclData[i].timeStamp), 2)
+            + pow(differentiate(acclData[i - 1].z, acclData[i].z, acclData[i - 1].timeStamp, acclData[i].timeStamp), 2);
+    }
+
+    ldlj /= (acclData.length - 1);
+
+    ldlj *= timeDiff / pow(aPeak, 2);
+    //print(timeDiff);
+    //print(aPeak);
+    //print(ldlj);
+    ldlj = -log(ldlj);
+
+    return ldlj;
+  }
+
+  double calculateMI(List<ImuSensorData> acclData) {
+    double mi = 0;
+
+    for (ImuSensorData data in acclData) {
+      mi += sqrt(pow(data.x, 2) + pow(data.y, 2) + pow(data.z, 2)) / 9.81;
+    }
+
+    mi /= acclData.length;
+    
+    return mi;
   }
 
   double getMin(List<AngleGraph> angles, List<ImuSensorData> imuData, int param) {

@@ -57,6 +57,7 @@ class ExerciseSummaryView extends StatelessPage {
                     height: exerciseSummaryViewModel.imageSize,
                     child: Image.asset("assets/arm_rehab/images/flex.webp"),
                   ),
+                  space(15),
                   Text(
                     "Angle graph",
                     textAlign: TextAlign.center,
@@ -103,6 +104,7 @@ class ExerciseSummaryView extends StatelessPage {
                           animationDuration: 0),
                     ],
                   ),
+                  space(10),
                   Text(
                     "Accelerometer graph",
                     textAlign: TextAlign.center,
@@ -149,6 +151,7 @@ class ExerciseSummaryView extends StatelessPage {
                           animationDuration: 0),
                     ],
                   ),
+                  space(10),
                   Text(
                     "Gyroscope graph",
                     textAlign: TextAlign.center,
@@ -201,6 +204,19 @@ class ExerciseSummaryView extends StatelessPage {
                     textAlign: TextAlign.center,
                     style: buttonTextStyle(),
                   ),
+                  space(15),
+                  Text(
+                    "LDLJ (Log Dimensionless Jerk): ${exerciseSummaryViewModel.calculateLDLJ(ArmImuData.acclData).toStringAsFixed(4)}",
+                    textAlign: TextAlign.center,
+                    style: buttonTextStyle(),
+                  ),
+                  space(15),
+                  Text(
+                    "MI (Movement Intensity): ${exerciseSummaryViewModel.calculateMI(ArmImuData.acclData).toStringAsFixed(4)}",
+                    textAlign: TextAlign.center,
+                    style: buttonTextStyle(),
+                  ),
+                  space(80),
                 ],
               ),
             ),
