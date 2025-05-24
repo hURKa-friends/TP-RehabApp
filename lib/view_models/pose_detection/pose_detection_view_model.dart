@@ -8,10 +8,6 @@ import 'package:rehab_app/services/internal/logger_service_internal.dart';
 import '../../models/pose_detection/pose_detection_model.dart';
 import '../../services/external/logger_service.dart';
 
-// enum LogChannel { csv, error, event, plain }
-// enum ChannelAccess { public, protected, private }
-// enum ArmSelection { none, left, right }
-
 class PoseDetectionViewModel extends ChangeNotifier{
   // Fields
   late List<CameraDescription> _cameras;
@@ -44,6 +40,62 @@ class PoseDetectionViewModel extends ChangeNotifier{
   bool _RepetitionsCompleted = false;
   bool get allRepetitionsCompleted => _RepetitionsCompleted;
 
+    // Constructor
+    PoseDetectionViewModel() {
+        // Intentionally left empty. (almost)
+    }
+
+    // Overriden methods
+    Future<void> onInit() async {
+        UOID = await LoggerService().openCsvLogChannel(access: ChannelAccess.private, fileName: 'pose_detection_data', headerData: 'HeaderData1, HeaderData2, HeaderData3');
+        _initialize();
+    }
+
+    void onClose() {
+        print('Disposing PoseDetectionViewModel...');
+        _poseDetector.close();
+
+        if (cameraController.value.isInitialized) {
+          cameraController.stopImageStream();
+          cameraController.dispose();
+        }
+        LoggerService().closeLogChannelSafely(ownerId: UOID!, channel: LogChannel.csv);
+
+        _selectedArm = ArmSelection.none;
+        _isSetupComplete = false;
+        repetitions = 0;
+        _RepetitionsCompleted = false;
+    }
+
+    // Init methods
+    Future<void> _initialize() async {
+        await _asyncInitCamera();
+        _initPoseDetector();
+        notifyListeners();
+    }
+
+    void _initPoseDetector() {
+        _poseDetector = PoseDetector(options: PoseDetectorOptions());
+        print(_poseDetector);
+    }
+
+    Future<void> _asyncInitCamera() async {
+        _cameras = await availableCameras();
+
+        // setup front camera only
+        _frontCamera = _cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front);
+        cameraController = CameraController(_frontCamera,
+            ResolutionPreset.high,
+            enableAudio: false,
+            imageFormatGroup: Platform.isAndroid ? ImageFormatGroup.nv21 : ImageFormatGroup.bgra8888);
+        await cameraController.initialize();
+
+        if(cameraController.value.isInitialized) {
+            cameraController.startImageStream((CameraImage cameraImage) {
+                _processCameraFrame(cameraImage);
+            });
+        }
+    }
 
   void selectArm(ArmSelection arm) {
     _selectedArm = arm;
@@ -96,66 +148,19 @@ class PoseDetectionViewModel extends ChangeNotifier{
     );
   }
 
-  // Constructor
-  PoseDetectionViewModel() {
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    await _asyncInitCamera();
-    _initPoseDetector();
-    ChannelAccess channelAccess = ChannelAccess.private;
-    UOID = await LoggerService().openCsvLogChannel(access: channelAccess, fileName: 'testFile', headerData: 'HeaderData1, HeaderData2, HeaderData3');
-    notifyListeners();
-  }
-
-  @override // Deconstructor
-  void dispose() {
-    print('Disposing PoseDetectionViewModel...');
-    _poseDetector.close();
-    if (cameraController.value.isInitialized) {
-      cameraController.stopImageStream();
-      cameraController.dispose();
-    }
-    super.dispose();
-  }
-
-  Future<void> onInit() async {
-    ChannelAccess channelAccess = ChannelAccess.private;
-    // UOID = await LoggerService().openCsvLogChannel(access: channelAccess, fileName: 'testFile', headerData: 'HeaderData1, HeaderData2, HeaderData3');
-  }
-
-  void onClose() {
-    LoggerService().closeLogChannelSafely(ownerId: UOID!, channel: LogChannel.csv);
-  }
+  // @override // Deconstructor
+  // void dispose() {
+  //   print('Disposing PoseDetectionViewModel...');
+  //   _poseDetector.close();
+  //   if (cameraController.value.isInitialized) {
+  //     cameraController.stopImageStream();
+  //     cameraController.dispose();
+  //   }
+  //   super.dispose();
+  // }
 
   void onDataChanged() {
-    // bool wasSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: 'Dataaaaa');
   }
-
-  void _initPoseDetector() {
-    _poseDetector = PoseDetector(options: PoseDetectorOptions());
-  }
-
-  Future<void> _asyncInitCamera() async {
-    _cameras = await availableCameras();
-    // setup front camera only
-    _frontCamera = _cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front);
-    cameraController = CameraController(_frontCamera,
-        ResolutionPreset.high,
-        enableAudio: false,
-        imageFormatGroup: Platform.isAndroid
-            ? ImageFormatGroup.nv21
-            : ImageFormatGroup.bgra8888);
-    await cameraController.initialize();
-
-    if(cameraController.value.isInitialized){
-      cameraController.startImageStream((CameraImage cameraImage) {
-        _processCameraFrame(cameraImage);
-      });
-    }
-  }
-
 
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
     if (_isBusy) return; // Skip if already processing a frame
@@ -207,7 +212,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
     _isBusy = false;
     // print(stopwatch.elapsedMilliseconds);
     // stopwatch.stop();
-    // print(LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: 'Dataaaaa'));
+    bool wasSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: '123\n');
     notifyListeners();
   }
 

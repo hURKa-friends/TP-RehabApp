@@ -22,13 +22,13 @@ class PoseDetectionView extends StatefulPage {
   void initPage(BuildContext context) {
     var poseDetectionViewModel = Provider.of<PoseDetectionViewModel>(context, listen: false);
     poseDetectionViewModel.setExercise(exerciseType);
-    // poseDetectionViewModel.onInit();
+    poseDetectionViewModel.onInit();
   }
 
   @override
   void closePage(BuildContext context) {
-    // var poseDetectionViewModel = Provider.of<PoseDetectionViewModel>(context, listen: false);
-    // poseDetectionViewModel.onClose();
+    var poseDetectionViewModel = Provider.of<PoseDetectionViewModel>(context, listen: false);
+    poseDetectionViewModel.onClose();
   }
 
   @override
@@ -44,11 +44,11 @@ class PoseDetectionViewState extends StatefulPageState {
     _poseDetectionViewModel ??= Provider.of<PoseDetectionViewModel>(context);
   }
 
-  @override
-  void dispose() {
-    _poseDetectionViewModel?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   //_poseDetectionViewModel?.dispose();
+  //   super.dispose();
+  // }
 
   Widget _buildArmSelectionUI(BuildContext context, PoseDetectionViewModel viewModel) {
     final ThemeData theme = Theme.of(context); // Get the current theme
@@ -58,17 +58,16 @@ class PoseDetectionViewState extends StatefulPageState {
     final TextStyle bodyTextStyle = theme.textTheme.bodyLarge ?? TextStyle(fontSize: 18, color: theme.colorScheme.onBackground);
     final TextStyle buttonTextStyle = theme.textTheme.labelLarge ?? TextStyle(fontSize: 18, color: theme.colorScheme.onPrimary);
     final TextStyle pickerSelectedTextStyle = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: theme.colorScheme.primary);
-    final TextStyle pickerTextStyle = TextStyle(fontSize: 18, color: theme.colorScheme.onSurface.withOpacity(0.7)); // Slightly muted for non-selected
+    final TextStyle pickerTextStyle = TextStyle(fontSize: 18, color: theme.colorScheme.onSurface.withOpacity(0.7));
 
     return Scaffold(
-      // AppBar uses theme colors by default, but you can customize if needed
       appBar: AppBar(
-        title: Text('Configure Exercise:', style: TextStyle(color: theme.colorScheme.onPrimary)), // Assuming AppBar background is primary
+        title: Text('Configure Exercise:', style: TextStyle(color: theme.colorScheme.onPrimary)),
         backgroundColor: theme.colorScheme.primary,
-        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary), // For back button, etc.
+        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
         automaticallyImplyLeading: false,
       ),
-      backgroundColor: theme.colorScheme.background, // Page background
+      backgroundColor: theme.colorScheme.background,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -91,11 +90,11 @@ class PoseDetectionViewState extends StatefulPageState {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: viewModel.selectedArm == ArmSelection.left
-                          ? theme.colorScheme.primary // Selected button color
-                          : theme.colorScheme.surfaceVariant, // Unselected button color
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.surfaceVariant,
                       foregroundColor: viewModel.selectedArm == ArmSelection.left
-                          ? theme.colorScheme.onPrimary // Text color for selected
-                          : theme.colorScheme.onSurfaceVariant, // Text color for unselected
+                          ? theme.colorScheme.onPrimary
+                          : theme.colorScheme.onSurfaceVariant,
                     ),
                     child: Text('Left Arm', style: buttonTextStyle.copyWith(
                       color: viewModel.selectedArm == ArmSelection.left
@@ -135,7 +134,7 @@ class PoseDetectionViewState extends StatefulPageState {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surface, // Background for the picker area
+                    color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: theme.colorScheme.outline.withOpacity(0.5)),
                     boxShadow: [
@@ -222,16 +221,7 @@ class PoseDetectionViewState extends StatefulPageState {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Shoulder Angle: ${viewModel.currentAngleShoulder}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'OOL: ${viewModel.outOfLimits}',
+                  'Correct rep: ${!viewModel.outOfLimits}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
