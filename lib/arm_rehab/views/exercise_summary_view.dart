@@ -57,7 +57,11 @@ class ExerciseSummaryView extends StatelessPage {
                     height: exerciseSummaryViewModel.imageSize,
                     child: Image.asset("assets/arm_rehab/images/flex.webp"),
                   ),
-                  Text("Angle graph"),
+                  Text(
+                    "Angle graph",
+                    textAlign: TextAlign.center,
+                    style: buttonTextStyle(),
+                  ),
                   SfCartesianChart(
                     key: ValueKey(0),
                     legend: Legend(isVisible: true),
@@ -71,8 +75,8 @@ class ExerciseSummaryView extends StatelessPage {
                     ), // ✅ Ensures DateTime is handled correctly
                     primaryYAxis: NumericAxis(
                       title: AxisTitle(text: 'Accelerometer'),
-                      minimum: -20,
-                      maximum: 20,
+                      minimum: exerciseSummaryViewModel.getMin(Angles.angles, ArmImuData.userAcclData, 1),
+                      maximum: exerciseSummaryViewModel.getMax(Angles.angles, ArmImuData.userAcclData, 1),
                       interval: 1,
                     ),
                     series: <LineSeries<AngleGraph, DateTime>>[
@@ -99,7 +103,11 @@ class ExerciseSummaryView extends StatelessPage {
                           animationDuration: 0),
                     ],
                   ),
-                  Text("Accelerometer graph"),
+                  Text(
+                    "Accelerometer graph",
+                    textAlign: TextAlign.center,
+                    style: buttonTextStyle(),
+                  ),
                   SfCartesianChart(
                     key: ValueKey(1),
                     legend: Legend(isVisible: true),
@@ -113,8 +121,8 @@ class ExerciseSummaryView extends StatelessPage {
                     ), // ✅ Ensures DateTime is handled correctly
                     primaryYAxis: NumericAxis(
                       title: AxisTitle(text: 'Accelerometer'),
-                      minimum: -20,
-                      maximum: 20,
+                      minimum: exerciseSummaryViewModel.getMin(Angles.angles, ArmImuData.userAcclData, 2),
+                      maximum: exerciseSummaryViewModel.getMax(Angles.angles, ArmImuData.userAcclData, 2),
                       interval: 1,
                     ),
                     series: <LineSeries<ImuSensorData, DateTime>>[
@@ -141,7 +149,11 @@ class ExerciseSummaryView extends StatelessPage {
                           animationDuration: 0),
                     ],
                   ),
-                  Text("Gyroscope graph"),
+                  Text(
+                    "Gyroscope graph",
+                    textAlign: TextAlign.center,
+                    style: buttonTextStyle(),
+                  ),
                   SfCartesianChart(
                     key: ValueKey(2),
                     legend: Legend(isVisible: true),
@@ -155,8 +167,8 @@ class ExerciseSummaryView extends StatelessPage {
                     ), // ✅ Ensures DateTime is handled correctly
                     primaryYAxis: NumericAxis(
                       title: AxisTitle(text: 'Gyroscope'),
-                      minimum: -20,
-                      maximum: 20,
+                      minimum: exerciseSummaryViewModel.getMin(Angles.angles, ArmImuData.gyroData, 2),
+                      maximum: exerciseSummaryViewModel.getMax(Angles.angles, ArmImuData.gyroData, 2),
                       interval: 1,
                     ),
                     series: <LineSeries<ImuSensorData, DateTime>>[
@@ -183,7 +195,12 @@ class ExerciseSummaryView extends StatelessPage {
                           animationDuration: 0),
                     ],
                   ),
-                  Text("DAV (Difference Acceleration Vector): ${exerciseSummaryViewModel.calculateDAV(ArmImuData.userAcclData).toStringAsFixed(4)}"),
+                  space(15),
+                  Text(
+                    "DAV (Difference Acceleration Vector): ${exerciseSummaryViewModel.calculateDAV(ArmImuData.userAcclData).toStringAsFixed(4)}",
+                    textAlign: TextAlign.center,
+                    style: buttonTextStyle(),
+                  ),
                 ],
               ),
             ),

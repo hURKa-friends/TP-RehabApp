@@ -41,9 +41,9 @@ class ExerciseStartViewModel extends ChangeNotifier {
   late double setpoint1X;
   late double setpoint1Y;
   late double setpoint1Z;
-  final _toleranceX = 0.3;
-  final _toleranceY = 0.3;
-  final _toleranceZ = 0.3;
+  final _toleranceX = 0.35;
+  final _toleranceY = 0.35;
+  final _toleranceZ = 0.35;
   final setpoints = Setpoints();
   final double imageSize = 300;
   final double _alpha = 0.95;
