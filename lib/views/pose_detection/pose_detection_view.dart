@@ -175,7 +175,7 @@ class PoseDetectionViewState extends StatefulPageState {
               ElevatedButton(
                 onPressed: viewModel.isArmSelected && viewModel.targetRepetitions >= 1 && viewModel.targetRepetitions <= 20
                     ? () {
-                  viewModel.initializeCameraAndDetection();
+                  viewModel.checkFinishedSetup();
                 }
                     : null,
                 style: ElevatedButton.styleFrom(

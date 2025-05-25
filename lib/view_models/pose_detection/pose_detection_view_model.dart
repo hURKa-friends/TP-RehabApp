@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:io';
-import 'package:flutter/services.dart';
 import 'dart:math';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:rehab_app/services/internal/logger_service_internal.dart';
 import '../../models/pose_detection/pose_detection_model.dart';
 import '../../services/external/logger_service.dart';
 
-class PoseDetectionViewModel extends ChangeNotifier{
+class PoseDetectionViewModel extends ChangeNotifier {
   // Fields
   late List<CameraDescription> _cameras;
   late CameraDescription _frontCamera;
@@ -37,81 +36,111 @@ class PoseDetectionViewModel extends ChangeNotifier{
   bool _isSetupComplete = false;
   bool get isSetupComplete => _isSetupComplete;
 
-  bool _RepetitionsCompleted = false;
-  bool get allRepetitionsCompleted => _RepetitionsCompleted;
+  bool _repetitionsCompleted = false;
+  bool get allRepetitionsCompleted => _repetitionsCompleted;
 
-    // Constructor
-    PoseDetectionViewModel() {
-        // Intentionally left empty. (almost)
+  int _startTimestamp = DateTime.now().millisecondsSinceEpoch;
+  int _currentTimestamp = DateTime.now().millisecondsSinceEpoch;
+
+  // Constructor
+  PoseDetectionViewModel() {
+    // Intentionally left empty.
+  }
+
+  // Overriden methods
+  Future<void> onInit() async {
+    String fileName = createFilename();
+
+    UOID = await LoggerService().openCsvLogChannel(
+        access: ChannelAccess.private,
+        fileName: fileName,
+        headerData:
+            'timestamp, rep_done_flag, is_rep_process_correct_flag, shoulder_angle, elbow_angle');
+    _initialize();
+  }
+
+  void onClose() {
+    print('Disposing PoseDetectionViewModel...');
+    _poseDetector.close();
+
+    if (cameraController.value.isInitialized) {
+      cameraController.stopImageStream();
+      cameraController.dispose();
     }
+    LoggerService()
+        .closeLogChannelSafely(ownerId: UOID!, channel: LogChannel.csv);
 
-    // Overriden methods
-    Future<void> onInit() async {
-        UOID = await LoggerService().openCsvLogChannel(access: ChannelAccess.private, fileName: 'pose_detection_data', headerData: 'HeaderData1, HeaderData2, HeaderData3');
-        _initialize();
+    _selectedArm = ArmSelection.none;
+    _isSetupComplete = false;
+    repetitions = 0;
+    _repetitionsCompleted = false;
+  }
+
+  // Init methods
+  Future<void> _initialize() async {
+    await _asyncInitCamera();
+    _initPoseDetector();
+    _startTimestamp = DateTime.now().millisecondsSinceEpoch;
+    _currentTimestamp = _startTimestamp;
+    notifyListeners();
+  }
+
+  void _initPoseDetector() {
+    _poseDetector = PoseDetector(options: PoseDetectorOptions());
+    print(_poseDetector);
+  }
+
+  Future<void> _asyncInitCamera() async {
+    _cameras = await availableCameras();
+
+    // setup front camera only
+    _frontCamera = _cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.front);
+    cameraController = CameraController(_frontCamera, ResolutionPreset.high,
+        enableAudio: false,
+        imageFormatGroup: Platform.isAndroid
+            ? ImageFormatGroup.nv21
+            : ImageFormatGroup.bgra8888);
+    await cameraController.initialize();
+
+    if (cameraController.value.isInitialized) {
+      cameraController.startImageStream((CameraImage cameraImage) {
+        _processCameraFrame(cameraImage);
+      });
     }
+  }
 
-    void onClose() {
-        print('Disposing PoseDetectionViewModel...');
-        _poseDetector.close();
+  String createFilename(){
+    String fileName = '';
 
-        if (cameraController.value.isInitialized) {
-          cameraController.stopImageStream();
-          cameraController.dispose();
-        }
-        LoggerService().closeLogChannelSafely(ownerId: UOID!, channel: LogChannel.csv);
-
-        _selectedArm = ArmSelection.none;
-        _isSetupComplete = false;
-        repetitions = 0;
-        _RepetitionsCompleted = false;
+    switch (_exerciseType) {
+      case ExerciseType.shoulderAbductionActive:
+        fileName = 'shoulder_abduction_active';
+        break;
+      case ExerciseType.shoulderForwardElevationActive:
+        fileName = 'shoulder_forward_elevation_active';
+        break;
+      default:
+        fileName = 'unknown';
+        break;
     }
-
-    // Init methods
-    Future<void> _initialize() async {
-        await _asyncInitCamera();
-        _initPoseDetector();
-        notifyListeners();
-    }
-
-    void _initPoseDetector() {
-        _poseDetector = PoseDetector(options: PoseDetectorOptions());
-        print(_poseDetector);
-    }
-
-    Future<void> _asyncInitCamera() async {
-        _cameras = await availableCameras();
-
-        // setup front camera only
-        _frontCamera = _cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front);
-        cameraController = CameraController(_frontCamera,
-            ResolutionPreset.high,
-            enableAudio: false,
-            imageFormatGroup: Platform.isAndroid ? ImageFormatGroup.nv21 : ImageFormatGroup.bgra8888);
-        await cameraController.initialize();
-
-        if(cameraController.value.isInitialized) {
-            cameraController.startImageStream((CameraImage cameraImage) {
-                _processCameraFrame(cameraImage);
-            });
-        }
-    }
+    return fileName;
+  }
 
   void selectArm(ArmSelection arm) {
     _selectedArm = arm;
     notifyListeners();
   }
 
-
   void setTargetRepetitions(int reps) {
-    if (reps > 0 && reps <= 20) { // Basic validation
+    if (reps > 0 && reps <= 20) {
+      // Basic validation
       _targetRepetitions = reps;
       notifyListeners();
     }
   }
 
-
-  Future<void> initializeCameraAndDetection() async {
+  Future<void> checkFinishedSetup() async {
     if (!isArmSelected || _targetRepetitions <= 0) {
       print("Arm or target repetitions not set correctly");
       _isSetupComplete = false;
@@ -123,7 +152,7 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
     _isSetupComplete = true;
     repetitions = 0;
-    _RepetitionsCompleted = false;
+    _repetitionsCompleted = false;
     currentAngleShoulder = 0;
     outOfLimits = false;
 
@@ -136,54 +165,32 @@ class PoseDetectionViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-
   void setExercise(ExerciseType type) {
     _exerciseType = type;
-    print("ViewModel: setExercise is creating Exercise. Type: $_exerciseType, Arm: ${_selectedArm.name}, Reps: $_targetRepetitions");
+    print(
+        "ViewModel: setExercise is creating Exercise. Type: $_exerciseType, Arm: ${_selectedArm.name}, Reps: $_targetRepetitions");
 
-    exercise = ExerciseFactory.create(
-        _exerciseType,
-        _targetRepetitions,
-        _selectedArm
-    );
-  }
-
-  // @override // Deconstructor
-  // void dispose() {
-  //   print('Disposing PoseDetectionViewModel...');
-  //   _poseDetector.close();
-  //   if (cameraController.value.isInitialized) {
-  //     cameraController.stopImageStream();
-  //     cameraController.dispose();
-  //   }
-  //   super.dispose();
-  // }
-
-  void onDataChanged() {
+    exercise =
+        ExerciseFactory.create(_exerciseType, _targetRepetitions, _selectedArm);
   }
 
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
-    if (_isBusy) return; // Skip if already processing a frame
-
-    // final stopwatch = Stopwatch();
-    // stopwatch.start();
+    if (_isBusy || _repetitionsCompleted) return; // Skip if already processing a frame
 
     _isBusy = true;
-    final format = InputImageFormatValue.fromRawValue(cameraImage.format.raw);
 
     final inputImage = await _convertCameraImageToInputImage(cameraImage);
 
-    if(inputImage == null) {
+    if (inputImage == null) {
       _isBusy = false;
       return;
     }
 
     final poses = await _poseDetector.processImage(inputImage);
 
-    double? angleRad = calculateAngleRad(
-                                  poses,
-                                  exercise.jointAngleLocations[0]);
-    if (angleRad != null){
+    double? angleRad =
+        calculateAngleRad(poses, exercise.jointAngleLocations[0]);
+    if (angleRad != null) {
       currentAngleShoulder = angleRad * (180 / pi);
     }
     outOfLimits = exercise.outOfLimits;
@@ -191,8 +198,8 @@ class PoseDetectionViewModel extends ChangeNotifier{
     repetitions += checkCorrectRepetition(exercise, poses);
 
     if (repetitions >= _targetRepetitions && _targetRepetitions > 0) {
-      if (!_RepetitionsCompleted) {
-        _RepetitionsCompleted = true;
+      if (!_repetitionsCompleted) {
+        _repetitionsCompleted = true;
         print("ViewModel: All target repetitions completed!");
       }
     }
@@ -209,14 +216,12 @@ class PoseDetectionViewModel extends ChangeNotifier{
     } else {
       customPaint = null;
     }
+
     _isBusy = false;
-    // print(stopwatch.elapsedMilliseconds);
-    // stopwatch.stop();
-    bool wasSuccessful = LoggerService().log(channel: LogChannel.csv, ownerId: UOID!, data: '123\n');
     notifyListeners();
   }
 
-  Future<InputImage?> _convertCameraImageToInputImage(CameraImage image) async{
+  Future<InputImage?> _convertCameraImageToInputImage(CameraImage image) async {
     // get image format
     final format = InputImageFormatValue.fromRawValue(image.format.raw);
     // only supported format is nv21 for Android
@@ -265,63 +270,79 @@ class PoseDetectionViewModel extends ChangeNotifier{
 
         return angleRad;
       } else {
-
         return null;
       }
     }
-  }   // calculateAngleRad
+    return null;
+  } // calculateAngleRad
 
-  int checkCorrectRepetition(ShoulderExercise e, List<Pose> poses){
-    for(int i = 0; i < e.jointLimits.length; i++){
-      double? angleRad = calculateAngleRad(
-          poses,
-          e.jointAngleLocations[i]);
+  int checkCorrectRepetition(ShoulderExercise e, List<Pose> poses) {
+    List<String> logData = [];
 
-      if (angleRad != null){
+    _currentTimestamp = (DateTime.now().millisecondsSinceEpoch - _startTimestamp);
+    logData.add((_currentTimestamp / 1000).toString());
+
+    for (int i = 0; i < e.jointLimits.length; i++) {
+      double? angleRad = calculateAngleRad(poses, e.jointAngleLocations[i]);
+
+      if (angleRad != null) {
         double angle = angleRad * (180 / pi);
+        logData.add(angle.toStringAsFixed(2));
 
         switch (e.jointLimits[i].limitType) {
           case LimitType.inLimits: // checking if angle is out of interval
-            if(angle < (e.jointLimits[i].lower - e.jointLimits[i].tolerance) ||
+            if (angle < (e.jointLimits[i].lower - e.jointLimits[i].tolerance) ||
                 angle > (e.jointLimits[i].upper + e.jointLimits[i].tolerance)) {
               e.outOfLimits = true;
             }
             break;
-          case LimitType.reachLimits: // checking if rep angle limits were reached
-            if(angle > e.jointLimits[i].lower - e.jointLimits[i].tolerance &&
-                angle < e.jointLimits[i].lower + e.jointLimits[i].tolerance){
+          case LimitType
+              .reachLimits: // checking if rep angle limits were reached
+            if (angle > e.jointLimits[i].lower - e.jointLimits[i].tolerance &&
+                angle < e.jointLimits[i].lower + e.jointLimits[i].tolerance) {
               e.jointLimits[i].reachedLow = true;
               e.outOfLimits = false;
-            }
-            else if((angle > e.jointLimits[i].upper - e.jointLimits[i].tolerance &&
-                angle < e.jointLimits[i].upper + e.jointLimits[i].tolerance) &&
-                e.jointLimits[i].reachedLow){
+            } else if ((angle >
+                        e.jointLimits[i].upper - e.jointLimits[i].tolerance &&
+                    angle <
+                        e.jointLimits[i].upper + e.jointLimits[i].tolerance) &&
+                e.jointLimits[i].reachedLow) {
               e.jointLimits[i].reachedLow = false;
-              if (!e.outOfLimits){
+              if (!e.outOfLimits) {
                 e.correctRepetition = true;
               }
             }
             break;
         }
       }
+      else {
+        double angle = -1;
+        logData.add(angle.toStringAsFixed(2));
+      }
     }
+    logData.insert(1, e.correctRepetition.toString());
+    logData.insert(2, (!e.outOfLimits).toString());
+    LoggerService().log(
+      channel: LogChannel.csv,
+      ownerId: UOID!,
+      data: '${logData.join(', ')}\n',
+    );
 
-    if(e.correctRepetition == true){
+    if (e.correctRepetition == true) {
       e.correctRepetition = false;
       return 1;
-    }
-    else{
+    } else {
       return 0;
     }
   }
-}   // PoseDetectionViewModel
+} // PoseDetectionViewModel
 
 class PosePainter extends CustomPainter {
   PosePainter(
-      this.poses,
-      this.imageSize,
-      this.rotation,
-      this.cameraLensDirection,
+    this.poses,
+    this.imageSize,
+    this.rotation,
+    this.cameraLensDirection,
   );
 
   final List<Pose> poses;
@@ -368,8 +389,8 @@ class PosePainter extends CustomPainter {
             paint);
       });
 
-      void paintLine(PoseLandmarkType type1, PoseLandmarkType type2,
-          Paint paintType) {
+      void paintLine(
+          PoseLandmarkType type1, PoseLandmarkType type2, Paint paintType) {
         final PoseLandmark joint1 = pose.landmarks[type1]!;
         final PoseLandmark joint2 = pose.landmarks[type2]!;
 
@@ -433,16 +454,15 @@ class PosePainter extends CustomPainter {
   }
 
   double translateX(
-      double x,
-      Size canvasSize,
-      Size imageSize,
-      InputImageRotation rotation,
-      CameraLensDirection cameraLensDirection,
-      ) {
+    double x,
+    Size canvasSize,
+    Size imageSize,
+    InputImageRotation rotation,
+    CameraLensDirection cameraLensDirection,
+  ) {
     switch (rotation) {
       case InputImageRotation.rotation90deg:
-        return x *
-            canvasSize.width / imageSize.height;
+        return x * canvasSize.width / imageSize.height;
       case InputImageRotation.rotation270deg:
         return canvasSize.width - x * canvasSize.width / imageSize.height;
       case InputImageRotation.rotation0deg:
@@ -457,16 +477,15 @@ class PosePainter extends CustomPainter {
   }
 
   double translateY(
-      double y,
-      Size canvasSize,
-      Size imageSize,
-      InputImageRotation rotation,
-      ) {
+    double y,
+    Size canvasSize,
+    Size imageSize,
+    InputImageRotation rotation,
+  ) {
     switch (rotation) {
       case InputImageRotation.rotation90deg:
       case InputImageRotation.rotation270deg:
-        return y *
-            canvasSize.height / imageSize.width;
+        return y * canvasSize.height / imageSize.width;
       case InputImageRotation.rotation0deg:
       case InputImageRotation.rotation180deg:
         return y * canvasSize.height / imageSize.height;
@@ -478,4 +497,3 @@ class PosePainter extends CustomPainter {
     return oldDelegate.imageSize != imageSize || oldDelegate.poses != poses;
   }
 }
-
