@@ -62,7 +62,7 @@ class PoseDetectionViewState extends StatefulPageState {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Configure Exercise:', style: TextStyle(color: theme.colorScheme.onPrimary)),
+        title: Text('Konfigurácia cvičenia:', style: TextStyle(color: theme.colorScheme.onPrimary)),
         backgroundColor: theme.colorScheme.primary,
         iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
         automaticallyImplyLeading: false,
@@ -76,7 +76,7 @@ class PoseDetectionViewState extends StatefulPageState {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Which arm will you be exercising?',
+                'Zvoľte si ruku, s ktorou chcete cvičiť:',
                 style: headlineStyle,
                 textAlign: TextAlign.center,
               ),
@@ -96,7 +96,7 @@ class PoseDetectionViewState extends StatefulPageState {
                           ? theme.colorScheme.onPrimary
                           : theme.colorScheme.onSurfaceVariant,
                     ),
-                    child: Text('Left Arm', style: buttonTextStyle.copyWith(
+                    child: Text('Ľavá ruka', style: buttonTextStyle.copyWith(
                       color: viewModel.selectedArm == ArmSelection.left
                           ? theme.colorScheme.onPrimary
                           : theme.colorScheme.onSurfaceVariant,
@@ -114,7 +114,7 @@ class PoseDetectionViewState extends StatefulPageState {
                           ? theme.colorScheme.onPrimary
                           : theme.colorScheme.onSurfaceVariant,
                     ),
-                    child: Text('Right Arm', style: buttonTextStyle.copyWith(
+                    child: Text('Pravá ruka', style: buttonTextStyle.copyWith(
                       color: viewModel.selectedArm == ArmSelection.right
                           ? theme.colorScheme.onPrimary
                           : theme.colorScheme.onSurfaceVariant,
@@ -124,7 +124,7 @@ class PoseDetectionViewState extends StatefulPageState {
               ),
               const SizedBox(height: 40),
               Text(
-                'Select number of repetitions (1-20):',
+                'Zvoľte počet opakovaní (1-20):',
                 style: headlineStyle,
                 textAlign: TextAlign.center,
               ),
@@ -164,7 +164,7 @@ class PoseDetectionViewState extends StatefulPageState {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 60.0),
                   child: Text(
-                    "Please select an arm first.",
+                    "Prosím zvoľte najskôr ruku.",
                     style: bodyTextStyle.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6)),
                   ),
                 ),
@@ -183,7 +183,7 @@ class PoseDetectionViewState extends StatefulPageState {
                   foregroundColor: theme.colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 ),
-                child: Text('Start Exercise', style: buttonTextStyle.copyWith(color: theme.colorScheme.onPrimary)),
+                child: Text('Začať cvik', style: buttonTextStyle.copyWith(color: theme.colorScheme.onPrimary)),
               ),
             ],
           ),
@@ -212,7 +212,7 @@ class PoseDetectionViewState extends StatefulPageState {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Reps: ${viewModel.repetitions}',
+                  'Dosiahnuté opakovania: ${viewModel.repetitions}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -221,7 +221,7 @@ class PoseDetectionViewState extends StatefulPageState {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Correct rep: ${!viewModel.outOfLimits}',
+                  'Správne vykonávaný cvik: ${!viewModel.outOfLimits}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -242,7 +242,7 @@ class PoseDetectionViewState extends StatefulPageState {
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        title: Text('Exercise Complete', style: TextStyle(color: theme.colorScheme.onPrimary)),
+        title: Text('Cvičenie dokončené', style: TextStyle(color: theme.colorScheme.onPrimary)),
         backgroundColor: theme.colorScheme.primary,
         automaticallyImplyLeading: false, // No back button needed here usually
       ),
@@ -260,7 +260,7 @@ class PoseDetectionViewState extends StatefulPageState {
               ),
               const SizedBox(height: 24.0),
               Text(
-                'Exercise Finished Successfully! Click back in upper left corner to return to the main menu ',
+                'Cvičenie bolo úspešne dokončené. Klikni na šípku vľavo hore na vrátenie sa do hlavného menu.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   color: theme.colorScheme.onBackground,
