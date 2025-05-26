@@ -20,7 +20,7 @@ class RehabExerciseView extends StatelessWidget {
 
   Future<void> saveDataToCsv(List imuData, String fileName) async {
     final directory = await getExternalStorageDirectory(); // externý adresár
-    final path = '${directory!.path}/$fileName.csv';
+    final path = '${directory!.path}/$fileName.csv';  // cesta pre csv
 
     List<List<dynamic>> csvData = [
       ["timestamp", "x", "y", "z"]
