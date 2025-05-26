@@ -127,74 +127,74 @@ class _AcqViewState extends StatefulPageState {
         ),
 
 
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Impact Threshold: ${viewModel.impactThreshold.toStringAsFixed(1)}"),
-              Slider(
-                min: 5,
-                max: 30,
-                divisions: 25,
-                value: viewModel.impactThreshold,
-                onChanged: viewModel.on
-                    ? null // Disable while measuring
-                    : (value) {
-                  viewModel.setImpactThreshold(value);
-                },
-              ),
-              SizedBox(height: 12),
-              Text("Shaking Variance Threshold: ${viewModel.shakingVarianceThreshold.toStringAsFixed(2)}"),
-              Slider(
-                min: 0.5,
-                max: 10.0,
-                divisions: 95,
-                value: viewModel.shakingVarianceThreshold,
-                onChanged: viewModel.on
-                    ? null // Disable while measuring
-                    : (value) {
-                  viewModel.setShakingVarianceThreshold(value);
-                },
-              ),
-            ],
-          ),
-        ),
-
-
-        // Image with colored border (based on state)
-        // Center(
-        //   child: Container(
-        //     padding: const EdgeInsets.all(16),
-        //     margin: const EdgeInsets.symmetric(horizontal: 24),
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       borderRadius: BorderRadius.circular(16),
-        //       border: Border.all(
-        //         color: viewModel.shouldShowImpactWarning()
-        //             ? Colors.red
-        //             : viewModel.shouldShowShakingWarning()
-        //             ? Colors.blue
-        //             : Colors.transparent,
-        //         width: 5,
+        // Container(
+        //   padding: const EdgeInsets.all(12),
+        //   decoration: BoxDecoration(
+        //     color: Colors.grey.shade100,
+        //     borderRadius: BorderRadius.circular(12),
+        //   ),
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       Text("Impact Threshold: ${viewModel.impactThreshold.toStringAsFixed(1)}"),
+        //       Slider(
+        //         min: 5,
+        //         max: 30,
+        //         divisions: 25,
+        //         value: viewModel.impactThreshold,
+        //         onChanged: viewModel.on
+        //             ? null // Disable while measuring
+        //             : (value) {
+        //           viewModel.setImpactThreshold(value);
+        //         },
         //       ),
-        //       boxShadow: [
-        //         BoxShadow(
-        //           color: Colors.black26,
-        //           blurRadius: 10,
-        //           offset: Offset(0, 4),
-        //         ),
-        //       ],
-        //     ),
-        //     child: Image.asset(viewModel.on
-        //         ? 'assets/eating_rehab/measure.gif'
-        //         : 'assets/eating_rehab/click.png'),
+        //       SizedBox(height: 12),
+        //       Text("Shaking Variance Threshold: ${viewModel.shakingVarianceThreshold.toStringAsFixed(2)}"),
+        //       Slider(
+        //         min: 0.5,
+        //         max: 10.0,
+        //         divisions: 95,
+        //         value: viewModel.shakingVarianceThreshold,
+        //         onChanged: viewModel.on
+        //             ? null // Disable while measuring
+        //             : (value) {
+        //           viewModel.setShakingVarianceThreshold(value);
+        //         },
+        //       ),
+        //     ],
         //   ),
         // ),
+
+
+        //Image with colored border (based on state)
+        Center(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: viewModel.shouldShowImpactWarning()
+                    ? Colors.red
+                    : viewModel.shouldShowShakingWarning()
+                    ? Colors.blue
+                    : Colors.transparent,
+                width: 5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Image.asset(viewModel.on
+                ? 'assets/eating_rehab/measure.gif'
+                : 'assets/eating_rehab/click.png'),
+          ),
+        ),
 
         // Countdown display (3, 2, 1)
         StreamBuilder<String>(

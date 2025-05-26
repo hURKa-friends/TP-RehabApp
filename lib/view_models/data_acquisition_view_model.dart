@@ -24,17 +24,17 @@ class AcqViewModel extends ChangeNotifier {
   // Repetition detection
   int repetitions = 0;
   bool wasAboveThreshold = false;
-  final double threshold = 2.5;
+  final double threshold = 4.5;
   List<DateTime> repetitionTimestamps = [];
 
   // Impact detection
-  //final double impactThreshold = 50.0;
+  //final double impactThreshold = 20.0;
   bool impactDetected = false;
   int impactCount = 0;
 
   // Shaking detection
   final int shakingWindowSize = 40; // ~1 second
-  //final double shakingVarianceThreshold = 5.0;
+  //final double shakingVarianceThreshold = 4.0;
   bool isShaking = false;
   DateTime? _shakingStartedAt;
   Duration totalShakingDuration = Duration.zero;
@@ -51,8 +51,8 @@ class AcqViewModel extends ChangeNotifier {
 
   // String? ownerId;
 
-  double impactThreshold = 15.0;
-  double shakingVarianceThreshold = 1.3;
+  double impactThreshold = 25.0;
+  double shakingVarianceThreshold = 4.0;
 
   void setImpactThreshold(double value) {
     impactThreshold = value;
