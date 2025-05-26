@@ -65,21 +65,21 @@ flutter:
     - assets/images/fingerTrackingWorkInProgress.png
     - assets/images/CopperBusines.png
     #Dont look
-    - assets/images/Boop.png
-    - assets/images/Chwaaat.png
-    - assets/images/HellYeah.png
+    #- assets/images/Boop.png
+    #- assets/images/Chwaaat.png
+    #- assets/images/HellYeah.png
     - assets/images/LookiLooki.png
     - assets/images/NoSnacksOnGasStation.png
-    - assets/images/NotTodayPal.png
-    - assets/images/RidingIsThaDream.png
-    - assets/images/SickCoolAwsomeSkills.png
-    - assets/images/SmellingSomething.png
-    - assets/images/SpeakingHere.png
-    - assets/images/StarStrucke.png
-    - assets/images/Svippy.png
-    - assets/images/thaBombSquad.png
-    - assets/images/ThaBusines.png
-    - assets/images/WhoLovesTheCaterpilar.png
+    #- assets/images/NotTodayPal.png
+    #- assets/images/RidingIsThaDream.png
+    #- assets/images/SickCoolAwsomeSkills.png
+    #- assets/images/SmellingSomething.png
+    #- assets/images/SpeakingHere.png
+    #- assets/images/StarStrucke.png
+    #- assets/images/Svippy.png
+    #- assets/images/thaBombSquad.png
+    #- assets/images/ThaBusines.png
+    #- assets/images/WhoLovesTheCaterpilar.png
     - assets/images/YourPilotIsSpoking.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
