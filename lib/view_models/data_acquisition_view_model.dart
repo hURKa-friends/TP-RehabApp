@@ -26,6 +26,8 @@ class AcqViewModel extends ChangeNotifier {
   bool wasAboveThreshold = false;
   final double threshold = 4.5;
   List<DateTime> repetitionTimestamps = [];
+  final Duration repetitionCooldown = Duration(milliseconds: 300);
+  DateTime? lastRepetitionTime;
 
   // Impact detection
   double impactThreshold = 20.0;
@@ -104,12 +106,13 @@ class AcqViewModel extends ChangeNotifier {
   }
 
   void detectRepetition(double currentY) {
-    if (currentY > threshold && !wasAboveThreshold) {
-      repetitions++;
-      repetitionTimestamps.add(DateTime.now()); // Track when repetition happens
-      wasAboveThreshold = true;
-    } else if (currentY < threshold) {
-      wasAboveThreshold = false;
+    final now = DateTime.now();
+
+    if (currentY > threshold) {
+      if (lastRepetitionTime == null || now.difference(lastRepetitionTime!) > repetitionCooldown) {
+        repetitions++;
+        lastRepetitionTime = now;
+      }
     }
   }
 
