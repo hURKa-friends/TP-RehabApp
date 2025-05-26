@@ -5,7 +5,7 @@ import 'dart:math';
 
 class ExerciseBallViewModel extends ChangeNotifier {
 
-  bool debuggingMode = true;
+  bool debuggingMode = false;
 
   ExerciseBallModel exerciseBallModel;
   Color _currentColor = Colors.blue; // Default color
@@ -352,12 +352,23 @@ class ExerciseBallViewModel extends ChangeNotifier {
 
       for (final point in measuredPoints) {
         double minDistance = double.infinity;
+        double minDistanceCenterOfLine = double.infinity;
 
         for (int i = 0; i < optimalTrajectory.length - 1; i++) {
           final p1 = optimalTrajectory[i];
           final p2 = optimalTrajectory[i + 1];
           final distance = _perpendicularDistance(point, p1, p2);
+          final pointToLineDistance =(point - Offset(
+            (p1.dx + p2.dx) / 2,
+            (p1.dy + p2.dy) / 2,
+          )).distance;
+          /*
           if (distance < minDistance) {
+            minDistance = distance;
+          }
+          */
+          if(pointToLineDistance < minDistanceCenterOfLine){
+            minDistanceCenterOfLine = pointToLineDistance;
             minDistance = distance;
           }
         }

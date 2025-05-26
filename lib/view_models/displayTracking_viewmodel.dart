@@ -5,7 +5,7 @@ import 'package:rehab_app/view_models/exercise_ball_viewmodel.dart';
 
 class DisplayTrackingViewModel extends ChangeNotifier {
 
-  bool debuggingMode = true;
+  bool debuggingMode = false;
 
   String msgDisplayTrackingViewModel = "";
   List<FingerModel> fingers = [];
