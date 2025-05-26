@@ -12,6 +12,25 @@ class KneeRehabMainViewModel extends ChangeNotifier {
   int gyroIndex = 0, acclIndex = 0;
   String? name;
 
+// Filtered values (init to 0)
+  double filteredGyroX = 0.0;
+  double filteredAcclZ = 0.0;
+
+// Rep state
+  bool goingUp = false;
+  bool repInProgress = false;
+  int repCount = 0;
+
+// Filter parameter
+  final double alpha = 0.8;
+
+// Thresholds (tweak as needed)
+  final double angularVelocityThreshold = 1.2; // rad/s
+  final double returnThreshold = 0.4;
+
+  DateTime? legUpTime;
+  final Duration holdDuration = Duration(milliseconds: 1000);
+
   late String? UOID;
   KneeRehabMainViewModel() {
     // Default constructor
@@ -49,12 +68,37 @@ class KneeRehabMainViewModel extends ChangeNotifier {
     }
     gyroData.add(data);
 
+    // Filter
+    filteredGyroX = alpha * filteredGyroX + (1 - alpha) * data.x;
+    double angularVelocity = filteredGyroX.abs();
+
+    // Leg going up
+    if (!repInProgress && angularVelocity > angularVelocityThreshold) {
+      goingUp = true;
+      repInProgress = true;
+      legUpTime = DateTime.now();
+    }
+    // Leg going down
+    else if (repInProgress && goingUp && angularVelocity < returnThreshold) {
+      final now = DateTime.now();
+      final upDuration = now.difference(legUpTime ?? now);
+
+      if (upDuration >= holdDuration) {
+        repCount++;
+        //debugPrint("Repetition count: $repCount");
+      }
+
+      // Reset state regardless
+      goingUp = false;
+      repInProgress = false;
+    }
+
+    // === Logging ===
     if (start != 0) {
       bool wasSuccessful = LoggerService().log(
           channel: LogChannel.csv,
           ownerId: UOID!,
-          data:
-          "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}, "
+          data: "${gyroData.last.timeStamp}, ${gyroData.last.x}, ${gyroData.last.y}, ${gyroData.last.z}, "
               "${acclData.last.x}, ${acclData.last.y}, ${acclData.last.z}, $name\n");
     }
 

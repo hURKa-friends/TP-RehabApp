@@ -132,6 +132,10 @@ class KneeRehabViewState extends StatefulPageState {
                     ),
                     child: const Text("End exercise.")),
               ),
+            Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text("Number of repetitions: ${viewModel.repCount}")
+            ),
           ],
         ),
       ),
