@@ -68,8 +68,8 @@ flutter:
     - assets/arm_rehab/images/settings/arm_select/right_hand.jpg
     - assets/arm_rehab/images/settings/pos_select/shoulder.png
     - assets/arm_rehab/images/settings/pos_select/wrist.png
-    - assets/arm_rehab/sounds/beeps/short_beep.m4a
-    - assets/arm_rehab/sounds/beeps/long_beep.m4a
+    - assets/arm_rehab/sounds/beeps/short_beep.mp3
+    - assets/arm_rehab/sounds/beeps/long_beep.mp3
     - assets/arm_rehab/images/exercises/front_raises/front_raises.gif
     - assets/arm_rehab/images/exercises/front_raises/front_raises0.png
     - assets/arm_rehab/images/exercises/front_raises/front_raises1.png
@@ -82,9 +82,9 @@ flutter:
     - assets/arm_rehab/images/exercises/drinking/drinking.gif
     - assets/arm_rehab/images/exercises/drinking/drinking0.png
     - assets/arm_rehab/images/exercises/drinking/drinking1.png
-    #- assets/arm_rehab/images/exercises/turning_glass/turning_glass.gif
-    #- assets/arm_rehab/images/exercises/turning_glass/turning_glass0.png
-    #- assets/arm_rehab/images/exercises/turning_glass/turning_glass1.png
+    - assets/arm_rehab/images/exercises/turning_glass/turning_glass.gif
+    - assets/arm_rehab/images/exercises/turning_glass/turning_glass0.jpg
+    - assets/arm_rehab/images/exercises/turning_glass/turning_glass1.jpg
     - assets/arm_rehab/images/flex.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see

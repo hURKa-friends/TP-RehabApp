@@ -95,8 +95,8 @@ class ExerciseStartView extends StatelessPage {
                     },
                   5 =>
                     switch (exerciseStartViewModel.nextSetpoint) {
-                      0 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass0.png",
-                      1 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.png",
+                      0 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass0.jpg",
+                      1 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.jpg",
                       int() => "ErrorImage", // Out of range, this shouldn't happen
                     },
                   int() => "ErrorImage", // Out of range, this shouldn't happen
@@ -110,7 +110,7 @@ class ExerciseStartView extends StatelessPage {
                 style: headerStyle(),
               ),
               space(50),
-              Text("Gravity acceleration"),
+              /*Text("Gravity acceleration"),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,7 +139,7 @@ class ExerciseStartView extends StatelessPage {
                 children: [
                   Text("Time: ${exerciseStartViewModel.currentTimestamp.difference(exerciseStartViewModel.lastTimestamp).inMilliseconds / 1000}")
                 ],
-              ),
+              ),*/
             ],
           ),
       ),

@@ -57,8 +57,8 @@ class ExerciseSetpointsViewModel extends ChangeNotifier {
 
     _playerShort = AudioPlayer();
     _playerLong = AudioPlayer();
-    await _playerShort.setSource(AssetSource("arm_rehab/sounds/beeps/short_beep.m4a"));
-    await _playerLong.setSource(AssetSource("arm_rehab/sounds/beeps/long_beep.m4a"));
+    await _playerShort.setSource(AssetSource("arm_rehab/sounds/beeps/short_beep.mp3"));
+    await _playerLong.setSource(AssetSource("arm_rehab/sounds/beeps/long_beep.mp3"));
     await _playerShort.setReleaseMode(ReleaseMode.stop);
     await _playerLong.setReleaseMode(ReleaseMode.stop);
 

@@ -97,16 +97,16 @@ class ExerciseSetpointsView extends StatelessPage {
                     },
                   5 =>
                     switch (exerciseSetpointsViewModel.nextSetpoint) {
-                      0 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass0.png",
-                      1 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.png",
-                      int() => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.png",
+                      0 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass0.jpg",
+                      1 => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.jpg",
+                      int() => "assets/arm_rehab/images/exercises/turning_glass/turning_glass1.jpg",
                     },
                   int() => "ErrorImage", // Out of range, this shouldn't happen
                   },
                 ),
               ),
               space(50),
-              Row(
+              /*Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -117,7 +117,7 @@ class ExerciseSetpointsView extends StatelessPage {
                   Text("Pitch: ${Angles.currentAngleY.toStringAsFixed(3)}"),
                   Text("Yaw: ${Angles.currentAngleZ.toStringAsFixed(3)}"),
                 ],
-              ),
+              ),*/
             ],
           ),
       ),

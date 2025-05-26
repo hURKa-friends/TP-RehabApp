@@ -199,12 +199,12 @@ class ExerciseSummaryView extends StatelessPage {
                     ],
                   ),
                   space(15),
-                  Text(
+                  /*Text(
                     "DAV (Difference Acceleration Vector): ${exerciseSummaryViewModel.calculateDAV(ArmImuData.userAcclData).toStringAsFixed(4)}",
                     textAlign: TextAlign.center,
                     style: buttonTextStyle(),
                   ),
-                  space(15),
+                  space(15),*/
                   Text(
                     "LDLJ (Log Dimensionless Jerk): ${exerciseSummaryViewModel.calculateLDLJ(ArmImuData.acclData).toStringAsFixed(4)}",
                     textAlign: TextAlign.center,
