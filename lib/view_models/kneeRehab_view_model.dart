@@ -9,27 +9,27 @@ class KneeRehabMainViewModel extends ChangeNotifier {
   late List<ImuSensorData> gyroData;
   late List<ImuSensorData> acclData;
   int? start = 0;
+  int firstStarted = 0;
   int gyroIndex = 0, acclIndex = 0;
   String? name;
+  int repCount = 0;
 
 // Filtered values (init to 0)
   double filteredGyroX = 0.0;
   double filteredAcclZ = 0.0;
 
-// Rep state
-  bool goingUp = false;
+  DateTime? legUpTimestamp;
   bool repInProgress = false;
-  int repCount = 0;
+  bool isHoldingAtTop = false;
+
+// Configurable thresholds
+  final double upwardThreshold = -1.2; // leg going up = negative gyroX
+  final double downwardThreshold = 1.2; // leg going down = positive gyroX
+  final double holdThreshold = 0.4; // for pause detection
+  final Duration holdDuration = Duration(milliseconds: 500);
 
 // Filter parameter
   final double alpha = 0.8;
-
-// Thresholds (tweak as needed)
-  final double angularVelocityThreshold = 1.2; // rad/s
-  final double returnThreshold = 0.4;
-
-  DateTime? legUpTime;
-  final Duration holdDuration = Duration(milliseconds: 1000);
 
   late String? UOID;
   KneeRehabMainViewModel() {
@@ -54,6 +54,7 @@ class KneeRehabMainViewModel extends ChangeNotifier {
   void onClose() {
     // Here you can call ViewModel disposal code.
     start = 0;
+    repCount = 0;
     name = null;
     SensorService().stopGyroDataStream();
     SensorService().stopAcclDataStream();
@@ -68,33 +69,47 @@ class KneeRehabMainViewModel extends ChangeNotifier {
     }
     gyroData.add(data);
 
-    // Filter
-    filteredGyroX = alpha * filteredGyroX + (1 - alpha) * data.x;
-    double angularVelocity = filteredGyroX.abs();
+    if (start != 0) {
+      // Filtered value
+      filteredGyroX = alpha * filteredGyroX + (1 - alpha) * data.x;
+      double angularVelocity = filteredGyroX;
 
-    // Leg going up
-    if (!repInProgress && angularVelocity > angularVelocityThreshold) {
-      goingUp = true;
-      repInProgress = true;
-      legUpTime = DateTime.now();
-    }
-    // Leg going down
-    else if (repInProgress && goingUp && angularVelocity < returnThreshold) {
-      final now = DateTime.now();
-      final upDuration = now.difference(legUpTime ?? now);
-
-      if (upDuration >= holdDuration) {
-        repCount++;
-        //debugPrint("Repetition count: $repCount");
+      // 1. Leg going up (negative X)
+      if (!repInProgress && angularVelocity < upwardThreshold) {
+        repInProgress = true;
+        isHoldingAtTop = false;
+        legUpTimestamp = null;
+        //print("Leg going up — rep started");
       }
 
-      // Reset state regardless
-      goingUp = false;
-      repInProgress = false;
-    }
+      // 2. Pause at top: nearly zero angular velocity
+      if (repInProgress && !isHoldingAtTop && angularVelocity > -holdThreshold && angularVelocity < holdThreshold) {
+        legUpTimestamp = DateTime.now();
+        isHoldingAtTop = true;
+        //print("Leg paused at top — hold timer started");
+      }
 
-    // === Logging ===
-    if (start != 0) {
+      // 3. Held long enough — count the rep
+      if (repInProgress && isHoldingAtTop && legUpTimestamp != null) {
+        final elapsed = DateTime.now().difference(legUpTimestamp!);
+        if (elapsed >= holdDuration) {
+          repCount++;
+          repInProgress = false;
+          isHoldingAtTop = false;
+          legUpTimestamp = null;
+          //print("✅ Rep counted: $repCount");
+        }
+      }
+
+      // 4. Cancel rep if leg goes down too early (positive gyroX)
+      if (repInProgress && angularVelocity > downwardThreshold) {
+        //print("Leg going down — rep canceled");
+        repInProgress = false;
+        isHoldingAtTop = false;
+        legUpTimestamp = null;
+      }
+
+      // === Logging ===
       bool wasSuccessful = LoggerService().log(
           channel: LogChannel.csv,
           ownerId: UOID!,
