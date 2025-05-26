@@ -28,13 +28,14 @@ class AcqViewModel extends ChangeNotifier {
   List<DateTime> repetitionTimestamps = [];
 
   // Impact detection
-  //final double impactThreshold = 20.0;
+  double impactThreshold = 20.0;
   bool impactDetected = false;
   int impactCount = 0;
+  final Duration impactCooldown = Duration(seconds: 1);
 
   // Shaking detection
   final int shakingWindowSize = 40; // ~1 second
-  //final double shakingVarianceThreshold = 4.0;
+  double shakingVarianceThreshold = 4.0;
   bool isShaking = false;
   DateTime? _shakingStartedAt;
   Duration totalShakingDuration = Duration.zero;
@@ -48,11 +49,7 @@ class AcqViewModel extends ChangeNotifier {
 
   DateTime? measurementStartTime;
 
-
   // String? ownerId;
-
-  double impactThreshold = 25.0;
-  double shakingVarianceThreshold = 4.0;
 
   void setImpactThreshold(double value) {
     impactThreshold = value;
@@ -118,13 +115,17 @@ class AcqViewModel extends ChangeNotifier {
 
   void detectImpact(ImuSensorData accl) {
     double magnitude = sqrt(accl.x * accl.x + accl.y * accl.y + accl.z * accl.z);
+    final now = DateTime.now();
+
     if (magnitude > impactThreshold) {
-      impactCount++;
-      lastImpactTime = DateTime.now();
+      if (lastImpactTime == null || now.difference(lastImpactTime!) > impactCooldown) {
+        impactCount++;
+        lastImpactTime = now;
+      }
     }
 
     showImpactWarning = lastImpactTime != null &&
-        DateTime.now().difference(lastImpactTime!) < alertDuration;
+        now.difference(lastImpactTime!) < alertDuration;
   }
 
   void detectShaking() {
