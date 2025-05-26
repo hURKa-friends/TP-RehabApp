@@ -102,15 +102,6 @@ class DisplayTrackingViewModel extends ChangeNotifier {
     }
   }
 
-  void processDataOfExercise(){
-    //Fingers and they trajectories
-
-
-    //Exercise ball
-
-
-  }
-
   void onPointerDown(PointerEvent event) {
     ///Back assignment of the fingers
     if(displayTrackingModel.fingersBackAssignment){

@@ -112,6 +112,8 @@ class _OptimalTrajectoryPainter extends CustomPainter {
 class FingersTrackingExercisesViewState extends StatefulPageState {
   DisplayTrackingViewModel? viewModel;
 
+  bool noFunny = true;
+
   String data = "";
   double dataTextSize = 23;
   ///Stylized parameters
@@ -186,8 +188,13 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: exerciseBallViewModel.currentColor.withOpacity(0.8),
+          //color: exerciseBallViewModel.currentColor.withOpacity(0.8),
+          color: Colors.transparent,
           shape: exerciseBallViewModel.exerciseBallModel.objectType == '1' ? BoxShape.circle : BoxShape.rectangle,
+          border: Border.all(
+            color: exerciseBallViewModel.currentColor.withOpacity(0.8), // Edge color
+            width: 25.0, // Thickness of the edge
+          )
         ),
         child: label != null
             ? Center(
@@ -201,6 +208,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
       ),
     );
   }
+
   Widget _buildExerciseBallGoalMarker(ExerciseBallViewModel exerciseBallViewModel){
     return Positioned(
       left: exerciseBallViewModel.goalPosition.dx - 25,
@@ -283,25 +291,28 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
         body: Stack(
           children: [
             //Background images
-            Positioned.fill(
+            noFunny
+                ? SizedBox.shrink() // When `noFunny` is true, show nothing
+                : Positioned.fill(
               child: Opacity(
-                  opacity: 0.2,
-                  child:Image.asset(
-                    'assets/images/fingerTrackingWorkInProgress.png', //Tha image
-                    fit: BoxFit.cover,
-                  )
+                opacity: 0.2,
+                child: Image.asset(
+                  'assets/images/fingerTrackingWorkInProgress.png', // The image
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-
             //Foreground content - buttons
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ///Buttons ---------------------------------------------------
-                  Text(
-                    "Choose the parameters of the exercise",
-                    style: TextStyle(fontSize: dataTextSize, color: Colors.green[500]),
+                  Center(
+                    child: Text(
+                      "Choose the parameters of the exercise",
+                      style: TextStyle(fontSize: dataTextSize, color: Colors.green[500]),
+                    ),
                   ),
                   SizedBox(height: buttonSpacing * 2),
 
@@ -309,9 +320,9 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildHandButton("Right"),
-                      SizedBox(width: 16),
                       _buildHandButton("Left"),
+                      SizedBox(width: 16),
+                      _buildHandButton("Right"),
                     ],
                   ),
 
@@ -382,58 +393,26 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                     ),
                     SizedBox(height: 30),
                     Text(
-                      "Mean Squared Error: ${viewmodel.exerciseBallViewModel.exerciseResultError}",
+                      "Mean Squared Error: ${viewmodel.exerciseBallViewModel.exerciseResultError.toStringAsFixed(2)}",
                       style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      viewmodel.exerciseBallViewModel.exerciseResultMark,
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: _getColorByMark(viewmodel.exerciseBallViewModel.exerciseResultMark),
+                      ),
                     ),
                     SizedBox(height: 20),
 
                     ///Experimental graph [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
-                    /*
-                    Expanded(
-                      child: SfCartesianChart(
-                        legend: Legend(isVisible: true),
-                        primaryXAxis: NumericAxis(
-                          title: AxisTitle(text: 'Point (Index)'),
-                          interval: 1, // Ensures all indices are displayed
-                          edgeLabelPlacement: EdgeLabelPlacement.shift, // Prevents label overlap
-                        ),
-                        primaryYAxis: NumericAxis(
-                          title: AxisTitle(text: 'Error Value'),
-                          minimum: viewmodel.exerciseBallViewModel.exerciseResultErrorList.isNotEmpty
-                              ? viewmodel.exerciseBallViewModel.exerciseResultErrorList.reduce((a, b) => a < b ? a : b) - 1
-                              : 0,
-                          maximum: viewmodel.exerciseBallViewModel.exerciseResultErrorList.isNotEmpty
-                              ? viewmodel.exerciseBallViewModel.exerciseResultErrorList.reduce((a, b) => a > b ? a : b) + 1
-                              : 1,
-                        ),
-                        series: <LineSeries<_ErrorData, int>>[
-                          LineSeries<_ErrorData, int>(
-                            name: 'Error Values',
-                            dataSource: viewmodel.exerciseBallViewModel.exerciseResultErrorList
-                                .asMap()
-                                .entries
-                                .map((entry) => _ErrorData(index: entry.key, error: entry.value))
-                                .toList(),
-                            xValueMapper: (_ErrorData data, _) => data.index, // X-axis: Point (Index)
-                            yValueMapper: (_ErrorData data, _) => data.error, // Y-axis: Error Value
-                            animationDuration: 0,
-                            markerSettings: MarkerSettings(
-                              isVisible: true, // Show markers for all points
-                              shape: DataMarkerType.circle,
-                              width: 8,
-                              height: 8,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    */
                     Expanded(
                       child: SfCartesianChart(
                         legend: Legend(isVisible: true),
                         primaryXAxis: NumericAxis(
                           title: AxisTitle(text: 'Point'),
-                          interval: 1, // Ensures all indices are displayed
+                          interval: 100, // Ensures all indices are displayed
                           edgeLabelPlacement: EdgeLabelPlacement.shift, // Prevents label overlap
                         ),
                         primaryYAxis: NumericAxis(
@@ -468,8 +447,8 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
                             markerSettings: MarkerSettings(
                               isVisible: true, // Show markers for all points
                               shape: DataMarkerType.circle,
-                              width: 8,
-                              height: 8,
+                              width: 1,
+                              height: 1,
                             ),
                           );
                         })
@@ -495,6 +474,7 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
           }
 
           // Otherwise, show the finger tracking exercise UI
+
           return Scaffold(
             body: Listener(
               onPointerDown: viewmodel.onPointerDown,
@@ -504,11 +484,13 @@ class FingersTrackingExercisesViewState extends StatefulPageState {
               child: Stack(
                 children: [
                   // Background
-                  Positioned.fill(
+                  noFunny
+                      ? SizedBox.shrink() // When `noFunny` is true, show nothing
+                      : Positioned.fill(
                     child: Opacity(
-                      opacity: 0.05,
+                      opacity: 0.2,
                       child: Image.asset(
-                        'assets/images/CopperBusines.png',
+                        'assets/images/fingerTrackingWorkInProgress.png', // The image
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -660,3 +642,94 @@ class _ErrorData {
 
   _ErrorData({required this.index, required this.error});
 }
+Color _getColorByMark(String mark) {
+  switch (mark) {
+    case "A":
+      return Colors.green;
+    case "B":
+      return Colors.lightGreen;
+    case "C":
+      return Colors.yellow;
+    case "D":
+      return Colors.orange;
+    case "E":
+    case "F":
+      return Colors.red;
+    default:
+      return Colors.black; // Default color for invalid marks
+  }
+}
+
+/*
+*return Scaffold(
+            body: Listener(
+              onPointerDown: viewmodel.onPointerDown,
+              onPointerMove: viewmodel.onPointerMove,
+              onPointerUp: viewmodel.onPointerUp,
+              behavior: HitTestBehavior.translucent,
+              child: Stack(
+                children: [
+                  // Background
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: 0.05,
+                      child: Image.asset(
+                        'assets/images/CopperBusines.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: () => setState(() => data = "Tapped!"),
+                    onDoubleTap: () => setState(() => data = "Double Tapped!"),
+                    onHorizontalDragEnd: (details) {
+                      setState(() => data =
+                      details.primaryVelocity! < 0 ? "Swiped Left!" : "Swiped Right!");
+                    },
+                    child: Center(
+                      child: Text(
+                        data,
+                        style: TextStyle(fontSize: dataTextSize, color: Colors.black12),
+                      ),
+                    ),
+                  ),
+
+                  // Finger positions
+                  ...viewmodel.fingers.map((finger) {
+                    if (finger.pointerFingerTrajectory.isEmpty) return const SizedBox.shrink();
+                    final lastPoint = finger.pointerFingerTrajectory.last;
+                    final displayOffset = viewmodel.displayTrackingModel.displayOffset;
+
+                    return Positioned(
+                      left: lastPoint.dx - fingerMarkerSize.dx / 2,
+                      top: lastPoint.dy - displayOffset.dy - fingerMarkerSize.dy / 2,
+                      child: _buildFingerMarkerNameTag(finger.fingerName),
+                    );
+                  }),
+
+                  // Exercise Ball and Goal
+                  _buildExerciseBallMarker(viewmodel.exerciseBallViewModel, viewmodel.displayTrackingModel, label: "-"),
+                  _buildExerciseBallGoalMarker(viewmodel.exerciseBallViewModel),
+
+                  //Finger Trajectory Paint
+                  Opacity(
+                    opacity: 0.3,
+                    child: CustomPaint(
+                      painter: _DynamicTrajectoryPainter(viewmodel),
+                    ),
+                  ),
+
+                  // Optimal Trajectory Paint
+                  Opacity(
+                    opacity: 0.8,
+                    child: CustomPaint(
+                      painter: _OptimalTrajectoryPainter(viewmodel.exerciseBallViewModel.optimalTrajectory),
+                      child: Container(), // Acts as a canvas
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+* */

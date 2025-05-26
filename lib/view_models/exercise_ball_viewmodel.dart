@@ -121,6 +121,9 @@ class ExerciseBallViewModel extends ChangeNotifier {
     // Set the last point as the goal position
     goalPosition = optimalTrajectory.last;
 
+
+    print("Optimal Trajectory: $optimalTrajectory");
+
     // Update the exercise ball's current position
     exerciseBallModel.currentPosition = currentPosition;
 
@@ -170,13 +173,16 @@ class ExerciseBallViewModel extends ChangeNotifier {
 
     //calculateTrajectoryError();
 
-    calculateTrajectoryXError();
+    computeAndStorePerpendicularErrors();
+
+    exerciseResultMark=grading();
 
     print("Exercise ending turn on");
     
     notifyListeners();
   }
 
+  /*
   double _squaredDistanceToSegment(Offset p, Offset a, Offset b) {
     final dx = b.dx - a.dx;
     final dy = b.dy - a.dy;
@@ -196,7 +202,6 @@ class ExerciseBallViewModel extends ChangeNotifier {
 
     return (p - projection).distanceSquared;
   }
-
   void calculateTrajectoryError() {
     print("Calculation");
 
@@ -239,7 +244,6 @@ class ExerciseBallViewModel extends ChangeNotifier {
     print("Calculation Done");
     notifyListeners();
   }
-
   double _squaredXErrorAtY(Offset p, Offset a, Offset b) {
     if ((b.dy - a.dy).abs() < 1e-6) {
       // Avoid division by zero if segment is flat in time
@@ -253,7 +257,6 @@ class ExerciseBallViewModel extends ChangeNotifier {
     double error = p.dx - idealX;
     return error * error;
   }
-
   void calculateTrajectoryXError(){
     print("Calculation");
 
@@ -304,6 +307,160 @@ class ExerciseBallViewModel extends ChangeNotifier {
     print("All Measurements: $allMeasurements");
     print("Calculation Done");
     notifyListeners();
+  }
+  */
+
+  /*
+  void computeAndStorePerpendicularErrors() {
+    //Adding up somehow
+    if (allTrajectoriesMeasurements.isEmpty || optimalTrajectory.isEmpty) return;
+
+    allMeasurements.clear();
+
+    for (final measuredPoints in allTrajectoriesMeasurements) {
+      final List<double> errors = [];
+
+      for (final point in measuredPoints) {
+        double minDistance = double.infinity;
+
+        for (int i = 0; i < optimalTrajectory.length - 1; i++) {
+          final p1 = optimalTrajectory[i];
+          final p2 = optimalTrajectory[i + 1];
+          //final distance = _perpendicularDistance(point, p1, p2);
+          final distance = _perpendicularDistanceUsingAngle(point, p1, p2);
+          if (distance < minDistance) {
+            minDistance = distance;
+          }
+        }
+
+        errors.add(minDistance);
+      }
+
+      allMeasurements.add(errors);
+    }
+
+  }
+   */
+
+  void computeAndStorePerpendicularErrors() {
+    if (allTrajectoriesMeasurements.isEmpty || optimalTrajectory.isEmpty) return;
+
+    allMeasurements.clear();
+
+    for (final measuredPoints in allTrajectoriesMeasurements) {
+      final List<double> errors = [];
+
+      for (final point in measuredPoints) {
+        double minDistance = double.infinity;
+
+        for (int i = 0; i < optimalTrajectory.length - 1; i++) {
+          final p1 = optimalTrajectory[i];
+          final p2 = optimalTrajectory[i + 1];
+          final distance = _perpendicularDistance(point, p1, p2);
+          if (distance < minDistance) {
+            minDistance = distance;
+          }
+        }
+
+        // Store the minimum distance for this point
+        errors.add(minDistance);
+      }
+
+      // Store the errors for this trajectory
+      allMeasurements.add(errors);
+    }
+
+    exerciseResultError= calculateMeanError();
+
+  }
+
+  double calculateMeanError() {
+    if (allMeasurements.isEmpty) return 0.0;
+
+    double totalError = 0.0;
+    int totalPoints = 0;
+
+    for (final measurement in allMeasurements) {
+      totalError += measurement.reduce((a, b) => a + b); // Sum of errors in the current measurement
+      totalPoints += measurement.length; // Count of points in the current measurement
+    }
+
+    return totalPoints > 0 ? totalError / totalPoints : 0.0; // Overall mean error
+  }
+
+  double _perpendicularDistanceUsingAngle(Offset p, Offset a, Offset b) {
+
+    final ab = b - a; // Vector from a to b
+    final ap = p - a; // Vector from a to p
+
+    final abLength = ab.distance; // Magnitude of ab
+    final apLength = ap.distance; // Magnitude of ap
+
+    if (abLength == 0.0) return apLength; // If a == b, return distance from p to a
+
+    // Dot product of ab and ap
+    final dotProduct = ab.dx * ap.dx + ab.dy * ap.dy;
+
+    // Cosine of the angle between ab and ap
+    final cosTheta = dotProduct / (abLength * apLength);
+
+    // Sine of the angle using sin^2(theta) + cos^2(theta) = 1
+    final sinTheta = sqrt(1 - cosTheta * cosTheta);
+
+    final angleDif = acos(cosTheta);
+
+    // Perpendicular distance
+    //return apLength * sinTheta;
+    return apLength * angleDif.abs();
+  }
+
+  double _perpendicularDistance(Offset p, Offset a, Offset b) {
+    /*
+    final ab = b - a;
+    final ap = p - a;
+    final abLengthSquared = ab.dx * ab.dx + ab.dy * ab.dy;
+
+    if (abLengthSquared == 0.0) return (p - a).distance;
+
+    double t = (ap.dx * ab.dx + ap.dy * ab.dy) / abLengthSquared;
+    t = t.clamp(0.0, 1.0);
+    final projection = Offset(a.dx + ab.dx * t, a.dy + ab.dy * t);
+
+    return (p - projection).distance;
+    */
+    final ab = b - a;
+    final ap = p - a;
+    final abSquared = ab.dx * ab.dx + ab.dy * ab.dy;
+
+    if (abSquared == 0.0) return (p - a).distance;
+
+    final dotProduct = ap.dx * ab.dx + ap.dy * ab.dy;
+    final t = dotProduct / abSquared;
+    final clampedT = t.clamp(0.0, 1.0);
+
+    final projection = Offset(
+      a.dx + ab.dx * clampedT,
+      a.dy + ab.dy * clampedT,
+    );
+
+    return (p - projection).distance;
+  }
+
+  String grading() {
+    if (exerciseResultError < 45) {
+      exerciseResultMark = "A";
+    } else if (exerciseResultError < 60) {
+      exerciseResultMark = "B";
+    } else if (exerciseResultError < 70) {
+      exerciseResultMark = "C";
+    } else if (exerciseResultError < 85) {
+      exerciseResultMark = "D";
+    } else if (exerciseResultError < 110) {
+      exerciseResultMark = "E";
+    } else {
+      exerciseResultMark = "F";
+    }
+    return exerciseResultMark;
   }
 
   void changeColor(Color newColor) {
@@ -389,6 +546,8 @@ class ExerciseBallViewModel extends ChangeNotifier {
       numberOfRepetitions++;
       checkExerciseProgress();
     }
+
+    //
 
     notifyListeners();
   }
