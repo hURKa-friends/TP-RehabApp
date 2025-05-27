@@ -69,7 +69,7 @@ class BeerPourPageState extends StatefulPageState<BeerPourPage> {
                     Expanded(
                       child: Center(
                         child: Text(
-                          'Starting in ${vm.countdown}...',
+                          'Začína za ${vm.countdown}...',
                           style: TextStyle(fontSize: 32),
                         ),
                       ),

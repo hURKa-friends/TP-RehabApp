@@ -63,6 +63,15 @@ flutter:
     - assets/example/003_exercise.gif
     - assets/example/FEI_logo.gif
     - assets/example/glass_outline.png
+    - assets/example/FMV/beer1.png
+    - assets/example/FMV/beer2.png
+    - assets/example/FMV/beer3.png
+    - assets/example/FMV/beer4.png
+    - assets/example/FMV/fmv1.png
+    - assets/example/FMV/fmv2.png
+    - assets/example/FMV/fmv3.png
+    - assets/example/FMV/fmv4.png
+    - assets/example/FMV/fmv5.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

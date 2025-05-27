@@ -31,7 +31,11 @@ class MotionDetectionViewModel extends ChangeNotifier {
   String? _logOwnerId;
   bool _isLoggingEnabled = false;
   bool _isAnalyzing = false;
+  String _selectedFingerOption = 'Palec a Ukazovak';
+  String _selectedHand = 'Prava';
 
+  String get selectedFingerOption => _selectedFingerOption;
+  String get selectedHand => _selectedHand;
   bool get isAnalyzing => _isAnalyzing;
   bool get isLoggingEnabled => _isLoggingEnabled;
   ImuSensorData get acclData => _acclData;
@@ -44,6 +48,16 @@ class MotionDetectionViewModel extends ChangeNotifier {
   bool get countdownActive => _countdownActive;
   int get countdown => _countdown;
 
+  void setSelectedFingerOption(String option) {
+    _selectedFingerOption = option;
+    notifyListeners();
+  }
+
+  void setSelectedHand(String hand) {
+    _selectedHand = hand;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _closeLogChannel();
@@ -51,7 +65,7 @@ class MotionDetectionViewModel extends ChangeNotifier {
   }
 
   void startSensors() {
-    _countdown = 3;
+    _countdown = 5;
     _countdownActive = true;
     notifyListeners();
 
@@ -83,7 +97,7 @@ class MotionDetectionViewModel extends ChangeNotifier {
         access: ChannelAccess.private,
         fileName: 'motion_data',
         headerData:
-        'SensorTimestamp, AcclX, AcclY, AcclZ, GyroX, GyroY, GyroZ, TouchTimestamp, TouchX, TouchY',
+        'SelectedHand, SelectedFingers, SensorTimestamp, AcclX, AcclY, AcclZ, GyroX, GyroY, GyroZ, TouchTimestamp, TouchX, TouchY',
       );
       print("Log owner ID: $_logOwnerId");
       _isLoggingEnabled = _logOwnerId != null;
@@ -118,6 +132,7 @@ class MotionDetectionViewModel extends ChangeNotifier {
   void stopSensors() {
     SensorService().stopAcclDataStream();
     SensorService().stopGyroDataStream();
+    _logTouchData();
     clearTouchPoints();
     _sensorsRunning = false;
     _closeLogChannel(); // Close channel here
@@ -125,51 +140,66 @@ class MotionDetectionViewModel extends ChangeNotifier {
   }
 
   void _updateAcclData(ImuSensorData data) {
-    _acclData = SensorService().getAcclData();
+    _acclData = data;
     _acclDataPoints.add(_acclData);
+    _logSensorData();
     notifyListeners();
   }
 
   void _updateGyroData(ImuSensorData data) {
-    _gyroData = SensorService().getGyroData();
+    _gyroData = data;
     _gyroDataPoints.add(_gyroData);
     notifyListeners();
   }
 
-  Future<void> analyzeData() async {
-    _isAnalyzing = true;
-    notifyListeners();
-
-    print("Analyzing data...");
-    print("Touch points count: ${_touchDataPoints.length}");
-    print("Accelerometer data points count: ${_acclDataPoints.length}");
-    print("Gyroscope data points count: ${_gyroDataPoints.length}");
-    print("Log owner ID: $_logOwnerId");
-    if (_isLoggingEnabled) {
-      // Log sensor data
-      for (int i = 0; i < _acclDataPoints.length; i++) {
-        LoggerService().log(
-          channel: LogChannel.csv,
-          ownerId: _logOwnerId!,
-          data:
-          '${_acclDataPoints[i].timeStamp},${_acclDataPoints[i].x},${_acclDataPoints[i].y},'
-              '${_acclDataPoints[i].z},${_gyroDataPoints[i].x},${_gyroDataPoints[i].y},${_gyroDataPoints[i].z},,,,',
-        );
-      }
-
-      for (final touchData in _touchDataPoints) {
-        LoggerService().log(
-          channel: LogChannel.csv,
-          ownerId: _logOwnerId!,
-          data: ',,,,,,${touchData.timeStamp},${touchData.point.dx},${touchData.point.dy}',
-        );
-      }
+  void _logTouchData() {
+    LoggerService().log(
+      channel: LogChannel.csv,
+      ownerId: _logOwnerId!,
+      data:
+      '\n',
+    );
+    for (final touch in _touchDataPoints) {
+      LoggerService().log(
+        channel: LogChannel.csv,
+        ownerId: _logOwnerId!,
+        data:
+        '${touch.point.dx.toStringAsFixed(2)},'
+            '${touch.point.dy.toStringAsFixed(2)},'
+            '${touch.timeStamp.toIso8601String()},',
+      );
     }
-
-    _closeLogChannel(); // Close channel here
-    _isAnalyzing = false;
-    notifyListeners();
+    LoggerService().log(
+      channel: LogChannel.csv,
+      ownerId: _logOwnerId!,
+      data:
+      '\n',
+    );
   }
+
+  void _logSensorData() {
+    if (_logOwnerId == null) return;
+
+    final d = _acclData;
+    final g = _gyroData;
+
+    // Log IMU + grasp info
+    LoggerService().log(
+      channel: LogChannel.csv,
+      ownerId: _logOwnerId!,
+      data:
+      '$_selectedHand,'
+          '$_selectedFingerOption,'
+          '${d.timeStamp.toIso8601String()},'
+          '${d.x.toStringAsFixed(3)},'
+          '${d.y.toStringAsFixed(3)},'
+          '${d.z.toStringAsFixed(3)},'
+          '${g.x.toStringAsFixed(3)},'
+          '${g.y.toStringAsFixed(3)},'
+          '${g.z.toStringAsFixed(3)},',
+    );
+  }
+
 
   void resetTry() {
     stopSensors();

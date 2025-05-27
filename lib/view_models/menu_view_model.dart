@@ -69,208 +69,56 @@ class MenuViewModel extends ChangeNotifier {
       ],
     ),
     SettingsView(icon: Icons.settings, title: "Settings"),
-    BeerPourPage(icon: Icons.local_drink, title: "Beer pour"),
-    SubMenuPageWrapper(icon: Icons.account_tree_outlined, title: "FMS",
-      subPages: [
-        SubMenuPageWrapper(icon: Icons.pan_tool, title: "Left hand",
-          subPages: [
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-          ],
+    BeerPourPage(icon: Icons.local_drink, title: "Beer pour",
+      tutorialSteps: [
+        TutorialStep(
+          assetURI: 'assets/example/FMV/beer1.png',
+          heading: '1. Krok',
+          description: 'Pred Vami sa zobrazí pohár piva. Po zmagnutí start sa začne odpočítavanie. Po 3 sekundách začne cvičenie.',
         ),
-        SubMenuPageWrapper(icon: Icons.pan_tool_outlined, title: "Right Hand",
-          subPages: [
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-            MotionDetectionView(icon: Icons.touch_app, title: "FMS",
-              tutorialSteps: [
-                TutorialStep(
-                  assetURI: 'assets/example/000_exercise.gif',
-                  heading: '1. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/001_exercise.gif',
-                  heading: '2. Krok',
-                  description: '.',
-                ),
-                TutorialStep(
-                  assetURI: 'assets/example/FEI_logo.gif',
-                  heading: '3. Krok',
-                  description: '',
-                ),
-                TutorialStep(
-                    assetURI: 'assets/example/002_exercise.gif',
-                    heading: 'Potvrdenie',
-                    description: ''
-                ),
-              ],
-            ),
-          ],
+        TutorialStep(
+          assetURI: 'assets/example/FMV/beer2.png',
+          heading: '2. Krok',
+          description: 'Vašou úlohou je pomaly a plynulo preliať toto virtuálne pivo do reálneho pohára. Tento bod je dôležitý aby sa vedeli zaznamenať prípadné nárazy na hranu.',
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/FMV/beer3.png',
+          heading: '3. Krok',
+          description: 'Cvičenie môžete vykonávať ohýbaním v zápästí alebo...',
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/FMV/beer4.png',
+          heading: 'Potvrdenie',
+          description: '...ohýbaním v predloktí.',
+        ),
+      ],
+    ),
+    MotionDetectionView(icon: Icons.front_hand, title: "Nácvik jemnej motoriky",
+      tutorialSteps: [
+        TutorialStep(
+          assetURI: 'assets/example/FMV/fmv1.png',
+          heading: '1. Krok',
+          description: 'Najprv si vyberiete aký úchyt mobilu zvolíte. Sú na výber 4.',
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/FMV/fmv2.png',
+          heading: '2. Krok',
+          description: 'Následne určíte ktorou rukou idete cvičenie vykonávať.',
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/FMV/fmv3.png',
+          heading: '3. Krok',
+          description: 'Pred vami sa zobrazí obrazovka s tlačídlom zapnúť senzory. Po jeho kliknutí sa začne časomiera 5 sekúnd na položenie mobilu do šálky obrátene.',
+        ),
+        TutorialStep(
+            assetURI: 'assets/example/FMV/fmv4.png',
+            heading: '4. Krok',
+            description: 'Cvičenie sa začne v momente keď uplynie 5 sekúnd a vy sa dotknete panelu pre dotyk s obrazovkou.'
+        ),
+        TutorialStep(
+            assetURI: 'assets/example/FMV/fmv5.png',
+            heading: '5. Krok',
+            description: 'Teraz presuniete zariadenie do iného hrnčeka, pomalým a plynulým pohybom a jemne položíte. Cvičenie sa skončí po uvoľnení displaya.'
         ),
       ],
     ),

@@ -70,6 +70,7 @@ class BeerPourViewModel extends ChangeNotifier {
 
   void startExercise() {
     if (_sensorsRunning) return;
+    resetExercise();
     _countdown = 3;
     _countdownActive = true;
     notifyListeners();
@@ -101,10 +102,10 @@ class BeerPourViewModel extends ChangeNotifier {
     _isPouring = false;
     _unevenPouring = false;
     _countdownActive = false;
-    // clear any prior summary
     _accelStdDev = 0.0;
     _impactCount = 0;
     _accelBuffer.clear();
+    _accelBuffer2.clear();
     _gyroBuffer.clear();
     _previousPourTime = null;
     _previousPourRate = 0.0;
@@ -130,7 +131,6 @@ class BeerPourViewModel extends ChangeNotifier {
     _accelBuffer.add(data);
     _accelBuffer2.add(data);
 
-    // Keep buffer size bounded
     if (_accelBuffer2.length > 5) {
       _accelBuffer2.removeAt(0);
     }
@@ -299,19 +299,20 @@ class BeerPourViewModel extends ChangeNotifier {
   void _logSensorData() {
     if (_logOwnerId == null) return;
     final d = _acclData;
+    final g = _gyroData;
     LoggerService().log(
       channel: LogChannel.csv,
       ownerId: _logOwnerId!,
       data:
-      '${d.timeStamp.toString},'
+      '${d.timeStamp.toString()},'
           '${d.x.toStringAsFixed(3)},'
           '${d.y.toStringAsFixed(3)},'
           '${d.z.toStringAsFixed(3)},'
-          '${_gyroData.x.toStringAsFixed(3)},'
-          '${_gyroData.y.toStringAsFixed(3)},'
-          '${_gyroData.z.toStringAsFixed(3)},'
+          '${g.x.toStringAsFixed(3)},'
+          '${g.y.toStringAsFixed(3)},'
+          '${g.z.toStringAsFixed(3)},'
           '${_angle.toStringAsFixed(3)},'
-          '${_beerLevel.toStringAsFixed(3)}',
+          '${_beerLevel.toStringAsFixed(3)}'
     );
   }
 

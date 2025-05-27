@@ -29,13 +29,13 @@ class MotionDetectionViewState extends StatefulPageState {
       child: Consumer<MotionDetectionViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: AppBar(title: const Text("Phone Pickup Exercise")),
+            appBar: AppBar(title: const Text("Cvičenie uchopovaním mobilu")),
             body: Column(
               children: [
                 if (viewModel.countdownActive)
                   Center(
                     child: Text(
-                      "Starting in ${viewModel.countdown}...",
+                      "Štart za ${viewModel.countdown}...",
                       style: const TextStyle(fontSize: 24),
                     ),
                   )
@@ -47,7 +47,38 @@ class MotionDetectionViewState extends StatefulPageState {
                           ? viewModel.stopSensors
                           : viewModel.startSensors,
                       child: Text(
-                          viewModel.sensorsRunning ? "Stop Sensors" : "Start Sensors"),
+                          viewModel.sensorsRunning ? "Zastaviť sensory" : "Zapnúť senzory"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(labelText: 'Zvoľte ruku'),
+                      value: viewModel.selectedHand,
+                      onChanged: (value) {
+                        if (value != null) viewModel.setSelectedHand(value);
+                      },
+                      items: ['Lava', 'Prava']
+                          .map((hand) => DropdownMenuItem(value: hand, child: Text(hand)))
+                          .toList(),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(labelText: 'Zvoľte prsty'),
+                      value: viewModel.selectedFingerOption,
+                      onChanged: (value) {
+                        if (value != null) viewModel.setSelectedFingerOption(value);
+                      },
+                      items: [
+                        'Palec a Ukazovak',
+                        'Palec a Prostredik',
+                        'Palec a Prstennik',
+                        'Palec a malicek'
+                      ]
+                          .map((fingers) => DropdownMenuItem(value: fingers, child: Text(fingers)))
+                          .toList(),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -61,7 +92,6 @@ class MotionDetectionViewState extends StatefulPageState {
                             : null;
                       },
                       onPanEnd: (_) {
-                        viewModel.analyzeData();
                         viewModel.stopSensors();
                       },
                       child: Container(
@@ -69,21 +99,21 @@ class MotionDetectionViewState extends StatefulPageState {
                         child: CustomPaint(
                           painter: TouchPainter(viewModel.touchPoints),
                           child: const Center(
-                              child: Text("Perform the phone pickup exercise")),
+                              child: Text("Vykonajte úchyt a presun zariadenia")),
                         ),
                       ),
                     ),
                   ),
                   ElevatedButton(
                     onPressed: viewModel.resetTry,
-                    child: const Text("Reset Try"),
+                    child: const Text("Reset"),
                   ),
                   if (viewModel.isAnalyzing)
                     const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
                         child: Text(
-                          "Analyzing and logging data...",
+                          "Analyzovanie and logovanie dát...",
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
