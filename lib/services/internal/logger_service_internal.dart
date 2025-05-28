@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rehab_app/main.dart';
 
-final String loggerDirectoryPath = '$baseAppDirectoryPath/logger';
+String loggerDirectoryPath = '$baseAppDirectoryPath/logger';
 
 enum LogChannel { csv, error, event, plain }
 enum ChannelAccess { public, protected, private }
@@ -20,11 +20,17 @@ class LoggerServiceInternal {
   final Map<LogChannel, IOSink?> _channelSinks = {};
 
   initialize() async {
+    loggerDirectoryPath = '/storage/emulated/0/Download/logger';
+
     final permissionState = await _managePermissions();
     final directoryState = await _initializeStorage();
 
-    if(!(permissionState && directoryState)) {
-      throw Exception("Permission or directory creation failed.");
+    if(!(permissionState)) {
+      throw Exception("Permission failure.");
+    }
+
+    if(!(directoryState)) {
+      throw Exception("Directory creation failed.");
     }
 
     for (var channel in LogChannel.values) {
@@ -39,6 +45,7 @@ class LoggerServiceInternal {
     final storagePermission = await Permission.storage.request().isGranted;
     final externalPermission = await Permission.manageExternalStorage.request().isGranted;
     return true;
+    return storagePermission && externalPermission;
   }
   Future<bool> _initializeStorage() async {
     try {

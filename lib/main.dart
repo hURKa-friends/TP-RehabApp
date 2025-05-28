@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 // App core dependencies
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
 import 'package:rehab_app/services/page_management/views/page_navigator_view.dart';
+import 'package:rehab_app/view_models/klaudia/data_acquisition_view_model.dart';
 import 'package:rehab_app/views/menu_view.dart';
 
 // Service dependencies
@@ -13,6 +14,7 @@ import 'package:rehab_app/services/external/sensor_service.dart';
 
 // MVVM application dependencies
 import 'package:rehab_app/view_models/menu_view_model.dart';
+import 'package:rehab_app/view_models/pose_detection/pose_detection_view_model.dart';
 ///
 /// Import your MVVM ViewModels here
 ///
@@ -41,16 +43,17 @@ class ChangeNotifierInjector extends StatelessWidget {
     SensorService();
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => PageNavigatorViewModel(context,
-            MenuView(icon: Icons.home, title: "App Menu"))),
+        ChangeNotifierProvider(create: (context) => PageNavigatorViewModel(context,MenuView(icon: Icons.home, title: "App Menu"))),
         ChangeNotifierProvider(create: (context) => MenuViewModel()),
         ///
         /// Add your ViewModels here
         ///
+        ChangeNotifierProvider(create: (context) => AcqViewModel()),
         ChangeNotifierProvider(create: (context) => AcclViewModel()),
         ChangeNotifierProvider(create: (context) => GyroViewModel()),
         ChangeNotifierProvider(create: (context) => MagViewModel()),
         ChangeNotifierProvider(create: (context) => LuxViewModel()),
+        ChangeNotifierProvider(create: (context) => PoseDetectionViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
       ],
       child: MyMaterialApp(),
