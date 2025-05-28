@@ -49,6 +49,9 @@ dependencies:
   vector_math:                any
   # Fine motor skills dependencies:
   fftea: ^1.5.0+1
+  # Knee rehab deps:
+  hyperlink: ^0.0.4
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
@@ -105,6 +108,11 @@ flutter:
     - assets/example/FMV/fmv3.png
     - assets/example/FMV/fmv4.png
     - assets/example/FMV/fmv5.png
+  # Knee rehab
+    - assets/knee_rehab/leg_extensions01.jpg
+    - assets/knee_rehab/leg_extensions02.jpg
+    - assets/knee_rehab/leg_extensions03.jpg
+    - assets/knee_rehab/something.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -131,3 +139,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: fonts/CustomIcons.ttf

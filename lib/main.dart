@@ -23,6 +23,7 @@ import 'package:rehab_app/view_models/gyro_viewmodel.dart';
 import 'package:rehab_app/view_models/lux_viewmodel.dart';
 import 'package:rehab_app/view_models/mag_viewmodel.dart';
 import 'package:rehab_app/view_models/settings_view_model.dart';
+import 'package:rehab_app/view_models/kneeRehab_view_model.dart';
 
 // Useful defines
 final String baseAppDirectoryPath = '/storage/emulated/0/RehabApp';
@@ -55,6 +56,7 @@ class ChangeNotifierInjector extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LuxViewModel()),
         ChangeNotifierProvider(create: (context) => PoseDetectionViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel()),
+        ChangeNotifierProvider(create: (context) => KneeRehabMainViewModel()),
       ],
       child: MyMaterialApp(),
     );

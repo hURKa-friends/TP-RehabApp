@@ -3,6 +3,7 @@ import 'package:rehab_app/models/pose_detection/pose_detection_model.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
+import 'package:rehab_app/custom_icon.dart';
 import 'package:rehab_app/views/graph_view.dart';
 
 /// Eating rehab - Klaudia
@@ -18,6 +19,9 @@ import 'package:rehab_app/views/denis/FMS_phone_pickup_view.dart';
 /// import your MVVM views here
 ///
 import 'package:rehab_app/views/settings_view.dart';
+import 'package:rehab_app/views/example_view.dart';
+import 'package:rehab_app/views/graph_view.dart';
+import 'package:rehab_app/views/kneeRehab_view.dart';
 
 import '../views/denis/Beerpour_view.dart';
 
@@ -155,6 +159,32 @@ class MenuViewModel extends ChangeNotifier {
             heading: '5. Krok',
             description: 'Teraz presuniete zariadenie do iného hrnčeka, pomalým a plynulým pohybom a jemne položíte. Cvičenie sa skončí po uvoľnení displaya.'
         ),
+      ],
+    ),
+    /// Knee Rehab
+    KneeRehabMainView(
+      icon: CustomIcons.knee_pain_icon,
+      title: "Knee Rehabilitation",
+      tutorialSteps: [
+        TutorialStep(
+            assetURI: "assets/knee_rehab/leg_extensions01.jpg",
+            heading: "Step 1",
+            description: "Sit upright on a chair or bench with your back straight and feet flat on the floor."),
+        TutorialStep(
+            assetURI: "assets/knee_rehab/leg_extensions02.jpg",
+            heading: "Step 2",
+            description:
+                "Tighten your thigh muscles and slowly extend the selected leg upward as high as you comfortably can."),
+        TutorialStep(
+            assetURI: "assets/knee_rehab/leg_extensions03.jpg",
+            heading: "Step 3",
+            description:
+                "Hold the leg fully extended and keep your thigh muscles engaged for 3 seconds. Then relax, lower your foot back to the floor, and rest for 3 seconds. Repeat this 10 times."),
+        TutorialStep(
+            assetURI: "assets/knee_rehab/something.png",
+            heading: "Important!",
+            description:
+                "Avoid swinging your leg or using forceful movements. Try to lift and lower your leg in a straight line, using slow and controlled motion both ways."),
       ],
     ),
     /// Settings
