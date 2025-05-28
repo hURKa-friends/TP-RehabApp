@@ -167,6 +167,19 @@ class MenuViewModel extends ChangeNotifier {
       title: "Knee Rehabilitation",
       tutorialSteps: [
         TutorialStep(
+            assetURI: "assets/knee_rehab/phone_case.jpg",
+            heading: "Before you begin this exercise...",
+            description: "...you will need a phone case, like the one shown in the picture."),
+        TutorialStep(
+            assetURI: "assets/knee_rehab/case_on_the_leg.png",
+            heading: "Attach the case",
+            description: "Attach the phone case to your leg, under the knee, as shown in the picture. When you put your phone in the case, the screen must be facing away from you and the "
+                "phone must be 'head' up."),
+        TutorialStep(
+            assetURI: "assets/knee_rehab/emoji_thinking.jpg",
+            heading: "How to do this exercise correctly?",
+            description: "In the next few steps, you’ll learn how to do this exercise correctly to avoid injury and achieve the best results."),
+        TutorialStep(
             assetURI: "assets/knee_rehab/leg_extensions01.jpg",
             heading: "Step 1",
             description: "Sit upright on a chair or bench with your back straight and feet flat on the floor."),

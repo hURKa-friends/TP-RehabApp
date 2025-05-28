@@ -113,6 +113,9 @@ flutter:
     - assets/knee_rehab/leg_extensions02.jpg
     - assets/knee_rehab/leg_extensions03.jpg
     - assets/knee_rehab/something.png
+    - assets/knee_rehab/phone_case.jpg
+    - assets/knee_rehab/case_on_the_leg.png
+    - assets/knee_rehab/emoji_thinking.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

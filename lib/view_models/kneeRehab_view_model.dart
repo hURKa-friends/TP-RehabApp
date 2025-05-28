@@ -23,8 +23,8 @@ class KneeRehabMainViewModel extends ChangeNotifier {
   bool isHoldingAtTop = false;
 
 // Configurable thresholds
-  final double upwardThreshold = -1.2; // leg going up = negative gyroX
-  final double downwardThreshold = 1.2; // leg going down = positive gyroX
+  final double upwardThreshold = -1.0; // leg going up = negative gyroX
+  final double downwardThreshold = 1.0; // leg going down = positive gyroX
   final double holdThreshold = 0.4; // for pause detection
   final Duration holdDuration = Duration(milliseconds: 500);
 

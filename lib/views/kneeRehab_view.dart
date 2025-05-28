@@ -93,26 +93,34 @@ class KneeRehabViewState extends StatefulPageState {
             if (viewModel.name != null && viewModel.start == 0)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        viewModel.start = 1;
-                        viewModel.firstStarted = 1;
-                        viewModel.repCount = 0;
-                        isDropdownEnabled = false; // Disable dropdown
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(200, 70),
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                      textStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                child: SizedBox(
+                  width: double.infinity, // Full width
+                  height: MediaQuery.of(context).size.height * 0.5, // Half screen height
+                  child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          viewModel.start = 1;
+                          viewModel.firstStarted = 1;
+                          viewModel.repCount = 0;
+                          isDropdownEnabled = false; // Disable dropdown
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 70),
+                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        textStyle: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        backgroundColor: Color.fromRGBO(255, 187, 51, 0.7),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)
+                        )
                       ),
-                      backgroundColor: Color.fromRGBO(255, 187, 51, 0.7),
-                      foregroundColor: Colors.black,
-                    ),
-                    child: const Text("Begin exercise.")),
+                      child: const Text("Begin exercise.")
+                  ),
+                ),
               ),
             if (viewModel.start == 1)
               Padding(
