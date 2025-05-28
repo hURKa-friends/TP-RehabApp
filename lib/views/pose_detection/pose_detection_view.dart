@@ -228,14 +228,14 @@ class PoseDetectionViewState extends StatefulPageState {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  'SA: ${viewModel.scopeAngle} , ASA: ${viewModel.avgScopeAngle}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                // Text(
+                //   'SA: ${viewModel.scopeAngle} , ASA: ${viewModel.avgScopeAngle}',
+                //   style: const TextStyle(
+                //     color: Colors.white,
+                //     fontSize: 24,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
               ],
             ),
           ),
