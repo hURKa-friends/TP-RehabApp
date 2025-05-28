@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rehab_app/models/sensor_models.dart';
 import 'package:rehab_app/services/external/sensor_service.dart';
-import '../services/external/logger_service.dart';
-import '../services/internal/logger_service_internal.dart';
+import '../../services/external/logger_service.dart';
+import '../../services/internal/logger_service_internal.dart';
 
 
 class KneeRehabViewModel extends ChangeNotifier {

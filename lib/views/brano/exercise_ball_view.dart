@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_models/exercise_ball_viewmodel.dart'; // Adjust path if needed
+import '../../view_models/brano/exercise_ball_viewmodel.dart'; // Adjust path if needed
 
 class ExerciseBallView extends StatelessWidget {
   const ExerciseBallView({Key? key}) : super(key: key);

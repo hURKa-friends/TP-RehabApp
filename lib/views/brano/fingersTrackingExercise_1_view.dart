@@ -3,12 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 
-import '../models/displayTracking_model.dart';
-import '../view_models/displayTracking_viewmodel.dart';
-import '../view_models/exercise_ball_viewmodel.dart';
-import '../views/exercise_ball_view.dart';
-
-import 'package:rehab_app/views/fingerTrackingExerciseNo1_view.dart';
+import '../../models/displayTracking_model.dart';
+import '../../view_models/brano/displayTracking_viewmodel.dart';
+import '../../view_models/brano/exercise_ball_viewmodel.dart';
 
 class FingersTrackingExercisesView extends StatefulPage {
   const FingersTrackingExercisesView({

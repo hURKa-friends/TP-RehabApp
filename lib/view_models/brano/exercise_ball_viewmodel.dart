@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/exercise_ball_model.dart';
+import '../../models/exercise_ball_model.dart';
 import 'dart:math';
 
 

@@ -1,7 +1,7 @@
 import 'package:rehab_app/models/finger_model.dart';
 import 'package:rehab_app/models/displayTracking_model.dart';
 import 'package:flutter/material.dart';
-import 'package:rehab_app/view_models/exercise_ball_viewmodel.dart';
+import 'package:rehab_app/view_models/brano/exercise_ball_viewmodel.dart';
 
 class DisplayTrackingViewModel extends ChangeNotifier {
 

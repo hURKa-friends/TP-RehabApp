@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../view_models/kneeRehab_view_model.dart';
+
+import '../../view_models/angelika/kneeRehab_view_model.dart';
 
 class KneeRehabMainView extends StatefulPage {
   const KneeRehabMainView({

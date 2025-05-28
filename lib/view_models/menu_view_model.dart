@@ -3,7 +3,6 @@ import 'package:rehab_app/models/pose_detection/pose_detection_model.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
-import 'package:rehab_app/views/example_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
 
 /// Eating rehab - Klaudia
@@ -15,13 +14,14 @@ import 'package:rehab_app/views/denis/Beerpour_view.dart';
 import 'package:rehab_app/views/denis/FMS_phone_pickup_view.dart';
 /// Knee rehab - Angelika
 import 'package:rehab_app/custom_icon.dart';
-import 'package:rehab_app/views/kneeRehab_view.dart';
+import 'package:rehab_app/views/angelika/kneeRehab_view.dart';
 /// Arm rehab - Tomáš
 import 'package:rehab_app/arm_rehab/views/exercise_select_view.dart';
 /// Display fine rehab - Branislav
-import 'package:rehab_app/views/displayTracking_view.dart';
-import 'package:rehab_app/views/fingersTrackingExercise_1_view.dart';
+import 'package:rehab_app/views/brano/fingersTrackingExercise_1_view.dart';
 
+///
+/// MVVM imports
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
@@ -230,21 +230,25 @@ class MenuViewModel extends ChangeNotifier {
               assetURI: 'assets/images/CopperBusines.png',
               heading: '1. Step',
               description: 'First select the hand you are going to exercises and then the difficult of the exercise.',
+              function: () {  },
             ),
             TutorialStep(
               assetURI: 'assets/images/LookiLooki.png',
               heading: '2. Step',
               description: 'You will be holding and navigating the ball to the stop on the display with to fingers pinching the object.',
+              function: () {  },
             ),
             TutorialStep(
               assetURI: 'assets/images/NoSnacksOnGasStation.png',
               heading: 'Caution',
               description: 'Be careful don\'t squeeze the object too hard or too lightly, the object will indicated how hard are you pinching it.',
+              function: () {  },
             ),
             TutorialStep(
               assetURI: 'assets/images/YourPilotIsSpoking.png',
               heading: 'Enjoy the ride',
               description: '',
+              function: () {  },
             ),
           ],
         ),
