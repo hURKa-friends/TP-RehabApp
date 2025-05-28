@@ -3,27 +3,25 @@ import 'package:rehab_app/models/pose_detection/pose_detection_model.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
-import 'package:rehab_app/custom_icon.dart';
+import 'package:rehab_app/views/example_view.dart';
 import 'package:rehab_app/views/graph_view.dart';
 
 /// Eating rehab - Klaudia
 import 'package:rehab_app/views/klaudia/data_acquisition_view.dart';
-
 /// Pose detection - Filip
 import 'package:rehab_app/views/pose_detection/pose_detection_view.dart';
-
 /// Fine motor skills - Denis
-import 'package:rehab_app/views/denis/FMS_phone_pickup_view.dart';
 import 'package:rehab_app/views/denis/Beerpour_view.dart';
-
+import 'package:rehab_app/views/denis/FMS_phone_pickup_view.dart';
 /// Knee rehab - Angelika
+import 'package:rehab_app/custom_icon.dart';
 import 'package:rehab_app/views/kneeRehab_view.dart';
-
 /// Arm rehab - Tomáš
 import 'package:rehab_app/arm_rehab/views/exercise_select_view.dart';
+/// Display fine rehab - Branislav
+import 'package:rehab_app/views/displayTracking_view.dart';
+import 'package:rehab_app/views/fingersTrackingExercise_1_view.dart';
 
-///
-/// import your MVVM views here
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
@@ -224,6 +222,36 @@ class MenuViewModel extends ChangeNotifier {
         ),
       ],
     ),
+    SubMenuPageWrapper(icon: Icons.install_mobile_rounded, title: "Fine motor skills exercise",
+      subPages: [
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 1",
+          tutorialSteps: [
+            TutorialStep(
+              assetURI: 'assets/images/CopperBusines.png',
+              heading: '1. Step',
+              description: 'First select the hand you are going to exercises and then the difficult of the exercise.',
+            ),
+            TutorialStep(
+              assetURI: 'assets/images/LookiLooki.png',
+              heading: '2. Step',
+              description: 'You will be holding and navigating the ball to the stop on the display with to fingers pinching the object.',
+            ),
+            TutorialStep(
+              assetURI: 'assets/images/NoSnacksOnGasStation.png',
+              heading: 'Caution',
+              description: 'Be careful don\'t squeeze the object too hard or too lightly, the object will indicated how hard are you pinching it.',
+            ),
+            TutorialStep(
+              assetURI: 'assets/images/YourPilotIsSpoking.png',
+              heading: 'Enjoy the ride',
+              description: '',
+            ),
+          ],
+        ),
+        FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 2"),
+      ],
+    ),
+
     /// Settings
     SettingsView(icon: Icons.settings, title: "Settings"),
   ];
