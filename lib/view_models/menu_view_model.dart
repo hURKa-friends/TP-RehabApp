@@ -14,20 +14,18 @@ import 'package:rehab_app/views/pose_detection/pose_detection_view.dart';
 
 /// Fine motor skills - Denis
 import 'package:rehab_app/views/denis/FMS_phone_pickup_view.dart';
+import 'package:rehab_app/views/denis/Beerpour_view.dart';
+
+/// Knee rehab - Angelika
+import 'package:rehab_app/views/kneeRehab_view.dart';
 
 ///
 /// import your MVVM views here
 ///
 import 'package:rehab_app/views/settings_view.dart';
-import 'package:rehab_app/views/example_view.dart';
-import 'package:rehab_app/views/graph_view.dart';
-import 'package:rehab_app/views/kneeRehab_view.dart';
-
-import '../views/denis/Beerpour_view.dart';
 
 class MenuViewModel extends ChangeNotifier {
   final List<BasePage> _pages = [
-
     ///
     /// You can add your pages here
     ///
