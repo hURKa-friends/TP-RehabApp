@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rehab_app/models/pose_detection/pose_detection_model.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
 import 'package:rehab_app/services/page_management/models/tutorial_step_model.dart';
 import 'package:rehab_app/services/page_management/views/sub_menu_wrapper.dart';
@@ -6,6 +7,9 @@ import 'package:rehab_app/views/graph_view.dart';
 
 /// Eating rehab - Klaudia
 import 'package:rehab_app/views/klaudia/data_acquisition_view.dart';
+
+/// Pose detection - Filip
+import 'package:rehab_app/views/pose_detection/pose_detection_view.dart';
 
 ///
 /// import your MVVM views here
@@ -62,6 +66,35 @@ class MenuViewModel extends ChangeNotifier {
             ),
           ],
         )
+      ],
+    ),
+    // Pose detection exercise tutorials
+    SubMenuPageWrapper(icon: Icons.accessibility_new, title: "Detekcia pózy",
+      subPages: [
+        SubMenuPageWrapper(icon: Icons.menu, title: "Rehabilitácia ramena",
+          subPages: [
+            PoseDetectionView(icon: Icons.accessibility_new, title: "Cvik ramena - Upaženie",
+              exerciseType: ExerciseType.shoulderAbductionActive,
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/pose_detection/shoulder_abduction_active.jpg',
+                  heading: 'Upaženie',
+                  description: 'Zdvihnite vystretú ruku bokom do horizontálnej polohy. Počas celého cviku sa snažte mať vystretú ruku s dlaňou smerujúcou nadol. Opakovanie sa ráta ako úspešné len s riadne vystretou rukou. Cvik vykonávajte pomaly.',
+                ),
+              ],
+            ),
+            PoseDetectionView(icon: Icons.accessibility_new, title: "Cvik ramena - Vzpaženie",
+              exerciseType: ExerciseType.shoulderForwardElevationActive,
+              tutorialSteps: [
+                TutorialStep(
+                  assetURI: 'assets/pose_detection/shoulder_forward_elevation_active.jpg',
+                  heading: 'Vzpaženie',
+                  description: 'Pomaly zdvíhajte vystretú ruku pred seba a následne pokračujte až smerom ku stropu, kým vaša ruka nie je rovnobežná s vaším telom..',
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     ),
     SettingsView(icon: Icons.settings, title: "Settings"),
