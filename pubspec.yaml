@@ -32,7 +32,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # Add your dependencies here:
   cupertino_icons:            ^1.0.8
   intl:                       ^0.20.2
@@ -49,12 +48,14 @@ dependencies:
   numberpicker:               any
   vector_math:                any
   # Fine motor skills dependencies:
-  fftea: ^1.5.0+1
+  fftea:                      ^1.5.0+1
   # Knee rehab deps:
-  hyperlink: ^0.0.4
-  url_launcher: ^6.2.5
+  hyperlink:                  ^0.0.4
+  url_launcher:               ^6.2.5
   # Arm rehab
-  audioplayers: ^6.4.0
+  audioplayers:               ^6.4.0
+  # Zuzka
+  csv:                        ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -161,6 +162,17 @@ flutter:
     #- assets/images/ThaBusines.png
     #- assets/images/WhoLovesTheCaterpilar.png
     - assets/images/YourPilotIsSpoking.png
+    # Zuzka rehab
+    - assets/example/bed1.jpg
+    - assets/example/bed2.jpg
+    - assets/example/bed3.jpg
+    - assets/example/bed4.jpg
+    - assets/example/char1.png
+    - assets/example/char2.png
+    - assets/example/char3.png
+    - assets/example/drep1.png
+    - assets/example/drep2.png
+    - assets/example/save.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

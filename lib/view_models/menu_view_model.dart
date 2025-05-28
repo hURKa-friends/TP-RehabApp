@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:rehab_app/models/pose_detection/pose_detection_model.dart';
 import 'package:rehab_app/services/page_management/models/base_page_model.dart';
@@ -24,6 +26,7 @@ import 'package:rehab_app/views/brano/fingersTrackingExercise_1_view.dart';
 /// MVVM imports
 ///
 import 'package:rehab_app/views/settings_view.dart';
+import '../views/exercise_feedback_view.dart';
 
 class MenuViewModel extends ChangeNotifier {
   final List<BasePage> _pages = [
@@ -253,6 +256,75 @@ class MenuViewModel extends ChangeNotifier {
           ],
         ),
         FingersTrackingExercisesView(icon: Icons.fingerprint, title: "Finger tracking exercise No 2"),
+      ],
+    ),
+    /// Zuzka
+    //  Tutoriál – Vstávanie z postele
+    ExerciseFeedbackView(
+      icon: Icons.bed_outlined,
+      title: "Getting out of bed",
+      tutorialSteps: [
+        TutorialStep(
+          assetURI: 'assets/example/bed1.jpg',
+          heading: '1.Step - Lie down.',
+          description: 'Lie down and bend your knees.',
+          function: () {  },
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/bed2.jpg',
+          heading: '2.Step - Turn around',
+          description: 'Turn onto your side and prepare to stand up.',
+          function: () {  },
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/bed3.jpg',
+          heading: '3.Step - Lower your legs',
+          description: 'Put your feet up off the bed and lean back.',
+          function: () {  },
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/bed4.jpg',
+          heading: '4.Step - Sit down ',
+          description: 'Sit down on the bed.',
+          function: () {  },
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/save.png',
+          heading: 'Save the workout!',
+          description: 'After exercising, you save your exercise data',
+          function: () {  },
+        ),
+      ],
+    ),
+    //  Tutoriál – Vykonavanie drepu
+    ExerciseFeedbackView(
+      icon: Icons.accessibility_new,
+      title: "Performing a squat",
+      tutorialSteps: [
+        TutorialStep(
+          assetURI: 'assets/example/drep1.png',
+          heading: '1.Step - Stand up',
+          description: 'Stand straight, with your hands in front of you.',
+          function: () {  },
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/drep2.png',
+          heading: '2.Step - Perform a squat',
+          description: 'Perform a squat with your hands in front of your body and hold the position for 5 seconds',
+          function: () {  },
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/drep1.png',
+          heading: '3.Step - Stand up',
+          description: 'Return to the starting position.',
+          function: () {  },
+        ),
+        TutorialStep(
+          assetURI: 'assets/example/save.png',
+          heading: 'Save the workout!',
+          description: 'After exercising, you save your exercise data',
+          function: () {  },
+        ),
       ],
     ),
 
