@@ -19,6 +19,9 @@ import 'package:rehab_app/views/denis/Beerpour_view.dart';
 /// Knee rehab - Angelika
 import 'package:rehab_app/views/kneeRehab_view.dart';
 
+/// Arm rehab - Tomáš
+import 'package:rehab_app/arm_rehab/views/exercise_select_view.dart';
+
 ///
 /// import your MVVM views here
 ///
@@ -185,6 +188,18 @@ class MenuViewModel extends ChangeNotifier {
                 "Avoid swinging your leg or using forceful movements. Try to lift and lower your leg in a straight line, using slow and controlled motion both ways."),
       ],
     ),
+    /// Arm rehab    
+    ExerciseSelectView(icon: Icons.accessibility_new, title: "Arm rehabilitation",
+      tutorialSteps: [
+        TutorialStep(
+          assetURI: "assets/arm_rehab/images/armband.jpg",
+          heading: "Armband required",
+          description: "For this arm rehabilitation, you need armband to mount your phone.",
+          function: () {  }
+        ),
+      ],
+    ),
+    
     /// Settings
     SettingsView(icon: Icons.settings, title: "Settings"),
   ];

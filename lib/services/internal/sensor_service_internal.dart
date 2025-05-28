@@ -9,6 +9,11 @@ class SensorServiceInternal {
   late StreamSubscription<AccelerometerEvent> _acclEventSubscription;
   late StreamController<ImuSensorData> _acclStreamController;
 
+  late ImuSensorData userAcclData;
+  late StreamSubscription<ImuSensorData> userAcclSubscription;
+  late StreamSubscription<UserAccelerometerEvent> _userAcclEventSubscription;
+  late StreamController<ImuSensorData> _userAcclStreamController;
+
   late ImuSensorData gyroData;
   late StreamSubscription<ImuSensorData> gyroSubscription;
   late StreamSubscription<GyroscopeEvent> _gyroEventSubscription;
@@ -37,6 +42,18 @@ class SensorServiceInternal {
     _acclEventSubscription = accelerometerEventStream(samplingPeriod: samplingPeriod).listen((event) {
       acclData = ImuSensorData(x:event.x, y:event.y, z:event.z, timeStamp: DateTime.now(), state: SensorState.on);
       _acclStreamController.add(acclData);
+    });
+    return true;
+  }
+
+  bool initializeUserAcclStream (Duration samplingPeriod) {
+    if(samplingPeriod.inMilliseconds < 2 || samplingPeriod.inMilliseconds > 200) {
+      return false;
+    }
+    _userAcclStreamController = StreamController();
+    _userAcclEventSubscription = userAccelerometerEventStream(samplingPeriod: samplingPeriod).listen((event) {
+      userAcclData = ImuSensorData(x:event.x, y:event.y, z:event.z, timeStamp: DateTime.now(), state: SensorState.on);
+      _userAcclStreamController.add(userAcclData);
     });
     return true;
   }
@@ -85,6 +102,13 @@ class SensorServiceInternal {
     return true;
   }
 
+  bool registerUserAcclStream (Function(ImuSensorData) callback) {
+    userAcclSubscription = _userAcclStreamController.stream.listen((data) {
+      callback(data);
+    });
+    return true;
+  }
+
   bool registerGyroStream (Function(ImuSensorData) callback) {
     gyroSubscription = _gyroStreamController.stream.listen((data) {
       callback(data);
@@ -115,6 +139,17 @@ class SensorServiceInternal {
       acclSubscription.cancel();
       _acclEventSubscription.cancel();
       acclData = ImuSensorData(x:0, y:0, z:0, timeStamp: DateTime.now(), state: SensorState.off);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool cancelUserAcclStream () {
+    try {
+      userAcclSubscription.cancel();
+      _userAcclEventSubscription.cancel();
+      userAcclData = ImuSensorData(x:0, y:0, z:0, timeStamp: DateTime.now(), state: SensorState.off);
       return true;
     } catch (e) {
       return false;

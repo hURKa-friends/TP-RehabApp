@@ -1,6 +1,7 @@
 // System and External dependencies
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 // App core dependencies
 import 'package:rehab_app/services/page_management/view_models/page_navigator_view_model.dart';
@@ -17,6 +18,14 @@ import 'package:rehab_app/view_models/menu_view_model.dart';
 import 'package:rehab_app/view_models/pose_detection/pose_detection_view_model.dart';
 ///
 /// Import your MVVM ViewModels here
+import 'package:rehab_app/arm_rehab/view_models/arm_select_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/pos_select_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/orient_select_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/exercise_select_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/repetition_select_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/exercise_setpoints_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/exercise_start_view_model.dart';
+import 'package:rehab_app/arm_rehab/view_models/exercise_summary_view_model.dart';
 ///
 import 'package:rehab_app/view_models/accl_viewmodel.dart';
 import 'package:rehab_app/view_models/gyro_viewmodel.dart';
@@ -37,6 +46,8 @@ class ChangeNotifierInjector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     ///
     /// Initialize all services here
     ///
@@ -48,6 +59,14 @@ class ChangeNotifierInjector extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MenuViewModel()),
         ///
         /// Add your ViewModels here
+        ChangeNotifierProvider(create: (context) => ArmSelectViewModel()),
+        ChangeNotifierProvider(create: (context) => PosSelectViewModel()),
+        ChangeNotifierProvider(create: (context) => OrientSelectViewModel()),
+        ChangeNotifierProvider(create: (context) => ExerciseSelectViewModel()),
+        ChangeNotifierProvider(create: (context) => RepetitionSelectViewModel()),
+        ChangeNotifierProvider(create: (context) => ExerciseSetpointsViewModel()),
+        ChangeNotifierProvider(create: (context) => ExerciseStartViewModel()),
+        ChangeNotifierProvider(create: (context) => ExerciseSummaryViewModel()),
         ///
         ChangeNotifierProvider(create: (context) => AcqViewModel()),
         ChangeNotifierProvider(create: (context) => AcclViewModel()),

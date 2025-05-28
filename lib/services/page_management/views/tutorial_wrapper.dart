@@ -51,6 +51,11 @@ class _TutorialWrapperState extends State<TutorialWrapper> {
       return widget.childBuilder();
     }
 
+    void completeFunction() {
+      complete();
+      currentStep.function();
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -156,7 +161,7 @@ class _TutorialWrapperState extends State<TutorialWrapper> {
                     maintainState: true,
                     maintainSize: true,
                     child:  ElevatedButton(
-                      onPressed: complete,
+                      onPressed: completeFunction,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
