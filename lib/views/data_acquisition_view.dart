@@ -52,7 +52,7 @@ class _AcqViewState extends StatefulPageState {
         Text(
           viewModel.on
               ? 'Pre zastavenie merania stlač Stop'
-              : 'Na začatie merania stlač Start',
+              : 'Na začatie merania stlač Štart',
           style: TextStyle(fontSize: 20, color: Colors.amberAccent),
         ),
 
@@ -65,7 +65,7 @@ class _AcqViewState extends StatefulPageState {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Repetície: ${viewModel.getRepetitionCount()}',
+                'Opakovania: ${viewModel.getRepetitionCount()}',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -127,6 +127,7 @@ class _AcqViewState extends StatefulPageState {
         ),
 
 
+        // Treshold sliders for testing
         // Container(
         //   padding: const EdgeInsets.all(12),
         //   decoration: BoxDecoration(
@@ -232,7 +233,7 @@ class _AcqViewState extends StatefulPageState {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text('Štatistika merania'),
+                    title: Text('Štatistika z merania'),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -255,7 +256,7 @@ class _AcqViewState extends StatefulPageState {
               );
             }
           },
-          child: Text(viewModel.on ? 'Stop Measurement' : 'Start Measurement'),
+          child: Text(viewModel.on ? 'Stop' : 'Štart'),
         ),
       ],
     );

@@ -24,10 +24,14 @@ class AcqViewModel extends ChangeNotifier {
   // Repetition detection
   int repetitions = 0;
   bool wasAboveThreshold = false;
-  final double threshold = 4.5;
   List<DateTime> repetitionTimestamps = [];
-  final Duration repetitionCooldown = Duration(milliseconds: 300);
   DateTime? lastRepetitionTime;
+
+  double upperThreshold = 4.0;   // adjust based on your test data
+  double lowerThreshold = 0.5;
+  bool waitingForDown = false;
+  Duration minInterval = Duration(milliseconds: 500); // optional: 0.5s cooldown
+
 
   // Impact detection
   double impactThreshold = 20.0;
@@ -82,8 +86,8 @@ class AcqViewModel extends ChangeNotifier {
     gyroData.add(SensorService().getGyroData());
 
     if (writeInfo) {
-      String forkText = isFork ? 'Fork' : 'Spoon';
-      String leftText = isLeft ? 'Left' : 'Right';
+      String forkText = isFork ? 'Vidlička' : 'Lyžička';
+      String leftText = isLeft ? 'Ľavá ruka' : 'Pravá ruka';
       LoggerService().log(channel: LogChannel.csv, ownerId: UOID!,
           data:'$forkText$leftText\n');
       writeInfo = false;
@@ -108,11 +112,17 @@ class AcqViewModel extends ChangeNotifier {
   void detectRepetition(double currentY) {
     final now = DateTime.now();
 
-    if (currentY > threshold) {
-      if (lastRepetitionTime == null || now.difference(lastRepetitionTime!) > repetitionCooldown) {
+    if (!waitingForDown && currentY < lowerThreshold) {
+      // Arm went down, now wait for it to go up
+      waitingForDown = true;
+    } else if (waitingForDown && currentY > upperThreshold) {
+      // Arm moved up after going down → count as repetition
+      if (lastRepetitionTime == null || now.difference(lastRepetitionTime!) > minInterval) {
         repetitions++;
+        repetitionTimestamps.add(now);
         lastRepetitionTime = now;
       }
+      waitingForDown = false;
     }
   }
 
@@ -183,6 +193,8 @@ class AcqViewModel extends ChangeNotifier {
     measurementStartTime = DateTime.now(); // Spustenie merania
     repetitions = 0;
     repetitionTimestamps.clear();
+    waitingForDown = false;
+    lastRepetitionTime = null;
     wasAboveThreshold = false;
     impactDetected = false;
     impactCount = 0;
