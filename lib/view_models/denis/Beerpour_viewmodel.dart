@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fftea/fftea.dart';
-import '../models/sensor_models.dart';
-import '../services/external/sensor_service.dart';
-import '../services/external/logger_service.dart';
-import '../services/internal/logger_service_internal.dart';
+import '../../models/sensor_models.dart';
+import '../../services/external/sensor_service.dart';
+import '../../services/external/logger_service.dart';
+import '../../services/internal/logger_service_internal.dart';
 
 /// ViewModel for the beer-pouring exercise
 class BeerPourViewModel extends ChangeNotifier {

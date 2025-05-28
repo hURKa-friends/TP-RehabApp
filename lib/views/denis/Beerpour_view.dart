@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../services/page_management/models/stateful_page_model.dart';
-import '../services/page_management/models/tutorial_step_model.dart';
-import '../view_models/Beerpour_viewmodel.dart';
+import '../../services/page_management/models/stateful_page_model.dart';
+import '../../services/page_management/models/tutorial_step_model.dart';
+import '../../view_models/denis/Beerpour_viewmodel.dart';
 
 /// Main page
 class BeerPourPage extends StatefulPage {

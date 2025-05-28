@@ -12,14 +12,14 @@ import 'package:rehab_app/views/klaudia/data_acquisition_view.dart';
 import 'package:rehab_app/views/pose_detection/pose_detection_view.dart';
 
 /// Fine motor skills - Denis
-import 'package:rehab_app/views/FMS_phone_pickup_view.dart';
+import 'package:rehab_app/views/denis/FMS_phone_pickup_view.dart';
 
 ///
 /// import your MVVM views here
 ///
 import 'package:rehab_app/views/settings_view.dart';
 
-import '../views/Beerpour_view.dart';
+import '../views/denis/Beerpour_view.dart';
 
 class MenuViewModel extends ChangeNotifier {
   final List<BasePage> _pages = [
@@ -103,7 +103,7 @@ class MenuViewModel extends ChangeNotifier {
         ),
       ],
     ),
-    SettingsView(icon: Icons.settings, title: "Settings"),
+    /// Fine motor skills
     BeerPourPage(icon: Icons.local_drink, title: "Beer pour",
       tutorialSteps: [
         TutorialStep(
@@ -157,6 +157,8 @@ class MenuViewModel extends ChangeNotifier {
         ),
       ],
     ),
+    /// Settings
+    SettingsView(icon: Icons.settings, title: "Settings"),
   ];
 
   // Getters

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_models/FMS_phone_pickup_viewmodel.dart';
+import '../../view_models/denis/FMS_phone_pickup_viewmodel.dart';
 import 'package:rehab_app/services/page_management/models/stateful_page_model.dart';
 
 class MotionDetectionView extends StatefulPage {
