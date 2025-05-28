@@ -212,7 +212,7 @@ class PoseDetectionViewState extends StatefulPageState {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dosiahnuté opakovania: ${viewModel.repetitions}',
+                  'Dosiahnuté opakovania: ${viewModel.repetitions} / ${viewModel.targetRepetitions}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -221,7 +221,15 @@ class PoseDetectionViewState extends StatefulPageState {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Správne vykonávaný cvik: ${!viewModel.outOfLimits}',
+                  'Správne vykonávaný cvik: ${!viewModel.outOfLimits ? 'ÁNO' : 'NIE'}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'SA: ${viewModel.scopeAngle} , ASA: ${viewModel.avgScopeAngle}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,

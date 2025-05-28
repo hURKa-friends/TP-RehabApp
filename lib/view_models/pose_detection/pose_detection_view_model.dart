@@ -22,8 +22,13 @@ class PoseDetectionViewModel extends ChangeNotifier {
   late bool mounted = false;
 
   int repetitions = 0;
-  double currentAngleShoulder = 0;
   bool outOfLimits = false;
+
+  // debug print variables
+  double scopeAngle = 0.0;
+  double avgScopeAngle = 0.0;
+  int scopeIndex = 1;
+
 
   ArmSelection _selectedArm = ArmSelection.none;
   ArmSelection get selectedArm => _selectedArm;
@@ -41,6 +46,11 @@ class PoseDetectionViewModel extends ChangeNotifier {
 
   int _startTimestamp = DateTime.now().millisecondsSinceEpoch;
   int _currentTimestamp = DateTime.now().millisecondsSinceEpoch;
+
+  // moving average variables
+  final int _windowSize = 10;
+  final List<List<double>> _movAvgBuffers = [];
+
 
   // Constructor
   PoseDetectionViewModel() {
@@ -73,6 +83,7 @@ class PoseDetectionViewModel extends ChangeNotifier {
     _selectedArm = ArmSelection.none;
     _isSetupComplete = false;
     repetitions = 0;
+    _targetRepetitions = 1;
     _repetitionsCompleted = false;
   }
 
@@ -153,7 +164,6 @@ class PoseDetectionViewModel extends ChangeNotifier {
     _isSetupComplete = true;
     repetitions = 0;
     _repetitionsCompleted = false;
-    currentAngleShoulder = 0;
     outOfLimits = false;
 
     for (var limit in exercise.jointLimits) {
@@ -172,6 +182,12 @@ class PoseDetectionViewModel extends ChangeNotifier {
 
     exercise =
         ExerciseFactory.create(_exerciseType, _targetRepetitions, _selectedArm);
+
+    _movAvgBuffers.clear();
+    _movAvgBuffers.addAll(List.generate(
+      exercise.jointLimits.length,
+          (_) => <double>[],
+    ));
   }
 
   Future<void> _processCameraFrame(CameraImage cameraImage) async {
@@ -189,9 +205,9 @@ class PoseDetectionViewModel extends ChangeNotifier {
     final poses = await _poseDetector.processImage(inputImage);
 
     double? angleRad =
-        calculateAngleRad(poses, exercise.jointAngleLocations[0]);
+        calculateAngleRad(poses, exercise.jointAngleLocations[scopeIndex]);
     if (angleRad != null) {
-      currentAngleShoulder = angleRad * (180 / pi);
+      scopeAngle = angleRad * (180 / pi);
     }
     outOfLimits = exercise.outOfLimits;
 
@@ -287,24 +303,29 @@ class PoseDetectionViewModel extends ChangeNotifier {
 
       if (angleRad != null) {
         double angle = angleRad * (180 / pi);
-        logData.add(angle.toStringAsFixed(2));
+        double avgAngle = movingAverage(i, angle);
+        logData.add(avgAngle.toStringAsFixed(2));
+
+        if(i == scopeIndex){
+          avgScopeAngle = avgAngle;
+        }
 
         switch (e.jointLimits[i].limitType) {
           case LimitType.inLimits: // checking if angle is out of interval
-            if (angle < (e.jointLimits[i].lower - e.jointLimits[i].tolerance) ||
-                angle > (e.jointLimits[i].upper + e.jointLimits[i].tolerance)) {
+            if (avgAngle < (e.jointLimits[i].lower - e.jointLimits[i].tolerance) ||
+                avgAngle > (e.jointLimits[i].upper + e.jointLimits[i].tolerance)) {
               e.outOfLimits = true;
             }
             break;
           case LimitType
               .reachLimits: // checking if rep angle limits were reached
-            if (angle > e.jointLimits[i].lower - e.jointLimits[i].tolerance &&
-                angle < e.jointLimits[i].lower + e.jointLimits[i].tolerance) {
+            if (avgAngle > e.jointLimits[i].lower - e.jointLimits[i].tolerance &&
+                avgAngle < e.jointLimits[i].lower + e.jointLimits[i].tolerance) {
               e.jointLimits[i].reachedLow = true;
               e.outOfLimits = false;
-            } else if ((angle >
+            } else if ((avgAngle >
                         e.jointLimits[i].upper - e.jointLimits[i].tolerance &&
-                    angle <
+                    avgAngle <
                         e.jointLimits[i].upper + e.jointLimits[i].tolerance) &&
                 e.jointLimits[i].reachedLow) {
               e.jointLimits[i].reachedLow = false;
@@ -316,8 +337,8 @@ class PoseDetectionViewModel extends ChangeNotifier {
         }
       }
       else {
-        double angle = -1;
-        logData.add(angle.toStringAsFixed(2));
+        double avgAngle = -1;
+        logData.add(avgAngle.toStringAsFixed(2));
       }
     }
     logData.insert(1, e.correctRepetition.toString());
@@ -335,7 +356,24 @@ class PoseDetectionViewModel extends ChangeNotifier {
       return 0;
     }
   }
+
+  double movingAverage(int i, double newVal) {
+    // Ensure the list exists
+    while (_movAvgBuffers.length <= i) {
+      _movAvgBuffers.add(<double>[]);
+    }
+
+    _movAvgBuffers[i].add(newVal);
+
+    if (_movAvgBuffers[i].length > _windowSize) {
+      _movAvgBuffers[i].removeAt(0);
+    }
+
+    final sum = _movAvgBuffers[i].fold<double>(0.0, (double a, double b) => a + b);
+    return sum / _movAvgBuffers[i].length;
+  }
 } // PoseDetectionViewModel
+
 
 class PosePainter extends CustomPainter {
   PosePainter(
