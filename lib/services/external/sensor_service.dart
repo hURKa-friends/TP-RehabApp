@@ -32,6 +32,9 @@ class SensorService {
   bool startAcclDataStream({required Duration samplingPeriod}) {
     return _internalService.initializeAcclStream(samplingPeriod);
   }
+  bool startUserAcclDataStream({required Duration samplingPeriod}) {
+    return _internalService.initializeUserAcclStream(samplingPeriod);
+  }
   bool startGyroDataStream({required Duration samplingPeriod}) {
     return _internalService.initializeGyroStream(samplingPeriod);
   }
@@ -44,6 +47,9 @@ class SensorService {
 
   bool registerAcclDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerAcclStream(callback);
+  }
+  bool registerUserAcclDataStream({required Function(ImuSensorData) callback}) {
+    return _internalService.registerUserAcclStream(callback);
   }
   bool registerGyroDataStream({required Function(ImuSensorData) callback}) {
     return _internalService.registerGyroStream(callback);
@@ -58,6 +64,9 @@ class SensorService {
   ImuSensorData getAcclData() {
     return _internalService.acclData;
   }
+  ImuSensorData getUserAcclData() {
+    return _internalService.userAcclData;
+  }
   ImuSensorData getGyroData() {
     return _internalService.gyroData;
   }
@@ -70,6 +79,9 @@ class SensorService {
 
   bool stopAcclDataStream() {
     return _internalService.cancelAcclStream();
+  }
+  bool stopUserAcclDataStream() {
+    return _internalService.cancelUserAcclStream();
   }
   bool stopGyroDataStream() {
     return _internalService.cancelGyroStream();

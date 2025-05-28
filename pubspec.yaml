@@ -19,29 +19,52 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.1
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=2.5.0"
 
 # Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
 
 
   # Add your dependencies here:
-  cupertino_icons:    ^1.0.8
-  intl:               ^0.20.2
-  light_sensor:       ^3.0.1
-  permission_handler: ^11.4.0
-  provider:           ^6.1.2
-  sensors_plus:       ^6.1.1
-  syncfusion_flutter_charts: ^28.2.6
+  cupertino_icons:            ^1.0.8
+  intl:                       ^0.20.2
+  light_sensor:               ^3.0.1
+  permission_handler:         ^11.4.0
+  provider:                   ^6.1.2
+  sensors_plus:               ^6.1.1
+  syncfusion_flutter_charts:  ^28.2.6
+  vibration:                  ^3.1.3
+  # Pose detection dependencies:
+  camera:                     ^0.10.6
+  google_mlkit_commons:       any
+  google_mlkit_pose_detection: ^0.11.0
+  numberpicker:               any
+  vector_math:                any
+  # Fine motor skills dependencies:
+  fftea: ^1.5.0+1
+  # Knee rehab deps:
+  hyperlink: ^0.0.4
+  url_launcher: ^6.2.5
+  # Arm rehab
+  audioplayers: ^6.4.0
 
-# Developer dependencies are other packages that your package needs ONLY
-# during development like for testing, code generation, or linting.
-# They're not included in the actual app when it’s built for release.
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
   flutter_lints:      ^5.0.0
 
 # For information on the generic Dart part of this file, see the
@@ -57,11 +80,68 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+  # Examples
     - assets/example/000_exercise.gif
     - assets/example/001_exercise.gif
     - assets/example/002_exercise.gif
     - assets/example/003_exercise.gif
     - assets/example/FEI_logo.gif
+  # Pose detection
+    - assets/pose_detection/WIP_image.png
+    - assets/pose_detection/shoulder_abduction_active.jpg
+    - assets/pose_detection/shoulder_external_rotation.jpg
+    - assets/pose_detection/shoulder_forward_elevation_active.jpg
+  # Eating rehab
+    - assets/eating_rehab/eating.png
+    - assets/eating_rehab/eat_spoon.png
+    - assets/eating_rehab/secure_phone.png
+    - assets/eating_rehab/ok.png
+    - assets/eating_rehab/start.png
+    - assets/eating_rehab/stop.png
+    - assets/eating_rehab/measure.gif
+    - assets/eating_rehab/click.png
+  # Fine motor skills  
+    - assets/example/glass_outline.png
+    - assets/example/FMV/beer1.png
+    - assets/example/FMV/beer2.png
+    - assets/example/FMV/beer3.png
+    - assets/example/FMV/beer4.png
+    - assets/example/FMV/fmv1.png
+    - assets/example/FMV/fmv2.png
+    - assets/example/FMV/fmv3.png
+    - assets/example/FMV/fmv4.png
+    - assets/example/FMV/fmv5.png
+  # Knee rehab
+    - assets/knee_rehab/leg_extensions01.jpg
+    - assets/knee_rehab/leg_extensions02.jpg
+    - assets/knee_rehab/leg_extensions03.jpg
+    - assets/knee_rehab/something.png
+  # Arm rehab
+    - assets/arm_rehab/images/settings/orient_select/armband_rotated.jpg
+    - assets/arm_rehab/images/armband.jpg
+    - assets/arm_rehab/images/settings/arm_select/left_hand.jpg
+    - assets/arm_rehab/images/settings/arm_select/right_hand.jpg
+    - assets/arm_rehab/images/settings/pos_select/shoulder.png
+    - assets/arm_rehab/images/settings/pos_select/wrist.png
+    - assets/arm_rehab/sounds/beeps/short_beep.mp3
+    - assets/arm_rehab/sounds/beeps/long_beep.mp3
+    - assets/arm_rehab/images/exercises/front_raises/front_raises.gif
+    - assets/arm_rehab/images/exercises/front_raises/front_raises0.png
+    - assets/arm_rehab/images/exercises/front_raises/front_raises1.png
+    - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls.gif
+    - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls0.png
+    - assets/arm_rehab/images/exercises/bicep_curls/bicep_curls1.png
+    - assets/arm_rehab/images/exercises/chest_press/chest_press.gif
+    - assets/arm_rehab/images/exercises/chest_press/chest_press0.png
+    - assets/arm_rehab/images/exercises/chest_press/chest_press1.png
+    - assets/arm_rehab/images/exercises/drinking/drinking.gif
+    - assets/arm_rehab/images/exercises/drinking/drinking0.png
+    - assets/arm_rehab/images/exercises/drinking/drinking1.png
+    - assets/arm_rehab/images/exercises/turning_glass/turning_glass.gif
+    - assets/arm_rehab/images/exercises/turning_glass/turning_glass0.jpg
+    - assets/arm_rehab/images/exercises/turning_glass/turning_glass1.jpg
+    - assets/arm_rehab/images/flex.webp
+  # Display rehab
     - assets/images/fingerTrackingWorkInProgress.png
     - assets/images/CopperBusines.png
     #Dont look
@@ -107,3 +187,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: fonts/CustomIcons.ttf
