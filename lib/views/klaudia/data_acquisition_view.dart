@@ -1,9 +1,9 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:rehab_app/view_models/data_acquisition_view_model.dart';
+import 'package:rehab_app/view_models/klaudia/data_acquisition_view_model.dart';
 import 'package:vibration/vibration.dart';
 
-import '../services/page_management/models/stateful_page_model.dart';
+import '../../services/page_management/models/stateful_page_model.dart';
 
 class AcqView extends StatefulPage {
   const AcqView(
