@@ -23,6 +23,7 @@ class MenuViewModel extends ChangeNotifier {
     /// You can add your pages here
     ///
     GraphView(icon: Icons.data_thresholding_outlined, title: "Sensor graph example"),
+    /// Eating rehab
     SubMenuPageWrapper(
       icon: Icons.fastfood,
       title: "Eating rehab",
@@ -68,7 +69,7 @@ class MenuViewModel extends ChangeNotifier {
         )
       ],
     ),
-    // Pose detection exercise tutorials
+    /// Pose detection
     SubMenuPageWrapper(icon: Icons.accessibility_new, title: "Detekcia pózy",
       subPages: [
         SubMenuPageWrapper(icon: Icons.menu, title: "Rehabilitácia ramena",
