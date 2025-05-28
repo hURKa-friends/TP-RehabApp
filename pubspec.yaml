@@ -47,6 +47,8 @@ dependencies:
   google_mlkit_pose_detection: ^0.11.0
   numberpicker:               any
   vector_math:                any
+  # Fine motor skills dependencies:
+  fftea: ^1.5.0+1
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +98,17 @@ flutter:
     - assets/eating_rehab/stop.png
     - assets/eating_rehab/measure.gif
     - assets/eating_rehab/click.png
+  # Fine motor skills  
+    - assets/example/glass_outline.png
+    - assets/example/FMV/beer1.png
+    - assets/example/FMV/beer2.png
+    - assets/example/FMV/beer3.png
+    - assets/example/FMV/beer4.png
+    - assets/example/FMV/fmv1.png
+    - assets/example/FMV/fmv2.png
+    - assets/example/FMV/fmv3.png
+    - assets/example/FMV/fmv4.png
+    - assets/example/FMV/fmv5.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
